@@ -1,0 +1,14 @@
+{
+  "name": "zekuru-v2",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:Zekumoru/zekuru-v2.git",
+  "author": "Zekumoru Dragonhart <57686690+Zekumoru@users.noreply.github.com>",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^14.13.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.51.0"
+  }
+}
