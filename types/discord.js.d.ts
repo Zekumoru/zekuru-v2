@@ -1,7 +1,7 @@
-import { Collection } from "discord.js";
-import { Command } from "./types";
+import { Collection } from 'discord.js';
+import { Command } from './types';
 
-declare module "discord.js" {
+declare module 'discord.js' {
     interface Client {
         commands: Collection<string, Command>,
     }

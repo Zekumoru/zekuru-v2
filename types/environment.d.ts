@@ -1,4 +1,5 @@
-export {}; // indicates that this file is a module
+// indicates that this file is a module
+export {};
 
 declare global {
     namespace NodeJS {

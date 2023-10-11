@@ -1,9 +1,14 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 
-export const data = new SlashCommandBuilder()
+const data = new SlashCommandBuilder()
 	.setName('ping')
-	.setDescription(`Checks bot's status`);
+	.setDescription('Checks bot\'s status');
 
-export async function execute(interaction: ChatInputCommandInteraction) {
-    await interaction.reply(`I'm up and running!`);
+async function execute(interaction: ChatInputCommandInteraction) {
+	await interaction.reply('I\'m up and running!');
 }
+
+export {
+	data,
+	execute,
+};
