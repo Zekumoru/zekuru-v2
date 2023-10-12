@@ -1,4 +1,5 @@
-// / <reference path="./types/environment.d.ts" />
+// eslint-disable-next-line spaced-comment, @typescript-eslint/triple-slash-reference
+/// <reference path="./types/environment.d.ts" />
 import fs from 'node:fs';
 import path from 'node:path';
 import dotenv from 'dotenv';

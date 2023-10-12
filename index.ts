@@ -1,8 +1,10 @@
-import './types/discord.js';
+// eslint-disable-next-line spaced-comment, @typescript-eslint/triple-slash-reference
+/// <reference path="./types/discord.js.d.ts" />
 import dotenv from 'dotenv';
 import fs from 'node:fs';
 import path from 'node:path';
-import { Client, Collection, Events, GatewayIntentBits, InteractionReplyOptions } from 'discord.js';
+import { Client, Collection, GatewayIntentBits } from 'discord.js';
+import { Command, Event } from './types/types.js';
 dotenv.config();
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -18,7 +20,7 @@ for (const folder of commandFolders) {
 
 	for (const file of commandFiles) {
 		const filePath = path.join(commandsPath, file);
-		const command = require(filePath);
+		const command = require(filePath) as Command;
 
 		if ('data' in command && 'execute' in command) {
 			client.commands.set(command.data.name, command);
@@ -29,38 +31,19 @@ for (const folder of commandFolders) {
 	}
 }
 
-client.once(Events.ClientReady, c => {
-	console.log(`Ready! Logged in as ${c.user.tag}`);
-});
+const eventsPath = path.join(__dirname, 'events');
+const eventFiles = fs.readdirSync(eventsPath).filter((file) => file.endsWith('.ts'));
 
-client.on(Events.InteractionCreate, async (interaction) => {
-	if (!interaction.isChatInputCommand()) return;
+for (const file of eventFiles) {
+	const filePath = path.join(eventsPath, file);
+	const event = require(filePath) as Event;
 
-	const command = interaction.client.commands.get(interaction.commandName);
-
-	if (!command) {
-		console.error(`No command matching ${interaction.commandName} was found.`);
-		return;
+	if (event?.once) {
+		client.once(event.name, (...args) => event.execute(...args));
 	}
-
-	try {
-		await command.execute(interaction);
+	else {
+		client.on(event.name, (...args) => event.execute(...args));
 	}
-	catch (error) {
-		console.error(error);
-
-		const options: InteractionReplyOptions = {
-			content: 'There was an error while executing this command!',
-			ephemeral: true,
-		};
-
-		if (interaction.replied || interaction.deferred) {
-			await interaction.followUp(options);
-		}
-		else {
-			await interaction.reply(options);
-		}
-	}
-});
+}
 
 client.login(process.env.DISCORD_TOKEN);
