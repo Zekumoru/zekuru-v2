@@ -7,7 +7,13 @@ import { Client, Collection, GatewayIntentBits } from 'discord.js';
 import { Command, Event } from './types/types.js';
 dotenv.config();
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({
+	intents: [
+		GatewayIntentBits.Guilds,
+		GatewayIntentBits.GuildMessages,
+		GatewayIntentBits.MessageContent,
+	],
+});
 
 client.commands = new Collection();
 
