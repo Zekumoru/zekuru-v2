@@ -6,6 +6,7 @@
   "author": "Zekumoru Dragonhart <57686690+Zekumoru@users.noreply.github.com>",
   "license": "MIT",
   "dependencies": {
+    "deepl-node": "^1.10.2",
     "discord.js": "^14.13.0",
     "dotenv": "^16.3.1"
   },
