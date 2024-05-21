@@ -5,9 +5,9 @@ import {
 } from 'discord.js';
 import { createCommand } from '../types/DiscordCommand';
 import TranslateChannel from '../db/models/TranslateChannel';
-import channelLinks from '../cache/channelLinks';
 import { sourceLanguages } from '../translation/languages';
 import buildLongContentEmbeds from './utilities/buildLongContentEmbeds';
+import cache from '../cache';
 
 const data = new SlashCommandBuilder()
   .setName('show-channels')
@@ -36,7 +36,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
 
   const strBuilder = await Promise.all<string>(
     trChannels.map(async (trChannel, i) => {
-      const chLink = await channelLinks.get(trChannel.id);
+      const chLink = await cache.channelLink.get(trChannel.id);
       const language =
         sourceLanguages.find((lang) => lang.code === trChannel.sourceLang)
           ?.name ?? trChannel.sourceLang;

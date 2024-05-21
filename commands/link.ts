@@ -4,14 +4,16 @@ import {
   SlashCommandBuilder,
 } from 'discord.js';
 import { createCommand } from '../types/DiscordCommand';
-import translateChannels from '../cache/translateChannels';
-import channelLinks from '../cache/channelLinks';
 import { IChannelLink } from '../db/models/ChannelLink';
 import { ITranslateChannel } from '../db/models/TranslateChannel';
-
-export const CHANNEL_LINK_LIMIT = isNaN(Number(process.env.CHANNEL_LINK_LIMIT))
-  ? 5
-  : Number(process.env.CHANNEL_LINK_LIMIT);
+import cache from '../cache';
+import {
+  CHANNEL_LINK_LIMIT,
+  buildAllChannelsLinkMap,
+  getOrCreateChLink,
+  linkChannel,
+  linkChannels,
+} from './utilities/linking';
 
 const LinkOptions = {
   SOURCE_CHANNEL: 'source-channel',
@@ -61,102 +63,6 @@ const data = new SlashCommandBuilder()
   )
   .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild);
 
-export const getChLink = async (channelId: string, guildId: string) => {
-  return (
-    (await channelLinks.get(channelId)) ??
-    (await channelLinks.create(channelId, guildId))
-  );
-};
-
-export const linkChannel = async (
-  channelLink: IChannelLink,
-  channelId: string,
-  translateChannel: ITranslateChannel
-) => {
-  if (channelLink.links.find((link) => link.id === channelId) === undefined) {
-    channelLink.links.push(translateChannel);
-    await channelLinks.update(channelLink);
-    return true;
-  }
-  return false;
-};
-
-export interface IAllChLinkMapValue {
-  chLink: IChannelLink;
-  trChannel: ITranslateChannel;
-}
-
-export const linkChannelNoDB = (
-  channelLink: IChannelLink,
-  channelId: string,
-  translateChannel: ITranslateChannel
-) => {
-  if (channelLink.links.find((link) => link.id === channelId) === undefined) {
-    channelLink.links.push(translateChannel);
-    return true;
-  }
-  return false;
-};
-
-export const linkChannels = async (
-  allChLinkMap: Map<string, IAllChLinkMapValue>
-) => {
-  let linked = false;
-  allChLinkMap.forEach(({ chLink: sourceChLink }) => {
-    allChLinkMap.forEach(
-      ({ chLink: targetChLink, trChannel: targetTrChannel }) => {
-        if (sourceChLink === targetChLink) return;
-
-        linked =
-          linkChannelNoDB(sourceChLink, targetChLink.id, targetTrChannel) ||
-          linked;
-      }
-    );
-  });
-
-  // save to db
-  const promises: Promise<void>[] = [];
-  allChLinkMap.forEach(({ chLink }) => {
-    promises.push(
-      (async () => {
-        await channelLinks.update(chLink);
-      })()
-    );
-  });
-  await Promise.all(promises);
-
-  return linked;
-};
-
-export const buildAllChannelsLinkMap = async (channelLinks: IChannelLink[]) => {
-  const jobQueue: IChannelLink[] = [...channelLinks];
-  const allChLinkMap = new Map<string, IAllChLinkMapValue>();
-
-  // build map containing all channels
-  while (jobQueue.length) {
-    const chLink = jobQueue.shift()!;
-
-    for (const link of chLink.links) {
-      if (allChLinkMap.get(link.id)) continue;
-
-      const [linkTrChannel, linkChLink] = await Promise.all([
-        translateChannels.get(link.id),
-        getChLink(link.id, chLink.guildId),
-      ]);
-      jobQueue.push(linkChLink);
-
-      if (!linkTrChannel) continue;
-
-      allChLinkMap.set(linkChLink.id, {
-        chLink: linkChLink,
-        trChannel: linkTrChannel,
-      });
-    }
-  }
-
-  return allChLinkMap;
-};
-
 const execute = async (interaction: ChatInputCommandInteraction) => {
   if (!interaction.guildId) {
     await interaction.reply({
@@ -185,8 +91,8 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
 
   // check if these channels have languages associated with them
   const [sourceTrChannel, targetTrChannel] = await Promise.all([
-    translateChannels.get(sourceChannelId),
-    translateChannels.get(targetChannelId),
+    cache.translateChannel.get(sourceChannelId),
+    cache.translateChannel.get(targetChannelId),
   ]);
 
   let errorMessage = '';
@@ -209,8 +115,8 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
 
   // add to their respective link documents
   const [sourceChLink, targetChLink] = await Promise.all([
-    getChLink(sourceChannelId, interaction.guildId),
-    getChLink(targetChannelId, interaction.guildId),
+    getOrCreateChLink(sourceChannelId, interaction.guildId),
+    getOrCreateChLink(targetChannelId, interaction.guildId),
   ]);
 
   const allChLinkMap = await buildAllChannelsLinkMap([
@@ -256,11 +162,11 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   // already add these to map to save time since they're already done as well
   // refetch channels links due to bidirectional linking
   allChLinkMap.set(sourceChLink.id, {
-    chLink: await getChLink(sourceChannelId, interaction.guildId),
+    chLink: await getOrCreateChLink(sourceChannelId, interaction.guildId),
     trChannel: sourceTrChannel,
   });
   allChLinkMap.set(targetChLink.id, {
-    chLink: await getChLink(targetChannelId, interaction.guildId),
+    chLink: await getOrCreateChLink(targetChannelId, interaction.guildId),
     trChannel: targetTrChannel,
   });
 

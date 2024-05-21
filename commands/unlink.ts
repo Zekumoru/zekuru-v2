@@ -4,8 +4,8 @@ import {
   SlashCommandBuilder,
 } from 'discord.js';
 import { createCommand } from '../types/DiscordCommand';
-import channelLinks from '../cache/channelLinks';
-import { IChannelLink } from '../db/models/ChannelLink';
+import cache from '../cache';
+import { unlinkChannel } from './utilities/unlinking';
 
 const UnlinkOptions = {
   SOURCE_CHANNEL: 'source-channel',
@@ -30,28 +30,6 @@ const data = new SlashCommandBuilder()
   )
   .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild);
 
-export const unlinkChannel = async (
-  channelLink: IChannelLink,
-  channelId: string
-) => {
-  if (channelLink.links.find((link) => link.id === channelId)) {
-    channelLink.links = channelLink.links.filter(
-      (trChannel) => trChannel.id !== channelId
-    );
-
-    if (channelLink.links.length === 0) {
-      // remove channelLink since it doesn't have any links anymore
-      // because it cannot be called "channelLink" with no links
-      await channelLinks.delete(channelLink.id);
-    } else {
-      await channelLinks.update(channelLink);
-    }
-
-    return true;
-  }
-  return false;
-};
-
 const execute = async (interaction: ChatInputCommandInteraction) => {
   const sourceChannelId =
     interaction.options.getChannel(UnlinkOptions.SOURCE_CHANNEL)?.id ??
@@ -68,8 +46,8 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   }
 
   const [sourceChLink, targetChLink] = await Promise.all([
-    channelLinks.get(sourceChannelId),
-    channelLinks.get(targetChannelId),
+    cache.channelLink.get(sourceChannelId),
+    cache.channelLink.get(targetChannelId),
   ]);
 
   let errorMessage = '';

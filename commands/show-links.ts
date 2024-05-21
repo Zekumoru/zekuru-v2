@@ -4,11 +4,10 @@ import {
   SlashCommandBuilder,
 } from 'discord.js';
 import { createCommand } from '../types/DiscordCommand';
-import channelLinks from '../cache/channelLinks';
-import translateChannels from '../cache/translateChannels';
 import ChannelLink, { IChannelLink } from '../db/models/ChannelLink';
 import { ITranslateChannel } from '../db/models/TranslateChannel';
 import buildLongContentEmbeds from './utilities/buildLongContentEmbeds';
+import cache from '../cache';
 
 const data = new SlashCommandBuilder()
   .setName('show-links')
@@ -48,8 +47,8 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   const channel = interaction.options.getChannel('channel');
   if (channel) {
     const [chLink, trChannel] = await Promise.all([
-      channelLinks.get(channel.id),
-      translateChannels.get(channel.id),
+      cache.channelLink.get(channel.id),
+      cache.translateChannel.get(channel.id),
     ]);
     if (!chLink || !trChannel) {
       interaction.reply({
@@ -78,7 +77,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   // for each chLink, iterate over to links
   const strBuilder = await Promise.all<string>(
     chLinks.map(async (chLink, i) => {
-      const trChannel = await translateChannels.get(chLink.id);
+      const trChannel = await cache.translateChannel.get(chLink.id);
       if (!trChannel) return '';
 
       return (

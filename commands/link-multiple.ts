@@ -5,14 +5,14 @@ import {
   SlashCommandBuilder,
 } from 'discord.js';
 import { createCommand } from '../types/DiscordCommand';
-import translateChannels from '../cache/translateChannels';
+import cache from '../cache';
 import {
   CHANNEL_LINK_LIMIT,
   IAllChLinkMapValue,
   buildAllChannelsLinkMap,
-  getChLink,
+  getOrCreateChLink,
   linkChannels,
-} from './link';
+} from './utilities/linking';
 
 const CHANNEL_ID_REGEX = /<#\d*>/g;
 
@@ -69,14 +69,14 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
       if (chProcessMap.get(channelId)) return; // ignore if already added
       if (nonTrChannelIdsMap.get(channelId)) return; // ignore if already added
 
-      const trChannel = await translateChannels.get(channelId);
+      const trChannel = await cache.translateChannel.get(channelId);
       if (!trChannel) {
         nonTrChannelIdsMap.set(channelId, true);
         return;
       }
 
       if (!interaction.guildId) return;
-      const chLink = await getChLink(channelId, interaction.guildId);
+      const chLink = await getOrCreateChLink(channelId, interaction.guildId);
       chProcessMap.set(channelId, {
         trChannel,
         chLink,

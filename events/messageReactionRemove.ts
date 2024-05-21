@@ -6,7 +6,7 @@ import {
   User,
 } from 'discord.js';
 import { DiscordEvent } from '../types/DiscordEvent';
-import { getMessagesLink } from './messageReactionAdd';
+import getMessagesLink from './utilities/getMessagesLink';
 
 export default {
   name: Events.MessageReactionRemove,

@@ -9,8 +9,8 @@ import {
 } from 'discord.js';
 import { createCommand } from '../types/DiscordCommand';
 import { sourceLanguages, targetLanguages } from '../translation/languages';
-import translateChannels from '../cache/translateChannels';
-import { updateTranslateMessages } from '../events/messageUpdateTranslate';
+import cache from '../cache';
+import updateTranslateMessages from '../events/utilities/updateTranslateMessages';
 
 const data = new SlashCommandBuilder()
   .setName('set')
@@ -84,7 +84,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
     return;
   }
 
-  const trChannel = await translateChannels.get(channelId);
+  const trChannel = await cache.translateChannel.get(channelId);
 
   if (trChannel) {
     const oldLanguage =
@@ -127,7 +127,12 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
       });
 
       if (confirmation.customId === 'confirm') {
-        await translateChannels.set(channelId, guildId, sourceLang, targetLang);
+        await cache.translateChannel.set(
+          channelId,
+          guildId,
+          sourceLang,
+          targetLang
+        );
         await confirmation.update({
           content: `<#${channelId}> has been changed to \`${language}\`.`,
           components: [],
@@ -155,7 +160,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   }
 
   // set channel's language for the first time
-  await translateChannels.set(channelId, guildId, sourceLang, targetLang);
+  await cache.translateChannel.set(channelId, guildId, sourceLang, targetLang);
   await interaction.reply({
     content: `<#${channelId}> has been set to \`${language}\`.`,
   });

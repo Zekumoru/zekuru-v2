@@ -3,7 +3,7 @@ import ChannelLink, { IChannelLink } from '../db/models/ChannelLink';
 
 const cacheLinks = new Collection<string, IChannelLink>();
 
-const getLink = async (channelId: string, guildId: string) => {
+const fetchOrCreateLink = async (channelId: string, guildId: string) => {
   // fetch from db, if not exists, create new
   const link = await ChannelLink.findOne({ id: channelId })
     .populate('links')
@@ -21,7 +21,7 @@ const getLink = async (channelId: string, guildId: string) => {
 
 const create = async (channelId: string, guildId: string) => {
   // create otherwise fetch
-  const link = await getLink(channelId, guildId);
+  const link = await fetchOrCreateLink(channelId, guildId);
 
   cacheLinks.set(channelId, {
     guildId,
@@ -35,14 +35,14 @@ const create = async (channelId: string, guildId: string) => {
 
 const update = async (channelLink: IChannelLink) => {
   // update in db
-  const link = await getLink(channelLink.id, channelLink.guildId);
+  const link = await fetchOrCreateLink(channelLink.id, channelLink.guildId);
   link.overwrite(channelLink);
   await link.save();
 
   // update cache
   cacheLinks.set(
     channelLink.id,
-    await getLink(channelLink.id, channelLink.guildId)
+    await fetchOrCreateLink(channelLink.id, channelLink.guildId)
   );
 };
 
