@@ -1,50 +1,75 @@
-// eslint-disable-next-line spaced-comment, @typescript-eslint/triple-slash-reference
-/// <reference path="./types/environment.d.ts" />
-import fs from 'node:fs';
-import path from 'node:path';
-import dotenv from 'dotenv';
-import { REST, RESTPostAPIChatInputApplicationCommandsJSONBody, Routes } from 'discord.js';
-import { Command } from './types/types';
-dotenv.config();
+import 'dotenv/config';
+import {
+  REST,
+  RESTPostAPIChatInputApplicationCommandsJSONBody,
+  Routes,
+} from 'discord.js';
+import fs from 'fs';
+import path from 'path';
+import { argv } from 'process';
+import { DiscordCommand } from './types/DiscordCommand';
+
+// check whether to deploy globally or locally to guild development
+const isGlobal = argv.some(
+  (option) => option === '--global' || option === '-g'
+);
+
+// get ids and tokens
+const clientId = process.env.CLIENT_ID!;
+const guildId = process.env.GUILD_ID!;
+const token = process.env.DISCORD_TOKEN!;
 
 const commands: RESTPostAPIChatInputApplicationCommandsJSONBody[] = [];
 
-const foldersPath = path.join(__dirname, 'commands');
-const commandFolders = fs.readdirSync(foldersPath);
+// Grab all the commands
+const commandsPath = path.join(__dirname, 'commands');
+const commandFiles = fs
+  .readdirSync(commandsPath)
+  .filter((file) => file.endsWith('.ts'));
 
-for (const folder of commandFolders) {
-	const commandsPath = path.join(foldersPath, folder);
-	const commandFiles = fs.readdirSync(commandsPath).filter((file) => file.endsWith('.ts'));
+// Grab the SlashCommandBuilder#toJSON() output of each command's data for deployment
+for (const file of commandFiles) {
+  const filePath = path.join(commandsPath, file);
+  const command = require(filePath).default as DiscordCommand;
 
-	for (const file of commandFiles) {
-		const filePath = path.join(commandsPath, file);
-		const command = require(filePath) as Command;
-
-		if ('data' in command && 'execute' in command) {
-			commands.push(command.data.toJSON());
-		}
-		else {
-			console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
-		}
-	}
+  if ('data' in command && 'execute' in command) {
+    // Do not deploy commands that are for development only
+    if (!(isGlobal && command.devOnly)) commands.push(command.data.toJSON());
+  } else {
+    console.warn(
+      `[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`
+    );
+  }
 }
 
-const rest = new REST().setToken(process.env.DISCORD_TOKEN);
+// Construct and prepare an instance of the REST module
+const rest = new REST().setToken(token);
+
+// Deploy commands
+interface RestResult {
+  length: number;
+}
 
 (async () => {
-	try {
-		console.log(`Started refreshing ${commands.length} application (/) commands.`);
+  try {
+    console.log(
+      `Started refreshing${isGlobal ? ' globally ' : ' '}${
+        commands.length
+      } application (/) commands.`
+    );
 
-		const data = await rest.put(
-			Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.TEST_GUILD_ID),
-			{
-				body: commands,
-			},
-		) as { length: number };
+    const route = isGlobal
+      ? Routes.applicationCommands(clientId)
+      : Routes.applicationGuildCommands(clientId, guildId);
 
-		console.log(`Successfully reloaded ${data.length} application (/) commands.`);
-	}
-	catch (error) {
-		console.error(error);
-	}
+    // The put method is used to fully refresh all commands in the guild with
+    // the current set
+    const data = (await rest.put(route, { body: commands })) as RestResult;
+
+    console.log(
+      `Successfully reloaded ${data.length} application (/) commands.`
+    );
+  } catch (error) {
+    console.error(error);
+  }
 })();
