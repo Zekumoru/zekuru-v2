@@ -1,6 +1,4 @@
-# Zekuru-v2 Demo
-
-This is the demo version of Zekuru-v2, a Discord translation bot!
+# Zekuru-v2
 
 ## Introduction
 
@@ -174,9 +172,7 @@ You can also check out the [Zekuru-v2 documentation](https://zekuru-v2.zekumoru.
 
 ## Contributing
 
-Any issues or pull requests are welcome! Do mind that **this is a demo version** of the actual Zekuru-v2 bot. If you have any ideas or improvements on the bot, go to the [official Zekuru-v2 bot repository](https://github.com/Zekumoru/zekuru-v2) and check if your ideas are already implemented, otherwise feel free to contribute!
-
-Any contributions you make will be under the MIT software license.
+Any issues or pull requests are welcome! Do mind that any contributions you make will be under the MIT software license.
 
 ## License
 
