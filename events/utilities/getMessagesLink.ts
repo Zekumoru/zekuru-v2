@@ -1,6 +1,6 @@
 import { MessageReaction, PartialMessageReaction } from 'discord.js';
 import cache from '../../cache';
-import { errorDebug } from '../../utils/logger';
+import { errorDebug } from '../../utilities/logger';
 import MessageLink, { IMessageLink } from '../../db/models/MessageLink';
 import getMessagesFromMessageLink from '../../commands/utilities/getMessagesFromMessageLink';
 

@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { appDebug } from '../utils/logger';
+import { appDebug } from '../utilities/logger';
 
 const dbString = process.env.MONGODB_CONNECTION_STRING;
 

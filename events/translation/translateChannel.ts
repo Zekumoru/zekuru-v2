@@ -6,7 +6,7 @@ import addReplyPing from './addReplyPing';
 import translateContent from './translateContent';
 import { DISCORD_ATTACHMENT_SIZE_LIMIT } from './limits';
 import { AuthorizationError } from 'deepl-node';
-import { errorDebug } from '../../utils/logger';
+import { errorDebug } from '../../utilities/logger';
 import { ITranslateChannel } from '../../db/models/TranslateChannel';
 
 const translateChannel = async (

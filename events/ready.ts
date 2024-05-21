@@ -1,6 +1,6 @@
 import { Client, Events } from 'discord.js';
 import { DiscordEvent } from '../types/DiscordEvent';
-import { appDebug } from '../utils/logger';
+import { appDebug } from '../utilities/logger';
 import { sourceLanguages } from '../translation/languages';
 import GuildKey from '../db/models/GuildKey';
 import cache from '../cache';

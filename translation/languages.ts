@@ -1,5 +1,5 @@
 import * as deepl from 'deepl-node';
-import { appDebug } from '../utils/logger';
+import { appDebug } from '../utilities/logger';
 
 export const targetLanguages: deepl.Language[] = [];
 const loadTargetLanguages = async (translator: deepl.Translator) => {

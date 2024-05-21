@@ -9,7 +9,7 @@ import {
 import fs from 'fs';
 import path from 'path';
 import { DiscordEvent } from './types/DiscordEvent';
-import { appDebug } from './utils/logger';
+import { appDebug } from './utilities/logger';
 import './db/mongoDbConnect';
 
 const token = process.env.DISCORD_TOKEN;

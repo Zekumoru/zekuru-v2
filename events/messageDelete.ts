@@ -2,7 +2,7 @@ import { ChannelType, Events, Message, PartialMessage } from 'discord.js';
 import { DiscordEvent } from '../types/DiscordEvent';
 import MessageLink from '../db/models/MessageLink';
 import getMessagesFromMessageLink from '../commands/utilities/getMessagesFromMessageLink';
-import { errorDebug } from '../utils/logger';
+import { errorDebug } from '../utilities/logger';
 
 export default {
   name: Events.MessageDelete,

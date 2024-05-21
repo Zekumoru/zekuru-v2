@@ -1,6 +1,6 @@
 import { CacheType, Events, Interaction } from 'discord.js';
 import { DiscordEvent } from '../types/DiscordEvent';
-import { errorDebug } from '../utils/logger';
+import { errorDebug } from '../utilities/logger';
 
 export default {
   name: Events.InteractionCreate,

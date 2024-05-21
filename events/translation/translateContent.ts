@@ -4,7 +4,7 @@ import {
   TargetLanguageCode,
 } from 'deepl-node';
 import { DISCORD_MESSAGE_CHARS_LIMIT } from './limits';
-import tagTranscoder from '../../utils/tagTranscoder';
+import tagTranscoder from '../../utilities/tagTranscoder';
 import cache from '../../cache';
 
 const translateContent = async (

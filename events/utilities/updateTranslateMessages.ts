@@ -2,7 +2,7 @@ import { ChannelType, Message, PartialMessage } from 'discord.js';
 import MessageLink from '../../db/models/MessageLink';
 import cache from '../../cache';
 import getMessagesFromMessageLink from '../../commands/utilities/getMessagesFromMessageLink';
-import { errorDebug } from '../../utils/logger';
+import { errorDebug } from '../../utilities/logger';
 import translateContent from '../translation/translateContent';
 import { DISCORD_MESSAGE_CHARS_LIMIT } from '../translation/limits';
 

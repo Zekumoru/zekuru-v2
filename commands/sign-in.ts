@@ -5,7 +5,7 @@ import {
 } from 'discord.js';
 import { createCommand } from '../types/DiscordCommand';
 import { AuthorizationError } from 'deepl-node';
-import { errorDebug } from '../utils/logger';
+import { errorDebug } from '../utilities/logger';
 import cache from '../cache';
 
 const data = new SlashCommandBuilder()

@@ -2,8 +2,8 @@ import { AuthorizationError, Translator, TranslatorOptions } from 'deepl-node';
 import { Collection } from 'discord.js';
 import GuildKey, { IGuildKey } from '../db/models/GuildKey';
 import { loadLanguages } from '../translation/languages';
-import { errorDebug } from '../utils/logger';
-import { decrypt, encrypt } from '../utils/crypt';
+import { errorDebug } from '../utilities/logger';
+import { decrypt, encrypt } from '../utilities/crypt';
 
 export const translatorOptions: TranslatorOptions = {
   appInfo: {

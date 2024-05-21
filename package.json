@@ -8,8 +8,8 @@
   "scripts": {
     "start": "ts-node --files app.ts",
     "dev": "nodemon --files",
-    "deploy-commands": "ts-node --files .\\deploy-commands.ts",
-    "create-cipher-secret": "ts-node .\\create-cipher-secret.ts"
+    "deploy-commands": "ts-node --files .\\utilities\\deploy-commands.ts",
+    "create-cipher-secret": "ts-node .\\utilities\\create-cipher-secret.ts"
   },
   "dependencies": {
     "debug": "^4.3.4",
