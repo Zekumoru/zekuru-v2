@@ -1,15 +1,5 @@
 import { EmbedBuilder } from 'discord.js';
 
-export const buildEmbed = (name: string, iconURL: string, content: string) => {
-  return new EmbedBuilder()
-    .setColor(0x0099ff)
-    .setAuthor({
-      name,
-      iconURL,
-    })
-    .setDescription(content);
-};
-
 const buildLongContentEmbeds = (content: string) => {
   // 2000 is the Discord character limit
   const splitted = content.match(/(\r\n|\r|\n|.){1,4096}/g);

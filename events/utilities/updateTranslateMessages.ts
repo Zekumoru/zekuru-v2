@@ -2,11 +2,9 @@ import { ChannelType, Message, PartialMessage } from 'discord.js';
 import MessageLink from '../../db/models/MessageLink';
 import cache from '../../cache';
 import getMessagesFromMessageLink from '../../commands/utilities/getMessagesFromMessageLink';
-import {
-  DISCORD_MESSAGE_CHARS_LIMIT,
-  translateContent,
-} from '../messageCreateTranslate';
 import { errorDebug } from '../../utils/logger';
+import translateContent from '../translation/translateContent';
+import { DISCORD_MESSAGE_CHARS_LIMIT } from '../translation/limits';
 
 const updateTranslateMessages = async (
   newMessage: Message<boolean> | PartialMessage
