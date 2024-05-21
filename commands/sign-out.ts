@@ -7,7 +7,7 @@ import {
   SlashCommandBuilder,
 } from 'discord.js';
 import { createCommand } from '../types/DiscordCommand';
-import translatorCache from '../cache/translatorCache';
+import cache from '../cache';
 
 const data = new SlashCommandBuilder()
   .setName('sign-out')
@@ -25,7 +25,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   }
 
   // if not signed in
-  const translator = await translatorCache.get(interaction.guildId);
+  const translator = await cache.translator.get(interaction.guildId);
   if (translator == null) {
     await interaction.reply({
       content: `You are already signed out.`,
@@ -61,7 +61,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
     });
 
     if (confirmation.customId === 'confirm') {
-      await translatorCache.unset(interaction.guildId);
+      await cache.translator.unset(interaction.guildId);
       await confirmation.update({
         content: `You have successfully signed out the bot.`,
         components: [],

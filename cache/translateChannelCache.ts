@@ -3,9 +3,9 @@ import type { ITranslateChannel } from '../db/models/TranslateChannel';
 import TranslateChannel from '../db/models/TranslateChannel';
 import { SourceLanguageCode, TargetLanguageCode } from 'deepl-node';
 
-const channels = new Collection<string, ITranslateChannel>();
+const cacheTrChannels = new Collection<string, ITranslateChannel>();
 
-const getChannel = async (
+const fetchOrCreateTrChannel = async (
   channelId: string,
   guildId: string,
   sourceLang: string,
@@ -32,7 +32,12 @@ const set = async (
   targetLang: string
 ) => {
   // update in db
-  const channel = await getChannel(channelId, guildId, sourceLang, targetLang);
+  const channel = await fetchOrCreateTrChannel(
+    channelId,
+    guildId,
+    sourceLang,
+    targetLang
+  );
   channel.overwrite({
     id: channelId,
     guildId: channel.guildId,
@@ -43,7 +48,7 @@ const set = async (
   await channel.save();
 
   // update cache
-  channels.set(channelId, {
+  cacheTrChannels.set(channelId, {
     _id: channel._id,
     id: channel.id,
     guildId: channel.guildId,
@@ -55,7 +60,7 @@ const set = async (
 
 const get = async (channelId: string) => {
   // get from cache
-  const channelCache = channels.get(channelId);
+  const channelCache = cacheTrChannels.get(channelId);
   if (channelCache) return channelCache;
 
   // if not exists, fetch from db and set to cache
@@ -63,7 +68,7 @@ const get = async (channelId: string) => {
   if (!channel) return null;
 
   // update cache
-  channels.set(channelId, {
+  cacheTrChannels.set(channelId, {
     _id: channel._id,
     id: channel.id,
     guildId: channel.guildId,
@@ -71,7 +76,7 @@ const get = async (channelId: string) => {
     sourceLang: channel.sourceLang as SourceLanguageCode,
     createdAt: channel.createdAt,
   });
-  return channels.get(channelId)!;
+  return cacheTrChannels.get(channelId)!;
 };
 
 const unset = async (channelId: string) => {
@@ -82,7 +87,7 @@ const unset = async (channelId: string) => {
   await TranslateChannel.deleteOne({ id: channelId });
 
   // remove from cache
-  channels.delete(channelId);
+  cacheTrChannels.delete(channelId);
 };
 
 export default { set, unset, get };

@@ -4,8 +4,8 @@ import {
   SlashCommandBuilder,
 } from 'discord.js';
 import { createCommand } from '../types/DiscordCommand';
-import channelLinks from '../cache/channelLinks';
 import { unlinkChannel } from './unlink';
+import cache from '../cache';
 
 const data = new SlashCommandBuilder()
   .setName('unlink-channel')
@@ -23,7 +23,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   const channelId =
     interaction.options.getChannel('channel')?.id ?? interaction.channelId;
 
-  const channelLink = await channelLinks.get(channelId);
+  const channelLink = await cache.channelLink.get(channelId);
 
   if (channelLink == null) {
     await interaction.reply({
@@ -33,7 +33,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   }
 
   for (const { id } of channelLink.links) {
-    const otherChannelLink = await channelLinks.get(id);
+    const otherChannelLink = await cache.channelLink.get(id);
     if (otherChannelLink) {
       // no need to delete the channelLink here, the
       // unlinkChannel() will already handle it.

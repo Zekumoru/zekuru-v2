@@ -4,7 +4,7 @@ import {
   SlashCommandBuilder,
 } from 'discord.js';
 import { createCommand } from '../types/DiscordCommand';
-import translateChannels from '../cache/translateChannels';
+import cache from '../cache';
 
 const data = new SlashCommandBuilder()
   .setName('unset')
@@ -23,7 +23,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   const channelId =
     interaction.options.getChannel('channel')?.id ?? interaction.channelId;
 
-  const trChannel = await translateChannels.get(channelId);
+  const trChannel = await cache.translateChannel.get(channelId);
   if (!trChannel) {
     await interaction.reply({
       content: `<#${channelId}> is not set to any language.`,
@@ -31,7 +31,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
     return;
   }
 
-  await translateChannels.unset(channelId);
+  await cache.translateChannel.unset(channelId);
   await interaction.reply({
     content: `<#${channelId}> has been successfully unset.`,
   });

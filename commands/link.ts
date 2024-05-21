@@ -4,10 +4,9 @@ import {
   SlashCommandBuilder,
 } from 'discord.js';
 import { createCommand } from '../types/DiscordCommand';
-import translateChannels from '../cache/translateChannels';
-import channelLinks from '../cache/channelLinks';
 import { IChannelLink } from '../db/models/ChannelLink';
 import { ITranslateChannel } from '../db/models/TranslateChannel';
+import cache from '../cache';
 
 export const CHANNEL_LINK_LIMIT = isNaN(Number(process.env.CHANNEL_LINK_LIMIT))
   ? 5
@@ -63,8 +62,8 @@ const data = new SlashCommandBuilder()
 
 export const getChLink = async (channelId: string, guildId: string) => {
   return (
-    (await channelLinks.get(channelId)) ??
-    (await channelLinks.create(channelId, guildId))
+    (await cache.channelLink.get(channelId)) ??
+    (await cache.channelLink.create(channelId, guildId))
   );
 };
 
@@ -75,7 +74,7 @@ export const linkChannel = async (
 ) => {
   if (channelLink.links.find((link) => link.id === channelId) === undefined) {
     channelLink.links.push(translateChannel);
-    await channelLinks.update(channelLink);
+    await cache.channelLink.update(channelLink);
     return true;
   }
   return false;
@@ -119,7 +118,7 @@ export const linkChannels = async (
   allChLinkMap.forEach(({ chLink }) => {
     promises.push(
       (async () => {
-        await channelLinks.update(chLink);
+        await cache.channelLink.update(chLink);
       })()
     );
   });
@@ -140,7 +139,7 @@ export const buildAllChannelsLinkMap = async (channelLinks: IChannelLink[]) => {
       if (allChLinkMap.get(link.id)) continue;
 
       const [linkTrChannel, linkChLink] = await Promise.all([
-        translateChannels.get(link.id),
+        cache.translateChannel.get(link.id),
         getChLink(link.id, chLink.guildId),
       ]);
       jobQueue.push(linkChLink);
@@ -185,8 +184,8 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
 
   // check if these channels have languages associated with them
   const [sourceTrChannel, targetTrChannel] = await Promise.all([
-    translateChannels.get(sourceChannelId),
-    translateChannels.get(targetChannelId),
+    cache.translateChannel.get(sourceChannelId),
+    cache.translateChannel.get(targetChannelId),
   ]);
 
   let errorMessage = '';

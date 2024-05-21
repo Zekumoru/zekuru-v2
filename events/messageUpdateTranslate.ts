@@ -1,13 +1,12 @@
 import { ChannelType, Events, Message, PartialMessage } from 'discord.js';
-import webhookCache from '../cache/webhookCache';
 import MessageLink from '../db/models/MessageLink';
 import getMessagesFromMessageLink from '../commands/utilities/getMessagesFromMessageLink';
 import {
   DISCORD_MESSAGE_CHARS_LIMIT,
   translateContent,
 } from './messageCreateTranslate';
-import translateChannels from '../cache/translateChannels';
 import { errorDebug } from '../utils/logger';
+import cache from '../cache';
 
 export const updateTranslateMessages = async (
   newMessage: Message<boolean> | PartialMessage
@@ -19,7 +18,9 @@ export const updateTranslateMessages = async (
   if (!link) return;
 
   // check if the edited message's translate channel exists
-  const sourceTrChannel = await translateChannels.get(newMessage.channelId);
+  const sourceTrChannel = await cache.translateChannel.get(
+    newMessage.channelId
+  );
   if (!sourceTrChannel) return;
 
   // get other channels' linked messages
@@ -37,7 +38,9 @@ export const updateTranslateMessages = async (
       if (message.channel.type !== ChannelType.GuildText) return;
 
       // translate message
-      const targetTrChannel = await translateChannels.get(message.channelId);
+      const targetTrChannel = await cache.translateChannel.get(
+        message.channelId
+      );
       if (!targetTrChannel) return;
 
       try {
@@ -49,7 +52,7 @@ export const updateTranslateMessages = async (
         );
 
         // edit old message
-        const webhook = await webhookCache.get(message.channel);
+        const webhook = await cache.webhook.get(message.channel);
         await webhook.editMessage(message.id, {
           content: translatedData?.content,
         });

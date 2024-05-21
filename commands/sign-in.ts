@@ -4,9 +4,9 @@ import {
   SlashCommandBuilder,
 } from 'discord.js';
 import { createCommand } from '../types/DiscordCommand';
-import translatorCache from '../cache/translatorCache';
 import { AuthorizationError } from 'deepl-node';
 import { errorDebug } from '../utils/logger';
+import cache from '../cache';
 
 const data = new SlashCommandBuilder()
   .setName('sign-in')
@@ -28,7 +28,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   }
 
   // if already signed in
-  if (await translatorCache.get(interaction.guildId)) {
+  if (await cache.translator.get(interaction.guildId)) {
     await interaction.reply({
       content: `You are already signed in. Please sign out using \`/sign-out\` command if you wish to sign in with another API key.`,
     });
@@ -45,7 +45,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   }
 
   try {
-    await translatorCache.set(interaction.guildId, apiKey);
+    await cache.translator.set(interaction.guildId, apiKey);
   } catch (error) {
     if (error instanceof AuthorizationError) {
       await interaction.reply({

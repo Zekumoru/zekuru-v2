@@ -1,11 +1,9 @@
 import { Client, Events } from 'discord.js';
 import { DiscordEvent } from '../types/DiscordEvent';
-import { appDebug, errorDebug } from '../utils/logger';
+import { appDebug } from '../utils/logger';
 import { sourceLanguages } from '../translation/languages';
 import GuildKey from '../db/models/GuildKey';
-import { decrypt } from '../utils/crypt';
-import { Translator } from 'deepl-node';
-import translatorCache from '../cache/translatorCache';
+import cache from '../cache';
 
 export default {
   name: Events.ClientReady,
@@ -19,7 +17,7 @@ export default {
       if (!guildKey) break;
 
       // fetching a translator already loads the languages
-      const translator = await translatorCache.get(guildKey.id);
+      const translator = await cache.translator.get(guildKey.id);
       if (translator) break;
 
       // if translator is undefined, it means the key is invalid

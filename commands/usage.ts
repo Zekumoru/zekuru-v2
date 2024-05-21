@@ -1,6 +1,6 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
 import { createCommand } from '../types/DiscordCommand';
-import translatorCache from '../cache/translatorCache';
+import cache from '../cache';
 
 const data = new SlashCommandBuilder()
   .setName('usage')
@@ -10,7 +10,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   // check if this bot has a translator
   if (!interaction.guildId) return;
 
-  const translator = await translatorCache.get(interaction.guildId);
+  const translator = await cache.translator.get(interaction.guildId);
   if (translator == null) {
     interaction.reply({
       content: `Cannot get usage, no api key found. Please sign in using the \`sign-in\` command.`,

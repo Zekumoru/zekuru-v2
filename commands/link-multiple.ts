@@ -5,7 +5,7 @@ import {
   SlashCommandBuilder,
 } from 'discord.js';
 import { createCommand } from '../types/DiscordCommand';
-import translateChannels from '../cache/translateChannels';
+import cache from '../cache';
 import {
   CHANNEL_LINK_LIMIT,
   IAllChLinkMapValue,
@@ -69,7 +69,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
       if (chProcessMap.get(channelId)) return; // ignore if already added
       if (nonTrChannelIdsMap.get(channelId)) return; // ignore if already added
 
-      const trChannel = await translateChannels.get(channelId);
+      const trChannel = await cache.translateChannel.get(channelId);
       if (!trChannel) {
         nonTrChannelIdsMap.set(channelId, true);
         return;

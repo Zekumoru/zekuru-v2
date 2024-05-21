@@ -7,9 +7,6 @@ import {
 } from 'discord.js';
 import { DiscordEvent } from '../types/DiscordEvent';
 import tagTranscoder from '../utils/tagTranscoder';
-import translateChannels from '../cache/translateChannels';
-import channelLinks from '../cache/channelLinks';
-import webhookCache from '../cache/webhookCache';
 import {
   AuthorizationError,
   SourceLanguageCode,
@@ -21,8 +18,8 @@ import MessageLink, {
   IMessageLink,
   IMessageLinkItem,
 } from '../db/models/MessageLink';
-import translatorCache from '../cache/translatorCache';
 import { buildEmbed } from '../commands/utilities/buildLongContentEmbeds';
+import cache from '../cache';
 
 export const DISCORD_MESSAGE_CHARS_LIMIT = 2000;
 export const DISCORD_ATTACHMENT_SIZE_LIMIT = 25 * 1024 * 1024; // 25 MB
@@ -43,7 +40,7 @@ export const translateContent = async (
 
   const [messageToTranslate, tagTable] = tagTranscoder.encode(toTranslate);
 
-  const translator = await translatorCache.get(guildId);
+  const translator = await cache.translator.get(guildId);
   if (!translator) throw new AuthorizationError('Invalid api key');
 
   const translatedContentToDecode = (
@@ -185,9 +182,9 @@ const translateChannel = async (
   if (!channel) return;
   if (channel.type !== ChannelType.GuildText) return;
 
-  const webhook = await webhookCache.get(channel);
+  const webhook = await cache.webhook.get(channel);
 
-  const targetTrChannel = await translateChannels.get(channel.id);
+  const targetTrChannel = await cache.translateChannel.get(channel.id);
   if (!targetTrChannel) return;
 
   const username = message.member?.displayName ?? message.author.displayName;
@@ -326,12 +323,12 @@ export default {
       if (webhook.owner?.id === message.client.user.id) return;
     }
 
-    const sourceTrChannel = await translateChannels.get(message.channelId);
-    const link = await channelLinks.get(message.channelId);
+    const sourceTrChannel = await cache.translateChannel.get(message.channelId);
+    const link = await cache.channelLink.get(message.channelId);
     if (!sourceTrChannel || !link) return;
 
     // check if this bot has a translator
-    if ((await translatorCache.get(message.guildId)) == null) {
+    if ((await cache.translator.get(message.guildId)) == null) {
       if (message.author.id === message.client.user.id) return; // ignore this bot
       message.reply({
         content: `Cannot translate, no api key found. Please sign in using the \`/sign-in\` command.`,

@@ -4,8 +4,8 @@ import {
   SlashCommandBuilder,
 } from 'discord.js';
 import { createCommand } from '../types/DiscordCommand';
-import channelLinks from '../cache/channelLinks';
 import { IChannelLink } from '../db/models/ChannelLink';
+import cache from '../cache';
 
 const UnlinkOptions = {
   SOURCE_CHANNEL: 'source-channel',
@@ -42,9 +42,9 @@ export const unlinkChannel = async (
     if (channelLink.links.length === 0) {
       // remove channelLink since it doesn't have any links anymore
       // because it cannot be called "channelLink" with no links
-      await channelLinks.delete(channelLink.id);
+      await cache.channelLink.delete(channelLink.id);
     } else {
-      await channelLinks.update(channelLink);
+      await cache.channelLink.update(channelLink);
     }
 
     return true;
@@ -68,8 +68,8 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   }
 
   const [sourceChLink, targetChLink] = await Promise.all([
-    channelLinks.get(sourceChannelId),
-    channelLinks.get(targetChannelId),
+    cache.channelLink.get(sourceChannelId),
+    cache.channelLink.get(targetChannelId),
   ]);
 
   let errorMessage = '';

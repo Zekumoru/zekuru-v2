@@ -1,7 +1,5 @@
 import {
-  ChannelType,
   Events,
-  Message,
   MessageReaction,
   PartialMessageReaction,
   PartialUser,
@@ -10,8 +8,8 @@ import {
 import { DiscordEvent } from '../types/DiscordEvent';
 import { errorDebug } from '../utils/logger';
 import MessageLink, { IMessageLink } from '../db/models/MessageLink';
-import channelLinks from '../cache/channelLinks';
 import getMessagesFromMessageLink from '../commands/utilities/getMessagesFromMessageLink';
+import cache from '../cache';
 
 export const getMessagesLink = async (
   reaction: MessageReaction | PartialMessageReaction
@@ -19,7 +17,7 @@ export const getMessagesLink = async (
   // ignore if it is the bot
   if (reaction.me) return [];
   // ignore channels that aren't set with any language
-  if (!(await channelLinks.get(reaction.message.channelId))) return [];
+  if (!(await cache.channelLink.get(reaction.message.channelId))) return [];
 
   if (reaction.partial) {
     try {
