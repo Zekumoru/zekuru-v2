@@ -9,7 +9,7 @@ import {
 } from 'discord.js';
 import { DiscordEvent } from '../types/DiscordEvent';
 import { errorDebug } from '../utils/logger';
-import MessageLink, { IMessageLink } from '../models/MessageLink';
+import MessageLink, { IMessageLink } from '../db/models/MessageLink';
 import channelLinks from '../cache/channelLinks';
 import getMessagesFromMessageLink from '../commands/utilities/getMessagesFromMessageLink';
 

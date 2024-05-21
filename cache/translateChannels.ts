@@ -1,6 +1,6 @@
 import { Collection } from 'discord.js';
-import type { ITranslateChannel } from '../models/TranslateChannel';
-import TranslateChannel from '../models/TranslateChannel';
+import type { ITranslateChannel } from '../db/models/TranslateChannel';
+import TranslateChannel from '../db/models/TranslateChannel';
 import { SourceLanguageCode, TargetLanguageCode } from 'deepl-node';
 
 const channels = new Collection<string, ITranslateChannel>();

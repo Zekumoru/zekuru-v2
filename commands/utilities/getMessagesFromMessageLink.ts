@@ -1,5 +1,5 @@
 import { ChannelType, Guild, Message } from 'discord.js';
-import { IMessageLink } from '../../models/MessageLink';
+import { IMessageLink } from '../../db/models/MessageLink';
 
 const getMessagesFromMessageLink = async (
   messageLink: IMessageLink,

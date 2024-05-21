@@ -16,11 +16,11 @@ import {
   TargetLanguageCode,
 } from 'deepl-node';
 import { errorDebug } from '../utils/logger';
-import { ITranslateChannel } from '../models/TranslateChannel';
+import { ITranslateChannel } from '../db/models/TranslateChannel';
 import MessageLink, {
   IMessageLink,
   IMessageLinkItem,
-} from '../models/MessageLink';
+} from '../db/models/MessageLink';
 import translatorCache from '../cache/translatorCache';
 import { buildEmbed } from '../commands/utilities/buildLongContentEmbeds';
 

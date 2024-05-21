@@ -2,7 +2,7 @@ import { Client, Events } from 'discord.js';
 import { DiscordEvent } from '../types/DiscordEvent';
 import { appDebug, errorDebug } from '../utils/logger';
 import { sourceLanguages } from '../translation/languages';
-import GuildKey from '../models/GuildKey';
+import GuildKey from '../db/models/GuildKey';
 import { decrypt } from '../utils/crypt';
 import { Translator } from 'deepl-node';
 import translatorCache from '../cache/translatorCache';

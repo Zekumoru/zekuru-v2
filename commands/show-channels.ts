@@ -4,7 +4,7 @@ import {
   SlashCommandBuilder,
 } from 'discord.js';
 import { createCommand } from '../types/DiscordCommand';
-import TranslateChannel from '../models/TranslateChannel';
+import TranslateChannel from '../db/models/TranslateChannel';
 import channelLinks from '../cache/channelLinks';
 import { sourceLanguages } from '../translation/languages';
 import buildLongContentEmbeds from './utilities/buildLongContentEmbeds';

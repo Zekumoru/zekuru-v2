@@ -5,7 +5,7 @@ import {
 } from 'discord.js';
 import { createCommand } from '../types/DiscordCommand';
 import channelLinks from '../cache/channelLinks';
-import { IChannelLink } from '../models/ChannelLink';
+import { IChannelLink } from '../db/models/ChannelLink';
 
 const UnlinkOptions = {
   SOURCE_CHANNEL: 'source-channel',

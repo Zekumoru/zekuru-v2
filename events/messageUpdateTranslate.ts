@@ -1,6 +1,6 @@
 import { ChannelType, Events, Message, PartialMessage } from 'discord.js';
 import webhookCache from '../cache/webhookCache';
-import MessageLink from '../models/MessageLink';
+import MessageLink from '../db/models/MessageLink';
 import getMessagesFromMessageLink from '../commands/utilities/getMessagesFromMessageLink';
 import {
   DISCORD_MESSAGE_CHARS_LIMIT,

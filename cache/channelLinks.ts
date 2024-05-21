@@ -1,5 +1,5 @@
 import { Collection } from 'discord.js';
-import ChannelLink, { IChannelLink } from '../models/ChannelLink';
+import ChannelLink, { IChannelLink } from '../db/models/ChannelLink';
 
 const cacheLinks = new Collection<string, IChannelLink>();
 

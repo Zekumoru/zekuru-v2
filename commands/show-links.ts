@@ -6,8 +6,8 @@ import {
 import { createCommand } from '../types/DiscordCommand';
 import channelLinks from '../cache/channelLinks';
 import translateChannels from '../cache/translateChannels';
-import ChannelLink, { IChannelLink } from '../models/ChannelLink';
-import { ITranslateChannel } from '../models/TranslateChannel';
+import ChannelLink, { IChannelLink } from '../db/models/ChannelLink';
+import { ITranslateChannel } from '../db/models/TranslateChannel';
 import buildLongContentEmbeds from './utilities/buildLongContentEmbeds';
 
 const data = new SlashCommandBuilder()
