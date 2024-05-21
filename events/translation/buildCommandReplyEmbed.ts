@@ -12,7 +12,7 @@ const buildCommandReplyEmbed = async (
   if (!message.interaction) return;
   if (!message.guildId) return;
 
-  const content = `Used:`;
+  const content = `Used`;
   const translatedContent = await translateContent(
     content,
     message.guildId,
@@ -28,7 +28,7 @@ const buildCommandReplyEmbed = async (
     embed: buildEmbed(
       member?.nickname ?? message.author.displayName,
       member?.avatarURL({ size: 32 }) ?? author.displayAvatarURL({ size: 32 }),
-      `${translatedContent.content} \`/${message.interaction.commandName}\``
+      `${translatedContent.content}: \`/${message.interaction.commandName}\``
     ),
     message: message,
   };
