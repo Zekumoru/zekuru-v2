@@ -9,8 +9,8 @@ import {
 } from 'discord.js';
 import { createCommand } from '../types/DiscordCommand';
 import { sourceLanguages, targetLanguages } from '../translation/languages';
-import { updateTranslateMessages } from '../events/messageUpdateTranslate';
 import cache from '../cache';
+import updateTranslateMessages from '../events/utilities/updateTranslateMessages';
 
 const data = new SlashCommandBuilder()
   .setName('set')
