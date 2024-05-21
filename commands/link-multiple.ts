@@ -10,9 +10,9 @@ import {
   CHANNEL_LINK_LIMIT,
   IAllChLinkMapValue,
   buildAllChannelsLinkMap,
-  getChLink,
+  getOrCreateChLink,
   linkChannels,
-} from './link';
+} from './utilities/linking';
 
 const CHANNEL_ID_REGEX = /<#\d*>/g;
 
@@ -76,7 +76,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
       }
 
       if (!interaction.guildId) return;
-      const chLink = await getChLink(channelId, interaction.guildId);
+      const chLink = await getOrCreateChLink(channelId, interaction.guildId);
       chProcessMap.set(channelId, {
         trChannel,
         chLink,

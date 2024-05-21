@@ -4,8 +4,8 @@ import {
   SlashCommandBuilder,
 } from 'discord.js';
 import { createCommand } from '../types/DiscordCommand';
-import { unlinkChannel } from './unlink';
 import cache from '../cache';
+import { unlinkChannel } from './utilities/unlinking';
 
 const data = new SlashCommandBuilder()
   .setName('unlink-channel')
