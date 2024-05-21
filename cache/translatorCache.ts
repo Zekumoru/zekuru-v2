@@ -7,8 +7,8 @@ import { decrypt, encrypt } from '../utilities/crypt';
 
 export const translatorOptions: TranslatorOptions = {
   appInfo: {
-    appName: 'Zekuru-v2 Demo',
-    appVersion: '1.0.0',
+    appName: 'Zekuru-v2',
+    appVersion: '0.9.0',
   },
   minTimeout: 500, // 500 ms
   maxRetries: 10,
