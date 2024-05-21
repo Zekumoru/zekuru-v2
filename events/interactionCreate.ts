@@ -11,6 +11,10 @@ export default {
 
     if (!command) {
       errorDebug(`No command matching ${interaction.commandName} was found.`);
+      interaction.reply({
+        content: `Error: No command \`/${interaction.commandName}\` found.`,
+        ephemeral: true,
+      });
       return;
     }
 
