@@ -7,7 +7,7 @@ import {
 import fs from 'fs';
 import path from 'path';
 import { argv } from 'process';
-import { DiscordCommand } from '../types/DiscordCommand';
+import { DiscordCommand } from './types/DiscordCommand';
 
 // check whether to deploy globally or locally to guild development
 const isGlobal = argv.some(
