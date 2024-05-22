@@ -56,7 +56,7 @@ const translateChannel = async (
 
     // check if content only contains a single emoji, convert to link
     // emoji syntax: <a?:name:12345678901234567890>
-    const emojiTag = message.content.trim().match(/^<a?:.*:\d*>$/)?.[0];
+    const emojiTag = message.content.trim().match(/^<a?:[^<>]*:\d*>$/)?.[0];
 
     let translatedContent: string | undefined;
     if (emojiTag && reply === undefined) {
