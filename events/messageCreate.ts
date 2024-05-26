@@ -3,56 +3,88 @@ import { DiscordEvent } from '../types/DiscordEvent';
 import cache from '../cache';
 import buildLongContentEmbeds from '../commands/utilities/buildLongContentEmbeds';
 
-const outputMessage = (message: Message, indent?: number) => {
-  const username = message.author.username;
-  let output = indent && indent > 0 ? '  '.repeat(indent) : '';
+const buildContextContent = (message: Message, indent?: number) => {
+  let indentString = '';
+  if (indent && indent > 0) {
+    indentString = '  '.repeat(indent);
+  }
+
+  const username = message.member?.displayName ?? message.author.username;
+  const strBuilder: string[] = [];
+  strBuilder.push(indentString + username);
+  strBuilder.push(indentString + '"""');
 
   // message content exists
   if (message.content !== '') {
-    output += `[[message:${username}]]: ${message.content}`;
+    const tokens = message.content.split(/(\r\n|\n|\r)/g);
+    tokens.forEach((token) => strBuilder.push(indentString + token));
   }
   // check if sticker
-  else if (message.stickers.size) {
-    output += `[[sticker:${username}]]`;
+  if (message.stickers.size) {
+    strBuilder.push(indentString + '"""sticker"""');
   }
   // check if attachment
-  else if (message.attachments.size) {
-    output += `[[attachment:${username}]]`;
+  if (message.attachments.size) {
+    strBuilder.push(indentString + '"""attachment"""');
   }
   // check if embed
-  else if (message.embeds.length) {
-    output += `[[embed:${username}]]`;
-  }
-  // check if embed
-  else {
-    output += `[[generic:${username}]]`;
+  if (message.embeds.length) {
+    strBuilder.push(indentString + '"""embed"""');
   }
 
-  console.log(output);
+  strBuilder.push(indentString + '"""');
+  return strBuilder.join('\n');
 };
+
+interface IMessageContext {
+  message: Message;
+  replies: IMessageContext[];
+}
 
 const handleReplyChainHelper = async (
   message: Message,
   depth: number,
   count: number
-) => {
-  if (count > depth) return;
-  if (!message.reference?.messageId) return;
+): Promise<IMessageContext> => {
+  const contextMessage = {
+    message,
+    replies: [],
+  };
+  if (count > depth) return contextMessage;
+  if (!message.reference?.messageId) return contextMessage;
 
   const replyMessage = await message.channel.messages.fetch(
     message.reference.messageId
   );
 
+  if (!replyMessage) return contextMessage;
   // check reference id and the fetched message, this tells us if
   // the message isn't deleted (by the user)
-  if (replyMessage && message.reference.messageId === replyMessage.id) {
-    outputMessage(replyMessage, count);
-    await handleReplyChainHelper(replyMessage, depth, count + 1);
-  }
+  if (message.reference.messageId !== replyMessage.id) return contextMessage;
+
+  return {
+    message,
+    replies: [await handleReplyChainHelper(replyMessage, depth, count + 1)],
+  };
 };
 
 const handleReplyChain = async (message: Message, depth: number) => {
-  await handleReplyChainHelper(message, depth, 1);
+  return await handleReplyChainHelper(message, depth, 1);
+};
+
+const buildMessageContextsStrings = (
+  outStrings: string[],
+  msgContexts: IMessageContext[],
+  count = 0
+) => {
+  for (let i = msgContexts.length - 1; i >= 0; i--) {
+    const { message, replies } = msgContexts[i];
+    if (replies.length) {
+      buildMessageContextsStrings(outStrings, replies, count + 1);
+    }
+    outStrings.push(buildContextContent(message, count));
+    if (count === 0) outStrings.push('');
+  }
 };
 
 export default {
@@ -71,17 +103,20 @@ export default {
       limit: 10,
       before: '1244219469983780946',
     });
+    const msdContexts: IMessageContext[] = [];
     for (const [_id, message] of messages) {
-      outputMessage(message);
-      await handleReplyChain(message, 3);
+      msdContexts.push(await handleReplyChain(message, 3));
     }
+
+    const outStrings: string[] = [];
+    buildMessageContextsStrings(outStrings, msdContexts);
 
     const webhook = await cache.webhook.get(channel);
     webhook.send({
       username: message.member?.displayName ?? message.author.displayName,
       avatarURL:
         message.member?.avatarURL() ?? message.author.avatarURL() ?? undefined,
-      embeds: buildLongContentEmbeds(message.content),
+      embeds: buildLongContentEmbeds('```' + outStrings.join('\n') + '```'),
     });
   },
 } as DiscordEvent;
