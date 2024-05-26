@@ -10,7 +10,10 @@ const buildContextContent = (message: Message, indent: string) => {
   // message content exists
   if (message.content !== '') {
     const tokens = message.content.split(/(\r\n|\n|\r)/g);
-    tokens.forEach((token) => strBuilder.push(indent + token));
+    tokens.filter((t) => !/(\r\n|\n|\r)/g.test(t));
+    tokens.forEach((token) => {
+      strBuilder.push(indent + token);
+    });
   }
   // check if sticker
   if (message.stickers.size) {
