@@ -2,37 +2,29 @@ import { ChannelType, Events, Message } from 'discord.js';
 import { DiscordEvent } from '../types/DiscordEvent';
 import cache from '../cache';
 import buildLongContentEmbeds from '../commands/utilities/buildLongContentEmbeds';
+import { appDebug } from '../utilities/logger';
 
-const buildContextContent = (message: Message, indent?: number) => {
-  let indentString = '';
-  if (indent && indent > 0) {
-    indentString = '  '.repeat(indent);
-  }
-
-  const username = message.member?.displayName ?? message.author.username;
+const buildContextContent = (message: Message, indent: string) => {
   const strBuilder: string[] = [];
-  strBuilder.push(indentString + username);
-  strBuilder.push(indentString + '"""');
 
   // message content exists
   if (message.content !== '') {
     const tokens = message.content.split(/(\r\n|\n|\r)/g);
-    tokens.forEach((token) => strBuilder.push(indentString + token));
+    tokens.forEach((token) => strBuilder.push(indent + token));
   }
   // check if sticker
   if (message.stickers.size) {
-    strBuilder.push(indentString + '"""sticker"""');
+    strBuilder.push(indent + '"""sticker"""');
   }
   // check if attachment
   if (message.attachments.size) {
-    strBuilder.push(indentString + '"""attachment"""');
+    strBuilder.push(indent + '"""attachment"""');
   }
   // check if embed
   if (message.embeds.length) {
-    strBuilder.push(indentString + '"""embed"""');
+    strBuilder.push(indent + '"""embed"""');
   }
 
-  strBuilder.push(indentString + '"""');
   return strBuilder.join('\n');
 };
 
@@ -77,14 +69,36 @@ const buildMessageContextsStrings = (
   msgContexts: IMessageContext[],
   count = 0
 ) => {
+  const indent = '  '.repeat(count);
+  let prevUsername = '';
+
   for (let i = msgContexts.length - 1; i >= 0; i--) {
     const { message, replies } = msgContexts[i];
+    const username = message.member?.displayName ?? message.author.username;
+
     if (replies.length) {
+      if (prevUsername !== '') {
+        // close context message
+        outStrings.push(indent + '"""');
+        if (count === 0) outStrings.push('');
+        prevUsername = '';
+      }
+
       buildMessageContextsStrings(outStrings, replies, count + 1);
     }
-    outStrings.push(buildContextContent(message, count));
-    if (count === 0) outStrings.push('');
+
+    if (prevUsername !== username) {
+      outStrings.push(indent + username);
+      outStrings.push(indent + '"""');
+      prevUsername = username;
+    }
+
+    outStrings.push(buildContextContent(message, indent));
   }
+
+  // close context message
+  outStrings.push(indent + '"""');
+  if (count === 0) outStrings.push('');
 };
 
 export default {
@@ -99,6 +113,7 @@ export default {
 
     if (message.content === '') return;
 
+    appDebug('start');
     const messages = await message.channel.messages.fetch({
       limit: 10,
       before: '1244219469983780946',
@@ -110,6 +125,7 @@ export default {
 
     const outStrings: string[] = [];
     buildMessageContextsStrings(outStrings, msdContexts);
+    appDebug('end');
 
     const webhook = await cache.webhook.get(channel);
     webhook.send({
