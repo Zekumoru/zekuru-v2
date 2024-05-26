@@ -1,3 +1,6 @@
+# Sample data (since it might contain sensitive information)
+samples/
+
 # Logs
 logs
 *.log
