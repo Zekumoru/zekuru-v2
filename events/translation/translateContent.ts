@@ -1,17 +1,14 @@
-import {
-  AuthorizationError,
-  SourceLanguageCode,
-  TargetLanguageCode,
-} from 'deepl-node';
+import { AuthorizationError } from 'deepl-node';
 import { DISCORD_MESSAGE_CHARS_LIMIT } from './limits';
 import tagTranscoder from '../../utilities/tagTranscoder';
 import cache from '../../cache';
+import languagesMap from '../../translation/languages';
 
 const translateContent = async (
   content: string,
   guildId: string,
-  sourceLang: SourceLanguageCode,
-  targetLang: TargetLanguageCode
+  sourceLanguageCode: string,
+  targetLanguageCode: string
 ) => {
   if (content.trim() === '') return;
 
@@ -26,8 +23,36 @@ const translateContent = async (
   const translator = await cache.translator.get(guildId);
   if (!translator) throw new AuthorizationError('Invalid api key');
 
+  const sourceLanguage = languagesMap.find(
+    (lang) => lang.code === sourceLanguageCode
+  );
+  if (!sourceLanguage) {
+    throw new Error(
+      `Could not find language object for '${sourceLanguageCode}'.`
+    );
+  }
+  if (!sourceLanguage.deepl) {
+    throw new Error(`Deepl doesn't support '${sourceLanguage.name}' yet.`);
+  }
+
+  const targetLanguage = languagesMap.find(
+    (lang) => lang.code === targetLanguageCode
+  );
+  if (!targetLanguage) {
+    throw new Error(
+      `Could not find language object for '${targetLanguageCode}'.`
+    );
+  }
+  if (!targetLanguage.deepl) {
+    throw new Error(`Deepl doesn't support '${targetLanguage.name}' yet.`);
+  }
+
   const translatedContentToDecode = (
-    await translator.translateText(messageToTranslate, sourceLang, targetLang)
+    await translator.translateText(
+      messageToTranslate,
+      sourceLanguage.deepl.sourceCode,
+      targetLanguage.deepl.targetCode
+    )
   ).text;
 
   const translatedContent = tagTranscoder.decode(

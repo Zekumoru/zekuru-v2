@@ -1,11 +1,10 @@
-import * as deepl from 'deepl-node';
 import { Schema, Types, model } from 'mongoose';
+import { Language } from '../../translation/languages';
 
 interface ITranslateChannelSchema {
   id: string;
   guildId: string;
-  sourceLang: deepl.SourceLanguageCode;
-  targetLang: deepl.TargetLanguageCode;
+  languageCode: string;
   createdAt: Date;
 }
 
@@ -22,11 +21,7 @@ const TranslateChannelSchema = new Schema<ITranslateChannelSchema>({
     type: String,
     required: true,
   },
-  sourceLang: {
-    type: String,
-    required: true,
-  },
-  targetLang: {
+  languageCode: {
     type: String,
     required: true,
   },

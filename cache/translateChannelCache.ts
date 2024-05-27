@@ -8,8 +8,7 @@ const cacheTrChannels = new Collection<string, ITranslateChannel>();
 const fetchOrCreateTrChannel = async (
   channelId: string,
   guildId: string,
-  sourceLang: string,
-  targetLang: string
+  languageCode: string
 ) => {
   // fetch from db, if not exists, create new
   const channel = await TranslateChannel.findOne({ id: channelId });
@@ -18,8 +17,7 @@ const fetchOrCreateTrChannel = async (
   const newChannel = new TranslateChannel({
     id: channelId,
     guildId,
-    sourceLang,
-    targetLang,
+    languageCode,
   });
   await newChannel.save();
   return newChannel;
@@ -28,21 +26,18 @@ const fetchOrCreateTrChannel = async (
 const set = async (
   channelId: string,
   guildId: string,
-  sourceLang: string,
-  targetLang: string
+  languageCode: string
 ) => {
   // update in db
   const channel = await fetchOrCreateTrChannel(
     channelId,
     guildId,
-    sourceLang,
-    targetLang
+    languageCode
   );
   channel.overwrite({
     id: channelId,
     guildId: channel.guildId,
-    sourceLang,
-    targetLang,
+    languageCode,
     createdAt: channel.createdAt,
   });
   await channel.save();
@@ -52,8 +47,7 @@ const set = async (
     _id: channel._id,
     id: channel.id,
     guildId: channel.guildId,
-    targetLang: channel.targetLang as TargetLanguageCode,
-    sourceLang: channel.sourceLang as SourceLanguageCode,
+    languageCode: channel.languageCode,
     createdAt: channel.createdAt,
   });
 };
@@ -72,8 +66,7 @@ const get = async (channelId: string) => {
     _id: channel._id,
     id: channel.id,
     guildId: channel.guildId,
-    targetLang: channel.targetLang as TargetLanguageCode,
-    sourceLang: channel.sourceLang as SourceLanguageCode,
+    languageCode: channel.languageCode,
     createdAt: channel.createdAt,
   });
   return cacheTrChannels.get(channelId)!;

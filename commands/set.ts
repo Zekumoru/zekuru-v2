@@ -8,7 +8,7 @@ import {
   SlashCommandBuilder,
 } from 'discord.js';
 import { createCommand } from '../types/DiscordCommand';
-import { sourceLanguages, targetLanguages } from '../translation/languages';
+import languagesMap from '../translation/languages';
 import cache from '../cache';
 import updateTranslateMessages from '../events/utilities/updateTranslateMessages';
 
@@ -32,7 +32,7 @@ const data = new SlashCommandBuilder()
 
 const autocomplete = async (interaction: AutocompleteInteraction) => {
   const focusedValue = interaction.options.getFocused();
-  const choices = sourceLanguages.map((lang) => lang.name);
+  const choices = languagesMap.map((lang) => `${lang.name} [${lang.code}]`);
   const filtered = choices
     .filter((choice) =>
       choice.toLowerCase().startsWith(focusedValue.toLowerCase())
@@ -56,30 +56,20 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   const channelId =
     interaction.options.getChannel('channel')?.id ?? interaction.channelId;
 
-  const language = interaction.options.getString('language');
-  if (!language) {
+  const languageChosen = interaction.options.getString('language');
+  if (!languageChosen) {
     await interaction.reply({
       content: `Please specify a language.`,
     });
     return;
   }
 
-  const sourceLang = sourceLanguages.find((lang) =>
-    lang.name.includes(language)
+  const languageCode = languagesMap.find(
+    (lang) => `${lang.name} [${lang.code}]` === languageChosen
   )?.code;
-  if (!sourceLang) {
+  if (!languageCode) {
     await interaction.reply({
-      content: `Invalid language '${language}'.`,
-    });
-    return;
-  }
-
-  const targetLang = targetLanguages.find((lang) =>
-    lang.name.includes(language)
-  )?.code;
-  if (!targetLang) {
-    await interaction.reply({
-      content: `Error! Target language is missing. Please contact the developer.`,
+      content: `Invalid target language \`${languageChosen}\`.`,
     });
     return;
   }
@@ -88,13 +78,13 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
 
   if (trChannel) {
     const oldLanguage =
-      sourceLanguages.find((lang) => lang.code === trChannel.sourceLang)
-        ?.name ?? trChannel.sourceLang;
+      languagesMap.get(languageChosen)?.name ??
+      languagesMap.find((lang) => lang.code === trChannel.languageCode)?.name;
 
     // if already set with the given language
-    if (oldLanguage === language) {
+    if (oldLanguage === languageChosen) {
       await interaction.reply({
-        content: `<#${channelId}> is already set to \`${language}\`!`,
+        content: `<#${channelId}> is already set to \`${languageChosen}\`!`,
       });
       return;
     }
@@ -116,7 +106,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
     );
 
     const response = await interaction.reply({
-      content: `<#${channelId}> is already set to \`${oldLanguage}\`. Do you want to change it to \`${language}\`?`,
+      content: `<#${channelId}> is already set to \`${oldLanguage}\`. Do you want to change it to \`${languageChosen}\`?`,
       components: [row],
     });
 
@@ -127,14 +117,9 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
       });
 
       if (confirmation.customId === 'confirm') {
-        await cache.translateChannel.set(
-          channelId,
-          guildId,
-          sourceLang,
-          targetLang
-        );
+        await cache.translateChannel.set(channelId, guildId, languageCode);
         await confirmation.update({
-          content: `<#${channelId}> has been changed to \`${language}\`.`,
+          content: `<#${channelId}> has been changed to \`${languageChosen}\`.`,
           components: [],
         });
       } else if (confirmation.customId === 'cancel') {
@@ -160,9 +145,9 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   }
 
   // set channel's language for the first time
-  await cache.translateChannel.set(channelId, guildId, sourceLang, targetLang);
+  await cache.translateChannel.set(channelId, guildId, languageCode);
   await interaction.reply({
-    content: `<#${channelId}> has been set to \`${language}\`.`,
+    content: `<#${channelId}> has been set to \`${languageChosen}\`.`,
   });
 };
 

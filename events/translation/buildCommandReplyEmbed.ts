@@ -1,12 +1,11 @@
 import { Message, MessageType } from 'discord.js';
 import buildEmbed from '../../commands/utilities/buildEmbed';
-import { SourceLanguageCode, TargetLanguageCode } from 'deepl-node';
 import translateContent from './translateContent';
 
 const buildCommandReplyEmbed = async (
   message: Message,
-  sourceLang: SourceLanguageCode,
-  targetLang: TargetLanguageCode
+  sourceLanguageCode: string,
+  targetLanguageCode: string
 ) => {
   if (message.type !== MessageType.ChatInputCommand) return;
   if (!message.interaction) return;
@@ -16,8 +15,8 @@ const buildCommandReplyEmbed = async (
   const translatedContent = await translateContent(
     content,
     message.guildId,
-    sourceLang,
-    targetLang
+    sourceLanguageCode,
+    targetLanguageCode
   );
   if (!translatedContent) return;
 

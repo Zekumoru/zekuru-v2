@@ -1,16 +1,16 @@
 import { Client, Events } from 'discord.js';
 import { DiscordEvent } from '../types/DiscordEvent';
 import { appDebug } from '../utilities/logger';
-import { sourceLanguages } from '../translation/languages';
 import GuildKey from '../db/models/GuildKey';
 import cache from '../cache';
+import { deeplStatus } from '../translation/languages';
 
 export default {
   name: Events.ClientReady,
   once: true,
   execute: async (client: Client<true>) => {
     // try to load languages
-    while (sourceLanguages.length === 0) {
+    while (!deeplStatus.isLanguagesInitialized) {
       // load languages by selecting a random key
       let guildKey = await GuildKey.findOne({});
       // if no more keys found, break out the loop

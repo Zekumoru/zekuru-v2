@@ -27,10 +27,10 @@ const showLinksString = (
 ) => {
   const strBuilder: string[] = [];
   chLink.links.forEach((link) =>
-    strBuilder.push(`\n- <#${link.id}> **(${link.sourceLang})**`)
+    strBuilder.push(`\n- <#${link.id}> **(${link.languageCode})**`)
   );
 
-  return `<#${chLink.id}> **(${trChannel.sourceLang})** is linked to ${
+  return `<#${chLink.id}> **(${trChannel.languageCode})** is linked to ${
     chLink.links.length
   } channels: ${strBuilder.join('')}`;
 };

@@ -4,8 +4,6 @@ import {
   SlashCommandBuilder,
 } from 'discord.js';
 import { createCommand } from '../types/DiscordCommand';
-import { IChannelLink } from '../db/models/ChannelLink';
-import { ITranslateChannel } from '../db/models/TranslateChannel';
 import cache from '../cache';
 import {
   CHANNEL_LINK_LIMIT,
@@ -127,7 +125,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   // don't link if reached linking limit
   if (allChLinkMap.size >= CHANNEL_LINK_LIMIT) {
     await interaction.reply({
-      content: `<#${sourceChannelId}> **(${sourceTrChannel.sourceLang})** and <#${targetChannelId}> **(${targetTrChannel.sourceLang})** are **not linked** because you already reached the linking limit of ${CHANNEL_LINK_LIMIT}!`,
+      content: `<#${sourceChannelId}> **(${sourceTrChannel.languageCode})** and <#${targetChannelId}> **(${targetTrChannel.languageCode})** are **not linked** because you already reached the linking limit of ${CHANNEL_LINK_LIMIT}!`,
     });
     return;
   }
@@ -139,8 +137,8 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   if (mode === LinkOptions.mode.UNIDIRECTIONAL) {
     await interaction.reply({
       content: linked
-        ? `<#${sourceChannelId}> **(${sourceTrChannel.sourceLang})** is now linked **unidirectionally** to <#${targetChannelId}> **(${targetTrChannel.sourceLang})**!`
-        : `<#${sourceChannelId}> **(${sourceTrChannel.sourceLang})** is already linked with <#${targetChannelId}> **(${targetTrChannel.sourceLang})**!`,
+        ? `<#${sourceChannelId}> **(${sourceTrChannel.languageCode})** is now linked **unidirectionally** to <#${targetChannelId}> **(${targetTrChannel.languageCode})**!`
+        : `<#${sourceChannelId}> **(${sourceTrChannel.languageCode})** is already linked with <#${targetChannelId}> **(${targetTrChannel.languageCode})**!`,
     });
     return;
   }
@@ -152,8 +150,8 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   if (mode === LinkOptions.mode.BIDIRECTIONAL) {
     await interaction.reply({
       content: linked
-        ? `<#${sourceChannelId}> **(${sourceTrChannel.sourceLang})** and <#${targetChannelId}> **(${targetTrChannel.sourceLang})** are now linked!`
-        : `<#${sourceChannelId}> **(${sourceTrChannel.sourceLang})** and <#${targetChannelId}> **(${targetTrChannel.sourceLang})** are already linked!`,
+        ? `<#${sourceChannelId}> **(${sourceTrChannel.languageCode})** and <#${targetChannelId}> **(${targetTrChannel.languageCode})** are now linked!`
+        : `<#${sourceChannelId}> **(${sourceTrChannel.languageCode})** and <#${targetChannelId}> **(${targetTrChannel.languageCode})** are already linked!`,
     });
     return;
   }
@@ -175,8 +173,8 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
 
   await interaction.reply({
     content: linked
-      ? `<#${sourceChannelId}> **(${sourceTrChannel.sourceLang})** and <#${targetChannelId}> **(${targetTrChannel.sourceLang})** are now linked **recursively**!`
-      : `<#${sourceChannelId}> **(${sourceTrChannel.sourceLang})** and <#${targetChannelId}> **(${targetTrChannel.sourceLang})** are already linked **recursively**!`,
+      ? `<#${sourceChannelId}> **(${sourceTrChannel.languageCode})** and <#${targetChannelId}> **(${targetTrChannel.languageCode})** are now linked **recursively**!`
+      : `<#${sourceChannelId}> **(${sourceTrChannel.languageCode})** and <#${targetChannelId}> **(${targetTrChannel.languageCode})** are already linked **recursively**!`,
   });
 };
 

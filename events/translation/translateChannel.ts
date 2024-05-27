@@ -33,8 +33,8 @@ const translateChannel = async (
       (await buildReplyEmbed(message, channel)) ??
       (await buildCommandReplyEmbed(
         message,
-        sourceTrChannel.sourceLang,
-        targetTrChannel.targetLang
+        sourceTrChannel.languageCode,
+        targetTrChannel.languageCode
       ));
     const replyAuthorId = !reply?.message.author.bot
       ? reply?.message.author.id
@@ -76,8 +76,8 @@ const translateChannel = async (
       const translatedData = await translateContent(
         message.content,
         message.guildId!,
-        sourceTrChannel.sourceLang,
-        targetTrChannel.targetLang
+        sourceTrChannel.languageCode,
+        targetTrChannel.languageCode
       );
       translatedContent = translatedData?.content;
 

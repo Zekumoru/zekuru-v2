@@ -45,8 +45,8 @@ const updateTranslateMessages = async (
         const translatedData = await translateContent(
           newMessage.content!,
           newMessage.guildId!,
-          sourceTrChannel.sourceLang,
-          targetTrChannel.targetLang
+          sourceTrChannel.languageCode,
+          targetTrChannel.languageCode
         );
 
         // edit old message

@@ -1,40 +1,71 @@
+import { appDebug, errorDebug } from '../utilities/logger';
 import * as deepl from 'deepl-node';
-import { appDebug } from '../utilities/logger';
+import gptLanguages from './gpt-4o-2024-05-13-supported-languages.json';
+import { Collection } from 'discord.js';
 
-export const targetLanguages: deepl.Language[] = [];
-const loadTargetLanguages = async (translator: deepl.Translator) => {
-  targetLanguages.push(
-    ...(await translator.getTargetLanguages()).filter(
-      (lang) =>
-        // push languages without parenthesis like English (American)
-        !/\(.*\)/.test(lang.name) ||
-        // push languages that are American and European
-        lang.name.includes('American') ||
-        lang.name.includes('European') ||
-        lang.name.includes('simplified')
-    )
-  );
+export interface Language {
+  name: string;
+  code: string;
+  deepl?: {
+    sourceCode: deepl.SourceLanguageCode;
+    targetCode: deepl.TargetLanguageCode;
+  };
+}
 
-  appDebug('Target languages loaded.');
+const languagesMap = new Collection<string, Language>();
+gptLanguages.forEach(({ language, code }) => {
+  languagesMap.set(language, {
+    name: language,
+    code,
+  });
+});
+
+export const deeplStatus = {
+  isLanguagesInitialized: false,
 };
-
-export const sourceLanguages: deepl.Language[] = [];
-const loadSourceLanguages = async (translator: deepl.Translator) => {
-  sourceLanguages.push(...(await translator.getSourceLanguages()));
-  appDebug('Source languages loaded.');
-};
-
-let alreadyCalled = false;
 export const loadLanguages = async (translator: deepl.Translator) => {
-  if (alreadyCalled) return;
-  alreadyCalled = true;
+  if (deeplStatus.isLanguagesInitialized) return;
 
-  const targetPromise =
-    targetLanguages.length === 0 ? loadTargetLanguages(translator) : undefined;
-  const sourcePromise =
-    sourceLanguages.length === 0 ? loadSourceLanguages(translator) : undefined;
+  const [sourceLanguages, targetLanguages] = await Promise.all([
+    translator.getSourceLanguages(),
+    translator.getTargetLanguages(),
+  ]);
 
-  // this already accounts if the languages are already loaded
-  // I'm referring to undefined promises so need for an if-statement
-  await Promise.all([targetPromise, sourcePromise]);
+  sourceLanguages.forEach((sourceLang) => {
+    // find its target counterpart
+    const targetLang = targetLanguages.find(
+      (targetLang) =>
+        targetLang.code === sourceLang.code ||
+        (sourceLang.code === 'en' && targetLang.code === 'en-US') ||
+        (sourceLang.code === 'pt' && targetLang.code === 'pt-PT')
+    );
+
+    // throw an error if a target language isn't found meaning there's
+    // source language but its target wasn't accounted for like 'en' and 'pt'
+    if (!targetLang) {
+      errorDebug(
+        `LanguageInitializer: DeepL's source language '${sourceLang.name}' is missing its target language. Check if they updated their languages list.`
+      );
+      return;
+    }
+
+    // add to languages but first check if source has corresponding to it
+    const language = languagesMap.get(sourceLang.name);
+    if (!language) {
+      errorDebug(
+        `LanguageInitializer: Cannot find the corresponding language for '${sourceLang.name}'.`
+      );
+      return;
+    }
+
+    language.deepl = {
+      sourceCode: sourceLang.code as unknown as deepl.SourceLanguageCode,
+      targetCode: targetLang.code as unknown as deepl.TargetLanguageCode,
+    };
+  });
+
+  deeplStatus.isLanguagesInitialized = true;
+  appDebug(`DeepL languages have been initialized!`);
 };
+
+export default languagesMap;
