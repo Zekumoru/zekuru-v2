@@ -51,6 +51,8 @@ const buildReplyEmbed = async (message: Message, replyChannel: TextChannel) => {
     }
   }
 
+  const authorId = message.author.bot ? message.author.id : undefined;
+
   return {
     embed: buildEmbed(
       replyMessage.member?.nickname ?? replyMessage.author.displayName,
@@ -59,6 +61,7 @@ const buildReplyEmbed = async (message: Message, replyChannel: TextChannel) => {
       replyContent
     ),
     message: replyMessage,
+    authorId,
   };
 };
 

@@ -7,7 +7,6 @@ import {
   TranslatorError,
 } from './error';
 import languagesMap, { Language } from './languages';
-import { errorDebug } from '../utilities/logger';
 
 export type TranslatorType = 'deepl' | 'openai';
 
@@ -17,10 +16,7 @@ export interface ITranslatorKey {
 }
 
 export interface ITranslationResult {
-  translated: string;
-  status: 'success' | 'not-supported';
-  sourceLanguage: Language;
-  targetLanguage: Language;
+  [key: string]: string | undefined;
 }
 
 export const deeplTranslatorOptions: deepl.TranslatorOptions = {
@@ -68,33 +64,14 @@ class Translator {
   async translate({
     translatorType,
     content,
-    contentLangCode,
-    targetLangCodes,
+    contentLanguage,
+    targetLanguages,
   }: {
     content: string;
-    contentLangCode: string;
-    targetLangCodes: string[];
+    contentLanguage: Language;
+    targetLanguages: Language[];
     translatorType: TranslatorType;
   }) {
-    const contentLanguage = languagesMap.find(
-      (lang) => lang.code === contentLangCode
-    );
-    if (!contentLanguage) {
-      throw new LanguageError(
-        `Source language with code '${contentLangCode}' not found.`
-      );
-    }
-
-    const targetLanguages = targetLangCodes.map((code) => {
-      const language = languagesMap.find((lang) => lang.code === code);
-      if (!language) {
-        throw new LanguageError(
-          `Target language with code '${contentLangCode}' not found.`
-        );
-      }
-      return language;
-    });
-
     switch (translatorType) {
       case 'deepl':
         return await this.#deeplTranslate(
@@ -129,16 +106,11 @@ class Translator {
     }
 
     // start translating each target language
-    const results = await Promise.all<ITranslationResult>(
+    const results: ITranslationResult = {};
+
+    await Promise.all(
       targetLanguages.map(async (lang) => {
-        if (!lang.deepl?.targetCode) {
-          return {
-            translated: '',
-            status: 'not-supported',
-            sourceLanguage: contentLanguage,
-            targetLanguage: lang,
-          };
-        }
+        if (!lang.deepl?.targetCode) return;
 
         const translatedResult = await deepl.translateText(
           content,
@@ -146,12 +118,7 @@ class Translator {
           lang.deepl.targetCode
         );
 
-        return {
-          translated: translatedResult.text,
-          status: 'success',
-          sourceLanguage: contentLanguage,
-          targetLanguage: lang,
-        };
+        results[lang.name] = translatedResult.text;
       })
     );
 
