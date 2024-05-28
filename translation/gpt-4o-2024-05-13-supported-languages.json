@@ -67,6 +67,7 @@
   { "language": "Mongolian", "code": "mn" },
   { "language": "Nepali", "code": "ne" },
   { "language": "Norwegian", "code": "no" },
+  { "language": "Norwegian (Bokmål)", "code": "nb" },
   { "language": "Odia", "code": "or" },
   { "language": "Pashto", "code": "ps" },
   { "language": "Persian", "code": "fa" },
