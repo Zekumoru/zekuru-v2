@@ -12,14 +12,15 @@ export interface Language {
   };
 }
 
-const languagesMap = new Collection<string, Language>();
+export const languagesMap = new Collection<string, Language>();
+export const codeLanguagesMap = new Collection<string, Language>();
 gptLanguages.forEach(({ language, code }) => {
   const item = {
     name: language,
     code,
   };
   languagesMap.set(language, item);
-  languagesMap.set(code, item);
+  codeLanguagesMap.set(code, item);
 });
 
 export const deeplStatus = {
@@ -53,7 +54,7 @@ export const loadLanguages = async (translator: deepl.Translator) => {
 
     // add to languages but first check if source has corresponding to it
     const language = languagesMap.get(sourceLang.name);
-    const codeLanguage = languagesMap.get(sourceLang.code);
+    const codeLanguage = codeLanguagesMap.get(sourceLang.code);
     if (!language || !codeLanguage) {
       errorDebug(
         `LanguageInitializer: Cannot find the corresponding language for '${sourceLang.name}'.`
