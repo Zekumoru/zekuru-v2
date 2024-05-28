@@ -47,8 +47,10 @@ const translateContent = async (
     throw new Error(`Deepl doesn't support '${targetLanguage.name}' yet.`);
   }
 
+  if (!translator.deepl) return;
+
   const translatedContentToDecode = (
-    await translator.translateText(
+    await translator.deepl.translateText(
       messageToTranslate,
       sourceLanguage.deepl.sourceCode,
       targetLanguage.deepl.targetCode

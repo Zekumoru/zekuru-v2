@@ -16,7 +16,7 @@ export default {
       // if no more keys found, break out the loop
       if (!guildKey) break;
 
-      // fetching a translator already loads the languages
+      // fetching a translator already load the languages
       const translator = await cache.translator.get(guildKey.id);
       if (translator) break;
 

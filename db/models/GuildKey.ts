@@ -1,8 +1,10 @@
 import { Schema, Types, model } from 'mongoose';
+import { ITranslatorKey, TranslatorType } from '../../translation/translator';
 
 interface IGuildKeySchema {
   id: string;
-  key: string;
+  preferredTranslator?: TranslatorType;
+  keys: ITranslatorKey[];
   createdAt: Date;
 }
 
@@ -15,10 +17,21 @@ const GuildKeySchema = new Schema<IGuildKey>({
     type: String,
     required: true,
   },
-  key: {
+  preferredTranslator: {
     type: String,
-    required: true,
   },
+  keys: [
+    {
+      type: {
+        type: String,
+        required: true,
+      },
+      key: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
   createdAt: {
     type: Date,
     default: Date.now,

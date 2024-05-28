@@ -18,7 +18,14 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
     return;
   }
 
-  const usage = await translator.getUsage();
+  if (!translator.deepl) {
+    interaction.reply({
+      content: `Cannot get usage, DeepL wasn't used.`,
+    });
+    return;
+  }
+
+  const usage = await translator.deepl.getUsage();
   if (!usage.character) {
     await interaction.reply('An error occurred. Could not get usage.');
     return;
