@@ -41,6 +41,8 @@ const buildMessageContextsStrings = (
     const { message, replies } = msgContexts[i];
     const username = message.member?.displayName ?? message.author.username;
 
+    console.log({ username, prevUsername, content: message.content });
+
     if (replies.length) {
       if (prevUsername !== '') {
         // close context message
@@ -53,6 +55,13 @@ const buildMessageContextsStrings = (
     }
 
     if (prevUsername !== username) {
+      if (prevUsername !== '') {
+        // close context message
+        outStrings.push(indent + '"""');
+        if (count === 0) outStrings.push('');
+        prevUsername = '';
+      }
+
       outStrings.push(indent + username);
       outStrings.push(indent + '"""');
       prevUsername = username;
