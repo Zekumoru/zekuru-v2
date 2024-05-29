@@ -1,5 +1,4 @@
-import { ChannelType, Message } from 'discord.js';
-import MessageLink from '../../db/models/MessageLink';
+import { Message } from 'discord.js';
 import getOriginalMessage from './getOriginalMessage';
 
 export interface IMessageContext {

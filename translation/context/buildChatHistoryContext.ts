@@ -1,7 +1,9 @@
 import { Message } from 'discord.js';
-import buildMessageContexts, { IMessageContext } from './buildMessageContexts';
+import buildMessageContexts, {
+  IMessageContext,
+} from './buildChatHistoryMessages';
 
-const buildMessageContent = (message: Message, indent: string) => {
+const buildChatMessageContent = (message: Message, indent: string) => {
   const strBuilder: string[] = [];
 
   // message content exists
@@ -29,7 +31,7 @@ const buildMessageContent = (message: Message, indent: string) => {
   return strBuilder.join('\n');
 };
 
-const buildMessageContextsStrings = (
+const buildChatMessagesContextStrings = (
   outStrings: string[],
   msgContexts: IMessageContext[],
   count = 0
@@ -49,7 +51,7 @@ const buildMessageContextsStrings = (
         prevUsername = '';
       }
 
-      buildMessageContextsStrings(outStrings, replies, count + 1);
+      buildChatMessagesContextStrings(outStrings, replies, count + 1);
     }
 
     if (prevUsername !== username) {
@@ -65,7 +67,7 @@ const buildMessageContextsStrings = (
       prevUsername = username;
     }
 
-    outStrings.push(buildMessageContent(message, indent));
+    outStrings.push(buildChatMessageContent(message, indent));
   }
 
   // close context message
@@ -73,7 +75,7 @@ const buildMessageContextsStrings = (
   if (count === 0) outStrings.push('');
 };
 
-const buildContextContent = async (
+const buildChatHistoryContext = async (
   message: Message,
   limit = 10,
   beforeMessageId?: string
@@ -85,9 +87,9 @@ const buildContextContent = async (
     beforeMessageId
   );
   if (msdContexts) {
-    buildMessageContextsStrings(outStrings, msdContexts);
+    buildChatMessagesContextStrings(outStrings, msdContexts);
   }
   return outStrings.join('\n');
 };
 
-export default buildContextContent;
+export default buildChatHistoryContext;
