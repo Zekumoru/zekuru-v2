@@ -1,7 +1,6 @@
 import { ChannelType, Message } from 'discord.js';
 import cache from '../../cache';
 import buildReplyEmbed from './buildReplyEmbed';
-import buildCommandReplyEmbed from './buildCommandReplyEmbed';
 import addReplyPing from './addReplyPing';
 import translateContent from './translateContent';
 import { DISCORD_ATTACHMENT_SIZE_LIMIT } from './limits';
@@ -29,13 +28,7 @@ const translateChannel = async (
 
   try {
     // get reply embed
-    const reply =
-      (await buildReplyEmbed(message, channel)) ??
-      (await buildCommandReplyEmbed(
-        message,
-        sourceTrChannel.languageCode,
-        targetTrChannel.languageCode
-      ));
+    const reply = await buildReplyEmbed(message, channel);
     const replyAuthorId = !reply?.message.author.bot
       ? reply?.message.author.id
       : undefined;
