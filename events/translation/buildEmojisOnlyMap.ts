@@ -1,15 +1,18 @@
-import { Collection, Message } from 'discord.js';
+import { Collection, Message, PartialMessage } from 'discord.js';
 import { ITranslateChannel } from '../../db/models/TranslateChannel';
 
 const buildEmojisOnlyMap = (
-  message: Message,
+  message: Message | PartialMessage,
   trChannels: ITranslateChannel[]
 ) => {
+  const messageContent = message.content;
+  if (!messageContent) return;
+
   // Only handle emoji-only message if the message isn't replying to anything.
   // Why? Because sending a link with a reply embed doesn't show the emoji.
   if (message.reference) return;
 
-  const emojiTag = message.content.trim().match(/^<a?:[^<>]*:\d*>$/)?.[0];
+  const emojiTag = messageContent.trim().match(/^<a?:[^<>]*:\d*>$/)?.[0];
   if (!emojiTag) return;
 
   const emojisOnlyMap = new Collection<string, string>();
@@ -19,7 +22,7 @@ const buildEmojisOnlyMap = (
     const [animRaw, _name, idRaw] = emojiTag.split(':');
     const emojiId = idRaw.slice(0, idRaw.length - 1);
 
-    let content = message.content;
+    let content = messageContent;
     // only swap emoji with image if the bot doesn't have it
     if (!message.client.emojis.cache.find((emoji) => emoji.id === emojiId)) {
       const ext = animRaw[1] === 'a' ? 'gif' : 'png';
