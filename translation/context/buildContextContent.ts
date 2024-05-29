@@ -41,8 +41,6 @@ const buildMessageContextsStrings = (
     const { message, replies } = msgContexts[i];
     const username = message.member?.displayName ?? message.author.username;
 
-    console.log({ username, prevUsername, content: message.content });
-
     if (replies.length) {
       if (prevUsername !== '') {
         // close context message
