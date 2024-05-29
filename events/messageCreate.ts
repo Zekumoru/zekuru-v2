@@ -12,6 +12,7 @@ const buildContextContent = (message: Message, indent: string) => {
     const tokens = message.content.split(/(\r\n|\n|\r)/g);
     tokens.filter((t) => !/(\r\n|\n|\r)/g.test(t));
     tokens.forEach((token) => {
+      if (token.trim() === '') return;
       strBuilder.push(indent + token);
     });
   }
@@ -119,7 +120,7 @@ export default {
     appDebug('start');
     const messages = await message.channel.messages.fetch({
       limit: 10,
-      before: '1244219469983780946',
+      before: message.id,
     });
     const msdContexts: IMessageContext[] = [];
     for (const [_id, message] of messages) {
