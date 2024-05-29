@@ -59,43 +59,43 @@ const updateTranslateMessages = async (
   const warningsStrBuilder: string[] = [];
   let results: { [key: string]: string | undefined } = {};
 
-  // translate if not emoji-only
-  if (!emojisOnlyMap) {
-    // because Discord has 2K characters limit, trim it to 2K
-    const userReachedLimit =
-      newMessage.content.length > DISCORD_MESSAGE_CHARS_LIMIT;
+  try {
+    // translate if not emoji-only
+    if (!emojisOnlyMap) {
+      // because Discord has 2K characters limit, trim it to 2K
+      const userReachedLimit =
+        newMessage.content.length > DISCORD_MESSAGE_CHARS_LIMIT;
 
-    if (userReachedLimit) {
-      warningsStrBuilder.push(
-        `**Warning:** You edited a message over 2000 characters. Due to Discord's characters limit, only the first 2000 characters will be translated.`
-      );
+      if (userReachedLimit) {
+        warningsStrBuilder.push(
+          `**Warning:** You edited a message over 2000 characters. Due to Discord's characters limit, only the first 2000 characters will be translated.`
+        );
+      }
+
+      const trimmedContent = userReachedLimit
+        ? newMessage.content.slice(0, DISCORD_MESSAGE_CHARS_LIMIT)
+        : newMessage.content;
+
+      const [contentToTranslate, tagTable] =
+        tagTranscoder.encode(trimmedContent);
+
+      results = await translator.translate({
+        content: contentToTranslate,
+        contentLanguage: sourceLanguage,
+        targetLanguages: getLanguagesFromTrChannels(targetTrChannels),
+        translatorType: 'deepl',
+      });
+
+      Object.keys(results).forEach((key) => {
+        const translated = results[key];
+        if (!translated) return;
+        // REMEMBER: Trim the translated output later since it might have
+        //           surpassed Discord's 2K characters limit
+        results[key] = tagTranscoder.decode(translated, tagTable);
+      });
     }
-
-    const trimmedContent = userReachedLimit
-      ? newMessage.content.slice(0, DISCORD_MESSAGE_CHARS_LIMIT)
-      : newMessage.content;
-
-    const [contentToTranslate, tagTable] = tagTranscoder.encode(trimmedContent);
-
-    results = await translator.translate({
-      content: contentToTranslate,
-      contentLanguage: sourceLanguage,
-      targetLanguages: getLanguagesFromTrChannels(targetTrChannels),
-      translatorType: 'deepl',
-    });
-
-    Object.keys(results).forEach((key) => {
-      const translated = results[key];
-      if (!translated) return;
-      // REMEMBER: Trim the translated output later since it might have
-      //           surpassed Discord's 2K characters limit
-      results[key] = tagTranscoder.decode(translated, tagTable);
-    });
-  }
-
-  await Promise.all(
-    messages.map(async (message) => {
-      try {
+    await Promise.all(
+      messages.map(async (message) => {
         const trChannel = await cache.translateChannel.get(message.channelId);
         if (!trChannel) return;
 
@@ -140,11 +140,11 @@ const updateTranslateMessages = async (
             content: warningsStrBuilder.join('\n'),
           });
         }
-      } catch (error) {
-        errorDebug(error);
-      }
-    })
-  );
+      })
+    );
+  } catch (error) {
+    errorDebug(error);
+  }
 };
 
 export default updateTranslateMessages;
