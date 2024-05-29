@@ -1,4 +1,6 @@
-import { Message } from 'discord.js';
+import { ChannelType, Message } from 'discord.js';
+import MessageLink from '../../db/models/MessageLink';
+import getOriginalMessage from './getOriginalMessage';
 
 export interface IMessageContext {
   message: Message;
@@ -26,9 +28,17 @@ const handleReplyChainHelper = async (
   // the message isn't deleted (by the user)
   if (message.reference.messageId !== replyMessage.id) return contextMessage;
 
+  const originalReplyMessage = await getOriginalMessage(replyMessage);
+
   return {
     message,
-    replies: [await handleReplyChainHelper(replyMessage, depth, count + 1)],
+    replies: [
+      await handleReplyChainHelper(
+        originalReplyMessage ?? replyMessage,
+        depth,
+        count + 1
+      ),
+    ],
   };
 };
 
@@ -50,7 +60,8 @@ const buildMessageContexts = async (
 
   const msgContexts: IMessageContext[] = [];
   for (const [_id, message] of messages) {
-    msgContexts.push(await handleReplyChain(message, 3));
+    const originalMessage = await getOriginalMessage(message);
+    msgContexts.push(await handleReplyChain(originalMessage ?? message, 3));
   }
 
   return msgContexts;
