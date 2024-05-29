@@ -28,6 +28,20 @@ export const deeplTranslatorOptions: deepl.TranslatorOptions = {
   maxRetries: 10,
 };
 
+interface DeeplOptions {
+  translatorType: 'deepl';
+  content: string;
+  contentLanguage: Language;
+  targetLanguages: Language[];
+}
+
+interface OpenAIOptions {
+  translatorType: 'openai';
+  content: string;
+}
+
+type TranslateOptions = DeeplOptions | OpenAIOptions;
+
 class Translator {
   #deepl?: deepl.Translator;
   #openai?: OpenAI;
@@ -61,28 +75,20 @@ class Translator {
     return this.#openai;
   }
 
-  async translate({
-    translatorType,
-    content,
-    contentLanguage,
-    targetLanguages,
-  }: {
-    content: string;
-    contentLanguage: Language;
-    targetLanguages: Language[];
-    translatorType: TranslatorType;
-  }) {
-    switch (translatorType) {
+  async translate(options: TranslateOptions) {
+    switch (options.translatorType) {
       case 'deepl':
         return await this.#deeplTranslate(
-          content,
-          contentLanguage,
-          targetLanguages
+          options.content,
+          options.contentLanguage,
+          options.targetLanguages
         );
       case 'openai':
-        throw new NoTranslatorError(translatorType);
+        return await this.#openaiTranslate(options.content);
       default:
-        throw new NoTranslatorError(translatorType);
+        throw new NoTranslatorError(
+          (options as { translatorType: string }).translatorType
+        );
     }
   }
 
@@ -121,6 +127,40 @@ class Translator {
         results[lang.name] = translatedResult.text;
       })
     );
+
+    return results;
+  }
+
+  async #openaiTranslate(content: string) {
+    const openai = this.#openai;
+
+    if (!openai) {
+      throw new TranslatorError(
+        `There's no OpenAI translator. Did you forget to sign-in the bot with OpenAI?`
+      );
+    }
+
+    console.log(content);
+
+    // start translating
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o',
+      response_format: { type: 'json_object' },
+      messages: [
+        {
+          role: 'system',
+          content: `Translate user's message in JSON format in the form {"Language 1":"Content","Language 2":"Content",...,"Language N":"Content"}. Do not translate tags of <:N:>.`,
+        },
+        { role: 'user', content },
+      ],
+    });
+
+    let results: ITranslationResult = {};
+    const output = completion.choices[0].message.content;
+
+    if (output) {
+      results = JSON.parse(output);
+    }
 
     return results;
   }

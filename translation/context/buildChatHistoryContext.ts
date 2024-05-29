@@ -78,13 +78,15 @@ const buildChatMessagesContextStrings = (
 const buildChatHistoryContext = async (
   message: Message,
   limit = 10,
-  beforeMessageId?: string
+  beforeMessageId?: string,
+  replyLimit = 3
 ) => {
   const outStrings: string[] = [];
   const msdContexts = await buildMessageContexts(
     message,
     limit,
-    beforeMessageId
+    beforeMessageId,
+    replyLimit
   );
   if (msdContexts) {
     buildChatMessagesContextStrings(outStrings, msdContexts);

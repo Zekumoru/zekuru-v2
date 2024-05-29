@@ -41,14 +41,18 @@ const handleReplyChainHelper = async (
   };
 };
 
-const handleReplyChain = async (message: Message, depth: number) => {
+export const handleChatHistoryReplyChain = async (
+  message: Message,
+  depth: number
+) => {
   return await handleReplyChainHelper(message, depth, 1);
 };
 
 const buildMessageContexts = async (
   message: Message,
   limit = 10,
-  beforeMessageId?: string
+  beforeMessageId?: string,
+  replyLimit = 3
 ) => {
   if (message.content === '') return;
 
@@ -60,7 +64,9 @@ const buildMessageContexts = async (
   const msgContexts: IMessageContext[] = [];
   for (const [_id, message] of messages) {
     const originalMessage = await getOriginalMessage(message);
-    msgContexts.push(await handleReplyChain(originalMessage ?? message, 3));
+    msgContexts.push(
+      await handleChatHistoryReplyChain(originalMessage ?? message, replyLimit)
+    );
   }
 
   return msgContexts;

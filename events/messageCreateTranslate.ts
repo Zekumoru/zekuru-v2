@@ -1,33 +1,14 @@
-import {
-  ChannelType,
-  Collection,
-  EmbedBuilder,
-  Events,
-  Message,
-  MessageType,
-  TextChannel,
-} from 'discord.js';
+import { ChannelType, Events, Message, TextChannel } from 'discord.js';
 import { DiscordEvent } from '../types/DiscordEvent';
 import MessageLink, { IMessageLinkItem } from '../db/models/MessageLink';
 import cache from '../cache';
 import { codeLanguagesMap } from '../translation/languages';
-import buildReplyEmbed from './translation/buildReplyEmbed';
-import { Language } from 'deepl-node';
-import buildEmbed from '../commands/utilities/buildEmbed';
-import { errorDebug } from '../utilities/logger';
-import addReplyPing from './translation/addReplyPing';
-import {
-  DISCORD_ATTACHMENT_SIZE_LIMIT,
-  DISCORD_MESSAGE_CHARS_LIMIT,
-} from './translation/limits';
-import tagTranscoder from '../utilities/tagTranscoder';
-import { AuthorizationError } from '../translation/error';
-import buildRepliesMap from './translation/buildRepliesMap';
 import handleCommandReplies from './translation/handleCommandReplies';
-import getLanguagesFromTrChannels from './translation/getLanguagesFromTrChannels';
 import handleStickerOnlyMessage from './translation/handleStickerOnlyMessage';
-import buildEmojisOnlyMap from './translation/buildEmojisOnlyMap';
 import handleMessageTranslation from './translation/handleMessageTranslation';
+import buildRepliesMap from './translation/buildRepliesMap';
+import { AuthorizationError, TranslatorError } from '../translation/error';
+import { appDebug, errorDebug } from '../utilities/logger';
 
 export default {
   name: Events.MessageCreate,
@@ -83,7 +64,7 @@ export default {
     );
 
     let messages: (Message | undefined)[] | undefined;
-
+    appDebug('start translate');
     try {
       const repliesMap = await buildRepliesMap(message, targetChannels);
       messages =
@@ -96,15 +77,17 @@ export default {
           repliesMap
         ));
     } catch (error) {
-      if (error instanceof AuthorizationError) {
+      if (error instanceof TranslatorError) {
+        if (message.author.id === message.client.user.id) return; // ignore this bot
         await message.reply({
-          content: `Cannot translate, invalid api key. Please check if you changed/disabled the api key then sign in again using the \`/sign-in\` command with a **valid** api key.`,
+          content: error.message,
         });
       }
       errorDebug(error);
     }
 
     if (!messages) return;
+    appDebug('end translate');
 
     const messagesIds = messages.filter(Boolean).map<IMessageLinkItem>((m) => ({
       messageId: m!.id,

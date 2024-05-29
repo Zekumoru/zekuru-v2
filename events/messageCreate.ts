@@ -3,7 +3,7 @@ import { DiscordEvent } from '../types/DiscordEvent';
 import cache from '../cache';
 import buildLongContentEmbeds from '../commands/utilities/buildLongContentEmbeds';
 import { appDebug } from '../utilities/logger';
-import buildContextContent from '../translation/context/buildContextContent';
+import buildTranslationContextContent from '../translation/context/buildTranslationContextContent';
 
 export default {
   name: Events.MessageCreate,
@@ -18,7 +18,7 @@ export default {
     if (message.content === '') return;
 
     appDebug('start');
-    const context = await buildContextContent(message);
+    const context = await buildTranslationContextContent(message, []);
     appDebug('end');
 
     const webhook = await cache.webhook.get(channel);

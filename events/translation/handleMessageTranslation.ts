@@ -12,6 +12,8 @@ import { ITranslateChannel } from '../../db/models/TranslateChannel';
 import { Language, codeLanguagesMap } from '../../translation/languages';
 import addReplyPing from './addReplyPing';
 import getUsernameAndAvatarURL from './getUsernameAndAvatarURL';
+import buildTranslationContextContent from '../../translation/context/buildTranslationContextContent';
+import { appDebug } from '../../utilities/logger';
 
 const handleMessageTranslation = async (
   message: Message,
@@ -48,12 +50,31 @@ const handleMessageTranslation = async (
 
     const [contentToTranslate, tagTable] = tagTranscoder.encode(trimmedContent);
 
-    results = await translator.translate({
-      content: contentToTranslate,
-      contentLanguage: sourceLanguage,
-      targetLanguages: getLanguagesFromTrChannels(targetTrChannels),
-      translatorType: 'deepl',
-    });
+    // REMEMBER: Change this when preferred translator is implemented
+    const translatorType = 'openai';
+
+    if (translatorType === 'openai') {
+      appDebug(`start build context`);
+      const content = await buildTranslationContextContent(
+        message,
+        getLanguagesFromTrChannels(targetTrChannels)
+      );
+      appDebug(`start build context`);
+      if (!content) return;
+      appDebug(`start openai`);
+      results = await translator.translate({
+        translatorType: 'openai',
+        content,
+      });
+      appDebug(`end openai`);
+    } else {
+      results = await translator.translate({
+        content: contentToTranslate,
+        contentLanguage: sourceLanguage,
+        targetLanguages: getLanguagesFromTrChannels(targetTrChannels),
+        translatorType: 'deepl',
+      });
+    }
 
     Object.keys(results).forEach((key) => {
       const translated = results[key];
