@@ -61,15 +61,15 @@ const buildMessageContexts = async (
     before: beforeMessageId ?? message.id,
   });
 
-  const msgContexts: IMessageContext[] = [];
-  for (const [_id, message] of messages) {
-    const originalMessage = await getOriginalMessage(message);
-    msgContexts.push(
-      await handleChatHistoryReplyChain(originalMessage ?? message, replyLimit)
-    );
-  }
-
-  return msgContexts;
+  return await Promise.all(
+    messages.map(async (message) => {
+      const originalMessage = await getOriginalMessage(message);
+      return await handleChatHistoryReplyChain(
+        originalMessage ?? message,
+        replyLimit
+      );
+    })
+  );
 };
 
 export default buildMessageContexts;
