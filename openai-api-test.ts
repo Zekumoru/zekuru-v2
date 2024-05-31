@@ -16,7 +16,7 @@ const promptTest = async (seed: number) => {
     messages: [
       {
         role: 'system',
-        content: `Translate users' messages in JSON format in the form {"Language 1":"Content","Language 2":"Content",...,"Language N":"Content"}. Do not translate tags of <:N:>.`,
+        content: `Translate users' messages in JSON format in the form { results: [{"Language 1":"Content","Language 2":"Content",...,"Language N":"Content"}, ...]}. Do not translate tags of <:N:>.`,
       },
       {
         role: 'user',
@@ -35,10 +35,13 @@ const promptTest = async (seed: number) => {
 };
 
 (async () => {
-  for (let i = 0; i < 10; i++) {
+  const times = Number(process.argv[3]);
+  for (let i = 0; i < (isNaN(times) ? 1 : times); i++) {
     const seed = Math.floor(Math.random() * 1_000_000_000);
     console.log({ seed });
+    console.time(`Time to process request`);
     await promptTest(seed);
+    console.timeEnd(`Time to process request`);
     // wait 1 second
     await new Promise((resolve) => setTimeout(resolve, 1_000));
   }

@@ -64,7 +64,7 @@ export default {
     );
 
     let messages: (Message | undefined)[] | undefined;
-    appDebug('start translate');
+    console.time('onTranslate');
     try {
       const repliesMap = await buildRepliesMap(message, targetChannels);
       messages =
@@ -87,7 +87,7 @@ export default {
     }
 
     if (!messages) return;
-    appDebug('end translate');
+    console.timeEnd('onTranslate');
 
     const messagesIds = messages.filter(Boolean).map<IMessageLinkItem>((m) => ({
       messageId: m!.id,

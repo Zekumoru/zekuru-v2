@@ -54,19 +54,19 @@ const handleMessageTranslation = async (
     const translatorType = 'openai';
 
     if (translatorType === 'openai') {
-      appDebug(`start build context`);
+      console.time('onContextBuild');
       const content = await buildTranslationContextContent(
         message,
         getLanguagesFromTrChannels(targetTrChannels)
       );
-      appDebug(`start build context`);
+      console.timeEnd('onContextBuild');
       if (!content) return;
-      appDebug(`start openai`);
+      console.time('onGptTranslate');
       results = await translator.translate({
         translatorType: 'openai',
         content,
       });
-      appDebug(`end openai`);
+      console.timeEnd('onGptTranslate');
     } else {
       results = await translator.translate({
         content: contentToTranslate,
