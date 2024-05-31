@@ -1,19 +1,22 @@
 import { appDebug, errorDebug } from '../utilities/logger';
 import * as deepl from 'deepl-node';
-import gptLanguages from './gpt-4o-2024-05-13-supported-languages.json';
+import gptLanguages from './gpt-4o-2024-05-13-supported-languages';
 import { Collection } from 'discord.js';
 
+export type LanguageName = (typeof gptLanguages)[number]['language'];
+export type LanguageCode = (typeof gptLanguages)[number]['code'];
+
 export interface Language {
-  name: string;
-  code: string;
+  name: LanguageName;
+  code: LanguageCode;
   deepl?: {
     sourceCode: deepl.SourceLanguageCode;
     targetCode: deepl.TargetLanguageCode;
   };
 }
 
-export const languagesMap = new Collection<string, Language>();
-export const codeLanguagesMap = new Collection<string, Language>();
+export const languagesMap = new Collection<LanguageName, Language>();
+export const codeLanguagesMap = new Collection<LanguageCode, Language>();
 gptLanguages.forEach(({ language, code }) => {
   const item = {
     name: language,
@@ -53,8 +56,8 @@ export const loadLanguages = async (translator: deepl.Translator) => {
     }
 
     // add to languages but first check if source has corresponding to it
-    const language = languagesMap.get(sourceLang.name);
-    const codeLanguage = codeLanguagesMap.get(sourceLang.code);
+    const language = languagesMap.get(sourceLang.name as LanguageName);
+    const codeLanguage = codeLanguagesMap.get(sourceLang.code as LanguageCode);
     if (!language || !codeLanguage) {
       errorDebug(
         `LanguageInitializer: Cannot find the corresponding language for '${sourceLang.name}'.`

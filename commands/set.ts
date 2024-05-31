@@ -8,7 +8,7 @@ import {
   SlashCommandBuilder,
 } from 'discord.js';
 import { createCommand } from '../types/DiscordCommand';
-import languagesMap from '../translation/languages';
+import languagesMap, { LanguageName } from '../translation/languages';
 import cache from '../cache';
 import updateTranslateMessages from '../events/utilities/updateTranslateMessages';
 
@@ -56,7 +56,9 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   const channelId =
     interaction.options.getChannel('channel')?.id ?? interaction.channelId;
 
-  const languageChosen = interaction.options.getString('language');
+  const languageChosen = interaction.options.getString(
+    'language'
+  ) as LanguageName;
   if (!languageChosen) {
     await interaction.reply({
       content: `Please specify a language.`,

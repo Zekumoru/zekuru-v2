@@ -2,13 +2,14 @@ import { Collection } from 'discord.js';
 import type { ITranslateChannel } from '../db/models/TranslateChannel';
 import TranslateChannel from '../db/models/TranslateChannel';
 import { SourceLanguageCode, TargetLanguageCode } from 'deepl-node';
+import { LanguageCode } from '../translation/languages';
 
 const cacheTrChannels = new Collection<string, ITranslateChannel>();
 
 const fetchOrCreateTrChannel = async (
   channelId: string,
   guildId: string,
-  languageCode: string
+  languageCode: LanguageCode
 ) => {
   // fetch from db, if not exists, create new
   const channel = await TranslateChannel.findOne({ id: channelId });
@@ -26,7 +27,7 @@ const fetchOrCreateTrChannel = async (
 const set = async (
   channelId: string,
   guildId: string,
-  languageCode: string
+  languageCode: LanguageCode
 ) => {
   // update in db
   const channel = await fetchOrCreateTrChannel(

@@ -1,10 +1,10 @@
 import { Schema, Types, model } from 'mongoose';
-import { Language } from '../../translation/languages';
+import { LanguageCode } from '../../translation/languages';
 
 interface ITranslateChannelSchema {
   id: string;
   guildId: string;
-  languageCode: string;
+  languageCode: LanguageCode;
   createdAt: Date;
 }
 
