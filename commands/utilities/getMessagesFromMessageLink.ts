@@ -7,7 +7,7 @@ const getMessagesFromMessageLink = async (
   guild: Guild
 ) => {
   try {
-    const messages = (await Promise.all(
+    return await Promise.all(
       messageLink.links.map(async (link) => {
         // ignore the message that the user has reacted to
         if (link.messageId === ignoreMessageId) return;
@@ -17,9 +17,7 @@ const getMessagesFromMessageLink = async (
         if (channel.type !== ChannelType.GuildText) return;
         return await channel.messages.fetch(link.messageId);
       })
-    )) as unknown as (Message<true> | undefined)[] | undefined;
-
-    return messages;
+    );
   } catch (error) {
     return;
   }

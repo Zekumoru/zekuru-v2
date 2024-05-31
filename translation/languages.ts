@@ -66,8 +66,8 @@ export const loadLanguages = async (translator: deepl.Translator) => {
     }
 
     const deepl = {
-      sourceCode: sourceLang.code as unknown as deepl.SourceLanguageCode,
-      targetCode: targetLang.code as unknown as deepl.TargetLanguageCode,
+      sourceCode: sourceLang.code as deepl.SourceLanguageCode,
+      targetCode: targetLang.code as deepl.TargetLanguageCode,
     };
 
     language.deepl = deepl;
