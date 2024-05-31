@@ -67,6 +67,8 @@ const translateChannel = async (
       if (!message.client.emojis.cache.find((emoji) => emoji.id === emojiId)) {
         const ext = animRaw[1] === 'a' ? 'gif' : 'png';
         translatedContent = `https://media.discordapp.net/emojis/${emojiId}.${ext}?size=48`;
+      } else {
+        translatedContent = message.content;
       }
     }
 
