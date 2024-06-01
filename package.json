@@ -12,6 +12,7 @@
     "create-cipher-secret": "ts-node .\\utilities\\create-cipher-secret.ts"
   },
   "dependencies": {
+    "amqplib": "^0.10.4",
     "debug": "^4.3.4",
     "deepl-node": "^1.13.0",
     "discord.js": "^14.15.2",
@@ -20,6 +21,7 @@
     "openai": "^4.47.1"
   },
   "devDependencies": {
+    "@types/amqplib": "^0.10.5",
     "@types/debug": "^4.1.12",
     "@typescript-eslint/eslint-plugin": "^7.10.0",
     "@typescript-eslint/parser": "^7.10.0",
