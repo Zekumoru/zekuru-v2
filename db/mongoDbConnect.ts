@@ -1,13 +1,24 @@
 import mongoose from 'mongoose';
-import { appDebug } from '../utilities/logger';
+import { appDebug, errorDebug } from '../utilities/logger';
 
 const dbString = process.env.MONGODB_CONNECTION_STRING;
 
-(async () => {
+const mongoDbPromise = (async () => {
   if (!dbString) throw new Error('Mongodb connection string is undefined');
 
-  await mongoose.connect(dbString);
+  const mongoDb = await mongoose.connect(dbString);
   appDebug(`Successfully connected to mongodb`);
-})().catch((error: { message: string }) => {
-  appDebug(`Cannot connect to db: ${error.message}`);
+
+  return mongoDb;
+})();
+
+mongoDbPromise.catch((error: { message: string }) => {
+  errorDebug(`Cannot connect to db: ${error.message}`);
 });
+
+export const closeMongoDb = async () => {
+  const mongoDb = await mongoDbPromise;
+  await mongoDb.disconnect();
+};
+
+export default mongoDbPromise;

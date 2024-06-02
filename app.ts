@@ -11,6 +11,9 @@ import path from 'path';
 import { DiscordEvent } from './types/DiscordEvent';
 import { appDebug } from './utilities/logger';
 import './db/mongoDbConnect';
+import './rabbitmq/rabbitMqConnect';
+import { closeMongoDb } from './db/mongoDbConnect';
+import { closeAmqpConnection } from './rabbitmq/rabbitMqConnect';
 
 const token = process.env.DISCORD_TOKEN;
 
@@ -77,3 +80,8 @@ for (const file of eventFiles) {
 }
 
 client.login(token);
+
+process.on('SIGINT', async () => {
+  await Promise.all([closeAmqpConnection(), closeMongoDb(), client.destroy()]);
+  process.exit(0);
+});
