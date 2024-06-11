@@ -67,7 +67,26 @@ describe('channelLinkCache', () => {
   });
 
   describe('get', () => {
-    it.todo('should get a link from the cache if it exists');
+    it('should get a link from the cache if it exists', async () => {
+      const mockFindOne = mockChannelLink.findOne.mockReturnValue({
+        populate: jest.fn().mockReturnThis(),
+        exec: jest.fn().mockResolvedValue({
+          _id: 'mockId',
+          id: '123',
+          guildId: '456',
+          links: [],
+          createdAt: new Date(),
+        }),
+      } as any);
+
+      const channelId = '123';
+
+      await channelLinkCache.get(channelId);
+      const result = await channelLinkCache.get(channelId);
+
+      expect(mockFindOne).toHaveBeenCalledTimes(1);
+      expect(result).toEqual(expect.objectContaining({ id: '123' }));
+    });
 
     it('should fetch a link from the database and store it in the cache if it does not exist in the cache', async () => {
       const mockFindOne = mockChannelLink.findOne.mockReturnValue({
