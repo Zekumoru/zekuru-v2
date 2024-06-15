@@ -3,6 +3,7 @@ import { DiscordEvent } from '../types/DiscordEvent';
 import MessageLink, { IMessageLinkItem } from '../db/models/MessageLink';
 import cache from '../cache';
 import translateChannel from './translation/translateChannel';
+import { errorDebug } from '../utilities/logger';
 
 export default {
   name: Events.MessageCreate,
@@ -11,8 +12,16 @@ export default {
 
     // ignore this bot's webhooks messages
     if (message.author.id !== message.client.user.id && message.webhookId) {
-      const webhook = await message.fetchWebhook();
-      if (webhook.owner?.id === message.client.user.id) return;
+      // Try-catch block is placed to mitigate an error which cause is unknown.
+      // Error [WebhookApplication]: This message webhook belongs to an application and cannot be fetched.
+      try {
+        const webhook = await message.fetchWebhook();
+        if (webhook.owner?.id === message.client.user.id) return;
+      } catch (error) {
+        errorDebug((error as { message: string }).message);
+        errorDebug(error);
+        return;
+      }
     }
 
     const sourceTrChannel = await cache.translateChannel.get(message.channelId);
