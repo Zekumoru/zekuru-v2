@@ -1,7 +1,7 @@
-import { ChatInputCommandInteraction } from 'discord.js';
 import linkMultiple from './link-multiple';
 import { ITranslateChannel } from '../db/models/TranslateChannel';
 import { IChannelLink } from '../db/models/ChannelLink';
+import createMockInteraction from '../test/createMockChatInputCommandInteraction';
 
 const guildId = 'guild-id';
 const sampleTranslateChannels: Omit<ITranslateChannel, '_id' | 'createdAt'>[] =
@@ -93,19 +93,6 @@ jest.mock('../cache', () => {
 });
 
 describe('/link-multiple command', () => {
-  const createMockInteraction = (
-    mockInteraction?: Partial<typeof ChatInputCommandInteraction.prototype> | {}
-  ) => {
-    return jest.mocked({
-      guildId,
-      reply: jest.fn(),
-      options: {
-        getString: jest.fn(),
-      },
-      ...mockInteraction,
-    } as ChatInputCommandInteraction);
-  };
-
   afterEach(() => {
     clearSampleChannelLinks();
     jest.clearAllMocks();

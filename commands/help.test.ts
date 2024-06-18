@@ -1,15 +1,12 @@
-import { ChatInputCommandInteraction } from 'discord.js';
+import createMockInteraction from '../test/createMockChatInputCommandInteraction';
 import help from './help';
 
 describe('/help command', () => {
   it('should correctly show help content', async () => {
-    const mockReply = jest.fn();
-    const interaction = {
-      reply: mockReply,
-    } as unknown as ChatInputCommandInteraction;
+    const interaction = createMockInteraction();
 
     await help.execute(interaction);
 
-    expect(mockReply.mock.calls[0][0]).toMatchSnapshot();
+    expect(interaction.reply.mock.calls[0][0]).toMatchSnapshot();
   });
 });
