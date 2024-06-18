@@ -10,10 +10,12 @@ export default {
   execute: async (message: Message) => {
     if (!message.guildId) return;
 
+    // check if the message comes from a translate channel otherwise ignore
+    const sourceTrChannel = await cache.translateChannel.get(message.channelId);
+    if (!sourceTrChannel) return;
+
     // ignore this bot's webhooks messages
     if (message.author.id !== message.client.user.id && message.webhookId) {
-      // Try-catch block is placed to mitigate an error which cause is unknown.
-      // Error [WebhookApplication]: This message webhook belongs to an application and cannot be fetched.
       try {
         const webhook = await message.fetchWebhook();
         if (webhook.owner?.id === message.client.user.id) return;
@@ -24,9 +26,8 @@ export default {
       }
     }
 
-    const sourceTrChannel = await cache.translateChannel.get(message.channelId);
     const link = await cache.channelLink.get(message.channelId);
-    if (!sourceTrChannel || !link) return;
+    if (!link) return;
 
     // check if this bot has a translator
     if ((await cache.translator.get(message.guildId)) == null) {
