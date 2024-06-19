@@ -7,6 +7,7 @@ export = {
       .mockImplementation(async (channelId) =>
         sampleTranslateChannels.find((trChannel) => trChannel.id === channelId)
       ),
+    set: jest.fn(),
   },
   channelLink: {
     create: jest
