@@ -1,96 +1,13 @@
 import linkMultiple from './link-multiple';
-import { ITranslateChannel } from '../db/models/TranslateChannel';
-import { IChannelLink } from '../db/models/ChannelLink';
 import createMockInteraction from '../test/createMockChatInputCommandInteraction';
+import {
+  clearSampleChannelLinks,
+  sampleChannelLinks,
+  sampleTranslateChannels,
+} from '../cache/__mocks__/sample-data';
 
-const guildId = 'guild-id';
-const sampleTranslateChannels: Omit<ITranslateChannel, '_id' | 'createdAt'>[] =
-  [
-    {
-      id: '100',
-      sourceLang: 'en',
-      targetLang: 'en-US',
-      guildId,
-    },
-    {
-      id: '200',
-      sourceLang: 'ja',
-      targetLang: 'ja',
-      guildId,
-    },
-    {
-      id: '300',
-      sourceLang: 'zh',
-      targetLang: 'zh',
-      guildId,
-    },
-    {
-      id: '400',
-      sourceLang: 'ko',
-      targetLang: 'ko',
-      guildId,
-    },
-  ];
-
-const sampleChannelLinks: Omit<IChannelLink, '_id' | 'createdAt'>[] = [
-  {
-    guildId,
-    id: '100',
-    links: [],
-  },
-  {
-    guildId,
-    id: '200',
-    links: [],
-  },
-  {
-    guildId,
-    id: '300',
-    links: [],
-  },
-  {
-    guildId,
-    id: '400',
-    links: [],
-  },
-];
-const clearSampleChannelLinks = () => {
-  sampleChannelLinks.forEach((chLink) =>
-    chLink.links.splice(0, chLink.links.length)
-  );
-};
-
-jest.mock('./utilities/linking', () => {
-  const originalModule = jest.requireActual('./utilities/linking');
-  return { ...originalModule, CHANNEL_LINK_LIMIT: 3 };
-});
-
-jest.mock('../cache', () => {
-  return {
-    translateChannel: {
-      get: jest
-        .fn()
-        .mockImplementation(async (channelId) =>
-          sampleTranslateChannels.find(
-            (trChannel) => trChannel.id === channelId
-          )
-        ),
-    },
-    channelLink: {
-      create: jest
-        .fn()
-        .mockImplementation(async (channelId) =>
-          sampleChannelLinks.find((chLink) => chLink.id === channelId)
-        ),
-      get: jest
-        .fn()
-        .mockImplementation(async (channelId) =>
-          sampleChannelLinks.find((chLink) => chLink.id === channelId)
-        ),
-      update: jest.fn(),
-    },
-  };
-});
+jest.mock('./utilities/linking');
+jest.mock('../cache');
 
 describe('/link-multiple command', () => {
   afterEach(() => {
