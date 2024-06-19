@@ -4,8 +4,6 @@ import {
   SlashCommandBuilder,
 } from 'discord.js';
 import { createCommand } from '../types/DiscordCommand';
-import { IChannelLink } from '../db/models/ChannelLink';
-import { ITranslateChannel } from '../db/models/TranslateChannel';
 import cache from '../cache';
 import {
   CHANNEL_LINK_LIMIT,
@@ -15,7 +13,7 @@ import {
   linkChannels,
 } from './utilities/linking';
 
-const LinkOptions = {
+export const LinkOptions = {
   SOURCE_CHANNEL: 'source-channel',
   TARGET_CHANNEL: 'target-channel',
   MODE: 'mode',
@@ -96,10 +94,10 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   ]);
 
   let errorMessage = '';
-  if (sourceChannelId === targetChannelId) {
-    errorMessage = `You cannot link <#${sourceChannelId}> with itself!`;
-  } else if (sourceTrChannel == null && targetTrChannel == null) {
+  if (sourceTrChannel == null && targetTrChannel == null) {
     errorMessage = `Both <#${sourceChannelId}> and <#${targetChannelId}> are not associated with any languages yet. Please use the \`/set\` command to set their languages.`;
+  } else if (sourceChannelId === targetChannelId) {
+    errorMessage = `You cannot link <#${sourceChannelId}> with itself!`;
   } else if (sourceTrChannel == null) {
     errorMessage = `<#${sourceChannelId}> is not associated with any languages yet. Please use the \`/set\` command to set its language.`;
   } else if (targetTrChannel == null) {
