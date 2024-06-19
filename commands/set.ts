@@ -137,7 +137,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
           content: `<#${channelId}> has been changed to \`${language}\`.`,
           components: [],
         });
-      } else if (confirmation.customId === 'cancel') {
+      } else {
         await confirmation.update({
           content: `<#${channelId}>'s language not changed`,
           components: [],
