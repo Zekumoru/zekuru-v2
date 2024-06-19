@@ -79,7 +79,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   )?.code;
   if (!targetLang) {
     await interaction.reply({
-      content: `Error! Target language is missing. Please contact the developer.`,
+      content: `Error! Target language for '${language}' is missing. Please contact the developer.`,
     });
     return;
   }
