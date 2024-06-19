@@ -8,6 +8,7 @@ const createMockChatInputCommandInteraction = (
     reply: jest.fn(),
     options: {
       getString: jest.fn(),
+      getChannel: jest.fn(),
     },
     ...mockInteraction,
   } as ChatInputCommandInteraction);
