@@ -42,7 +42,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
         sourceLanguages.find((lang) => lang.code === trChannel.sourceLang)
           ?.name ?? trChannel.sourceLang;
       const line = `- <#${trChannel.id}> is set to \`${language}\`${
-        chLink
+        chLink && chLink.links.length
           ? ` and is linked to ${chLink.links.length} translate channels`
           : ` and is **not linked** to any translate channels`
       }.`;
