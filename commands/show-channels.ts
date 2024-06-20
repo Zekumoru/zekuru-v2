@@ -8,6 +8,7 @@ import TranslateChannel from '../db/models/TranslateChannel';
 import { sourceLanguages } from '../translation/languages';
 import buildLongContentEmbeds from './utilities/buildLongContentEmbeds';
 import cache from '../cache';
+import botConfig from '../botConfig';
 
 const data = new SlashCommandBuilder()
   .setName('show-channels')
@@ -54,7 +55,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   const content = `**Showing all translate channels**\nThere are a total of ${
     trChannels.length
   } translate channels.\n${strBuilder.join('')}`;
-  if (content.length <= 2000) {
+  if (content.length <= botConfig.messageCharactersLimit) {
     interaction.reply({
       content,
     });
