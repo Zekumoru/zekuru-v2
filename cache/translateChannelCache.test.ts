@@ -20,7 +20,7 @@ describe('translateChannelCache', () => {
     id: '123',
     guildId: '456',
     sourceLang: 'en',
-    targetLang: 'ja',
+    targetLang: 'en-US',
     createdAt: new Date(),
   } as any;
 
