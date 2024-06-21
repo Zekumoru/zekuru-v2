@@ -60,12 +60,12 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   let errorMessage = '';
   if (sourceChannelId === targetChannelId) {
     errorMessage = `You cannot unlink <#${sourceChannelId}> with itself!`;
-  } else if (sourceChLink == null && targetChLink == null) {
-    errorMessage = `Both <#${sourceChannelId}> and <#${targetChannelId}> are not linked with any channels!`;
-  } else if (sourceChLink == null) {
-    errorMessage = `<#${sourceChannelId}> is not linked with any channels!`;
-  } else if (targetChLink == null) {
-    errorMessage = `<#${targetChannelId}> is not linked with any channels!`;
+  } else if (!sourceChLink && !targetChLink) {
+    errorMessage = `Both <#${sourceChannelId}> and <#${targetChannelId}> are not translate channels!`;
+  } else if (!sourceChLink) {
+    errorMessage = `<#${sourceChannelId}> is not a translate channel!`;
+  } else if (!targetChLink) {
+    errorMessage = `<#${targetChannelId}> is not a translate channel!`;
   }
 
   if (errorMessage || sourceChLink == null || targetChLink == null) {
