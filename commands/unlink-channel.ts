@@ -20,6 +20,13 @@ const data = new SlashCommandBuilder()
   .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild);
 
 const execute = async (interaction: ChatInputCommandInteraction) => {
+  if (!interaction.guildId) {
+    await interaction.reply({
+      content: `This command is only available on servers.`,
+    });
+    return;
+  }
+
   const channelId =
     interaction.options.getChannel('channel')?.id ?? interaction.channelId;
 
