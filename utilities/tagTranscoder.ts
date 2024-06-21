@@ -7,7 +7,7 @@ interface ITagTranscoder {
 
 // Ignore syntax: (discord tags | links | code blocks)
 const DISCORD_IGNORE_REGEX =
-  /(<a?[:@][\w:]*>)|(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&\/=]*))|(```((?!\s)|\r\n|\r|\n|.)*```)/g;
+  /(<a?[:@#][\w:]*>)|(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&\/=]*))|(```((?!\s)|\r\n|\r|\n|.)*```)/g;
 
 const tagTranscoder: ITagTranscoder = {
   encode: (message) => {
