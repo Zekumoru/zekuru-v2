@@ -85,6 +85,7 @@ describe('/show-channels command', () => {
     await showChannels.execute(interaction);
 
     expect(interaction.reply.mock.calls[0][0]).toMatchSnapshot();
+    expect(interaction.reply.mock.calls[0][0]).toHaveProperty('embeds');
     resetSampleChannelLinks();
   });
 });
