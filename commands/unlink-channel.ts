@@ -32,9 +32,16 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
 
   const channelLink = await cache.channelLink.get(channelId);
 
-  if (channelLink == null) {
+  if (!channelLink) {
     await interaction.reply({
-      content: `<#${channelId}> is not linked with any channels!`,
+      content: `Cannot unlink! <#${channelId}> is not a translate channel!`,
+    });
+    return;
+  }
+
+  if (channelLink.links.length === 0) {
+    await interaction.reply({
+      content: `Cannot unlink! <#${channelId}> is not linked with any channels!`,
     });
     return;
   }
