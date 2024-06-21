@@ -66,7 +66,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
         content: `You have successfully signed out the bot.`,
         components: [],
       });
-    } else if (confirmation.customId === 'cancel') {
+    } else {
       await confirmation.update({
         content: `Signing out has been cancelled.`,
         components: [],
