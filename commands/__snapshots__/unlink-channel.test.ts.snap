@@ -1,0 +1,65 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`/unlink-channel command should notify user that the channel they provided isn't a translate channel 1`] = `
+{
+  "content": "Cannot unlink! <#000> is not a translate channel!",
+}
+`;
+
+exports[`/unlink-channel command should notify user that the channel they provided isn't linked with any channels 1`] = `
+{
+  "content": "Cannot unlink! <#100> is not linked with any channels!",
+}
+`;
+
+exports[`/unlink-channel command should notify user that this command is only for servers 1`] = `
+{
+  "content": "This command is only available on servers.",
+}
+`;
+
+exports[`/unlink-channel command should unlink the provided translate channel from all of its links 1`] = `
+{
+  "content": "<#100> is now unlinked!",
+}
+`;
+
+exports[`/unlink-channel command should unlink the provided translate channel from all of its links 2`] = `
+{
+  "guildId": "guild-id",
+  "id": "200",
+  "links": [
+    {
+      "guildId": "guild-id",
+      "id": "300",
+      "sourceLang": "zh",
+      "targetLang": "zh",
+    },
+  ],
+}
+`;
+
+exports[`/unlink-channel command should unlink the provided translate channel from all of its links 3`] = `
+{
+  "guildId": "guild-id",
+  "id": "100",
+  "links": [],
+}
+`;
+
+exports[`/unlink-channel command should unlink the provided translate channel from all of its links 4`] = `
+{
+  "guildId": "guild-id",
+  "id": "300",
+  "links": [
+    {
+      "guildId": "guild-id",
+      "id": "200",
+      "sourceLang": "ja",
+      "targetLang": "ja",
+    },
+  ],
+}
+`;
+
+exports[`/unlink-channel command should unlink the provided translate channel from all of its links 5`] = `"100"`;
