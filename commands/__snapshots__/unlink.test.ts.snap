@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`/unlink command [000, 000] - should notify user appropriately with regards to the state of the provided source and target channels 1`] = `
+{
+  "content": "You cannot unlink <#000> with itself!",
+}
+`;
+
+exports[`/unlink command [000, 001] - should notify user appropriately with regards to the state of the provided source and target channels 1`] = `
+{
+  "content": "Both <#000> and <#001> are not translate channels!",
+}
+`;
+
+exports[`/unlink command [000, 100] - should notify user appropriately with regards to the state of the provided source and target channels 1`] = `
+{
+  "content": "<#000> is not a translate channel!",
+}
+`;
+
+exports[`/unlink command [100, 000] - should notify user appropriately with regards to the state of the provided source and target channels 1`] = `
+{
+  "content": "<#000> is not a translate channel!",
+}
+`;
+
+exports[`/unlink command [100, 100] - should notify user appropriately with regards to the state of the provided source and target channels 1`] = `
+{
+  "content": "You cannot unlink <#100> with itself!",
+}
+`;
+
+exports[`/unlink command should notify user if the provided channels are already unlinked 1`] = `
+{
+  "content": "<#100> and <#200> are already unlinked!",
+}
+`;
+
+exports[`/unlink command should notify user that the command is only for servers 1`] = `
+{
+  "content": "This command is only available on servers.",
+}
+`;
+
+exports[`/unlink command should notify user that they didn't provide a target channel 1`] = `
+{
+  "content": "Please specify the target channel.",
+}
+`;
+
+exports[`/unlink command should unlink 1`] = `
+{
+  "content": "<#100> and <#200> are now unlinked!",
+}
+`;
