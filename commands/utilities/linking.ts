@@ -73,6 +73,10 @@ export const linkChannels = async (
   return linked;
 };
 
+/**
+ * Builds a map which contains all of the channels that are linked
+ * together, doesn't matter even if unidirectional.
+ */
 export const buildAllChannelsLinkMap = async (channelLinks: IChannelLink[]) => {
   const jobQueue: IChannelLink[] = [...channelLinks];
   const allChLinkMap = new Map<string, IAllChLinkMapValue>();

@@ -87,9 +87,9 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   const nonTrChannelsWarning = nonTrChannelIdsMap.size
     ? `\n${stringChannels(
         nonTrChannelIdsMap.map((_, channelId) => channelId)
-      )} ${
-        nonTrChannelIdsMap.size === 1 ? 'is' : 'are'
-      } not linked because they are not set to any language. Please use the \`/set\` command to specify ${
+      )} ${nonTrChannelIdsMap.size === 1 ? 'is' : 'are'} not linked because ${
+        nonTrChannelIdsMap.size === 1 ? 'it is' : 'they are'
+      } not set to any language. Please use the \`/set\` command to specify ${
         nonTrChannelIdsMap.size === 1 ? 'its language' : 'their languages'
       }.`
     : '';
@@ -115,7 +115,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   );
   if (
     allChLinkMap.size >= CHANNEL_LINK_LIMIT ||
-    chProcessMap.size >= CHANNEL_LINK_LIMIT
+    chProcessMap.size > CHANNEL_LINK_LIMIT
   ) {
     await interaction.reply({
       content: `${linkedChannelsString} are **not linked** because you already reached the linking limit of ${CHANNEL_LINK_LIMIT}!`,

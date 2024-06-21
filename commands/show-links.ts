@@ -8,6 +8,7 @@ import ChannelLink, { IChannelLink } from '../db/models/ChannelLink';
 import { ITranslateChannel } from '../db/models/TranslateChannel';
 import buildLongContentEmbeds from './utilities/buildLongContentEmbeds';
 import cache from '../cache';
+import botConfig from '../botConfig';
 
 const data = new SlashCommandBuilder()
   .setName('show-links')
@@ -91,7 +92,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   const content = `**Showing all translate channels links**\nThere are a total of ${
     chLinks.length
   } channels that have links.\n\n${strBuilder.join('')}`;
-  if (content.length <= 2000) {
+  if (content.length <= botConfig.messageCharactersLimit) {
     interaction.reply({
       content,
     });

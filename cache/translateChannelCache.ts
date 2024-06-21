@@ -90,4 +90,8 @@ const unset = async (channelId: string) => {
   cacheTrChannels.delete(channelId);
 };
 
-export default { set, unset, get };
+const clear = () => {
+  cacheTrChannels.clear();
+};
+
+export default { set, unset, get, clear };

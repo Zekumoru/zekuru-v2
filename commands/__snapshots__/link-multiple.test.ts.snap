@@ -1,0 +1,70 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`/link-multiple command <#100> <#200> <#300> <#400> - it shouldn't link anymore if the limit has already been reached 1`] = `
+{
+  "content": "<#100>, <#200>, <#300> and <#400> are **not linked** because you already reached the linking limit of 3!",
+}
+`;
+
+exports[`/link-multiple command <#100> <#400> - it shouldn't link anymore if the limit has already been reached 1`] = `
+{
+  "content": "<#100> and <#400> are **not linked** because you already reached the linking limit of 3!",
+}
+`;
+
+exports[`/link-multiple command <#200> <#300> <#400> - it shouldn't link anymore if the limit has already been reached 1`] = `
+{
+  "content": "<#200>, <#300> and <#400> are **not linked** because you already reached the linking limit of 3!",
+}
+`;
+
+exports[`/link-multiple command <@123456789> - should notify user if they didn't provide correct channels 1`] = `
+{
+  "content": "Cannot link, you didn't provide any channels!",
+}
+`;
+
+exports[`/link-multiple command random string - should notify user if they didn't provide correct channels 1`] = `
+{
+  "content": "Cannot link, you didn't provide any channels!",
+}
+`;
+
+exports[`/link-multiple command should notify user that the command has been called outside of a server 1`] = `
+{
+  "content": "This command is only available on servers.",
+}
+`;
+
+exports[`/link-multiple command should notify user that they didn't provide a translate channel or translate channels 1`] = `
+{
+  "content": "Cannot link, you didn't provide any translate channels!
+<#000> is not linked because it is not set to any language. Please use the \`/set\` command to specify its language.",
+}
+`;
+
+exports[`/link-multiple command should notify user that they didn't provide a translate channel or translate channels 2`] = `
+{
+  "content": "Cannot link, you didn't provide any translate channels!
+<#000> and <#001> are not linked because they are not set to any language. Please use the \`/set\` command to specify their languages.",
+}
+`;
+
+exports[`/link-multiple command should notify user that they didn't provide a translate channel or translate channels 3`] = `
+{
+  "content": "Cannot link, you didn't provide any translate channels!
+<#000>, <#001>, <#002>, <#003> and <#004> are not linked because they are not set to any language. Please use the \`/set\` command to specify their languages.",
+}
+`;
+
+exports[`/link-multiple command should notify user that they only provided one translate channel 1`] = `
+{
+  "content": "Cannot link, please provide more than one translate channel!",
+}
+`;
+
+exports[`/link-multiple command should notify user that they reached linking limit 1`] = `
+{
+  "content": "<#100>, <#200>, <#300> and <#400> are **not linked** because you already reached the linking limit of 3!",
+}
+`;

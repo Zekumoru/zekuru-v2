@@ -11,7 +11,7 @@ const fetchOrCreateLink = async (channelId: string, guildId: string) => {
   if (link) return link;
 
   const newLink = new ChannelLink({
-    guildId,
+    // guildId,
     id: channelId,
     links: [],
   });
@@ -24,26 +24,13 @@ const create = async (channelId: string, guildId: string) => {
   const link = await fetchOrCreateLink(channelId, guildId);
 
   cacheLinks.set(channelId, {
-    guildId,
     _id: link._id,
     id: link.id,
+    guildId: link.guildId,
     links: link.links,
     createdAt: link.createdAt,
   });
   return cacheLinks.get(channelId)!;
-};
-
-const update = async (channelLink: IChannelLink) => {
-  // update in db
-  const link = await fetchOrCreateLink(channelLink.id, channelLink.guildId);
-  link.overwrite(channelLink);
-  await link.save();
-
-  // update cache
-  cacheLinks.set(
-    channelLink.id,
-    await fetchOrCreateLink(channelLink.id, channelLink.guildId)
-  );
 };
 
 const get = async (channelId: string) => {
@@ -67,6 +54,22 @@ const get = async (channelId: string) => {
   return cacheLinks.get(channelId)!;
 };
 
+const update = async (channelLink: IChannelLink) => {
+  // update in db
+  const link = await fetchOrCreateLink(channelLink.id, channelLink.guildId);
+  link.overwrite(channelLink);
+  await link.save();
+
+  // update cache
+  cacheLinks.set(channelLink.id, {
+    _id: link._id,
+    id: link.id,
+    guildId: link.guildId,
+    links: link.links,
+    createdAt: link.createdAt,
+  });
+};
+
 const deleteLink = async (channelId: string) => {
   // check if it exists first
   if ((await get(channelId)) == null) return;
@@ -78,4 +81,8 @@ const deleteLink = async (channelId: string) => {
   cacheLinks.delete(channelId);
 };
 
-export default { create, update, get, delete: deleteLink };
+const clear = () => {
+  cacheLinks.clear();
+};
+
+export default { create, update, get, delete: deleteLink, clear };

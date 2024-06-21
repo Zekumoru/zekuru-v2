@@ -1,0 +1,2 @@
+# .husky/pre-push
+yarn test

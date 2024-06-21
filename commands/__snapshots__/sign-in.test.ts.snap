@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`/sign-in command should notify user if something went wrong 1`] = `
+{
+  "content": "Bot could not sign in. Something went wrong!",
+}
+`;
+
+exports[`/sign-in command should notify user if they are already signed in 1`] = `
+{
+  "content": "You are already signed in. Please sign out using \`/sign-out\` command if you wish to sign in with another API key.",
+}
+`;
+
+exports[`/sign-in command should notify user if they didn't provide an API key 1`] = `
+{
+  "content": "Please provide a Deepl API key.",
+}
+`;
+
+exports[`/sign-in command should notify user if they passed an invalid API key 1`] = `
+{
+  "content": "Bot could not sign in. Invalid Deepl API key!",
+}
+`;
+
+exports[`/sign-in command should notify user that this command is only for servers 1`] = `
+{
+  "content": "This command is only available on servers.",
+}
+`;
+
+exports[`/sign-in command should sign in 1`] = `
+{
+  "content": "Bot has been successfully signed in. You can now translate!",
+}
+`;
