@@ -19,10 +19,8 @@ export default {
       try {
         const webhook = await message.fetchWebhook();
         if (webhook.owner?.id === message.client.user.id) return;
-      } catch (error) {
-        errorDebug((error as { message: string }).message);
-        errorDebug(error);
-        return;
+      } catch (_) {
+        // ignore error
       }
     }
 
