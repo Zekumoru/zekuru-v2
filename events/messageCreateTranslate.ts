@@ -20,7 +20,9 @@ export default {
         const webhook = await message.fetchWebhook();
         if (webhook.owner?.id === message.client.user.id) return;
       } catch (_) {
-        // ignore error
+        // ignore error because if the message.fetchWebhook throws an error
+        // then that means that it's a user's application's message and
+        // we also want to translate that
       }
     }
 
