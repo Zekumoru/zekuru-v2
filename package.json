@@ -3,7 +3,8 @@
   "version": "0.10.0",
   "license": "MIT",
   "scripts": {
-    "register": "ts-node ./apps/zekuru-v2/src/register.ts"
+    "register": "ts-node ./apps/zekuru-v2/src/register.ts",
+    "gen-cipher": "ts-node ./packages/utils/src/security/create-cipher-secret.ts"
   },
   "private": true,
   "dependencies": {
