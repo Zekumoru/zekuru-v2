@@ -1,23 +1,7 @@
-import { Schema, Types, model } from 'mongoose';
+import { IMessageLink } from '@zekuru-v2/types';
+import { Schema, model } from 'mongoose';
 
-export interface IMessageLinkItem {
-  messageId: string;
-  channelId: string;
-}
-
-interface IMessageLinkSchema {
-  authorId: string;
-  messageId: string;
-  channelId: string;
-  links: IMessageLinkItem[];
-  createdAt: Date;
-}
-
-export interface IMessageLink extends IMessageLinkSchema {
-  _id: Types.ObjectId;
-}
-
-const MessageLinkSchema = new Schema<IMessageLinkSchema>({
+const MessageLinkSchema = new Schema<IMessageLink>({
   authorId: {
     type: String,
     required: true,

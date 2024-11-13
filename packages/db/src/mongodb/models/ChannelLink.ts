@@ -1,18 +1,7 @@
+import { IChannelLink } from '@zekuru-v2/types';
 import { Schema, Types, model } from 'mongoose';
-import { ITranslateChannel } from './TranslateChannel';
 
-interface IChannelLinkSchema {
-  id: string;
-  guildId: string;
-  links: ITranslateChannel[];
-  createdAt: Date;
-}
-
-export interface IChannelLink extends IChannelLinkSchema {
-  _id: Types.ObjectId;
-}
-
-const ChannelLinkSchema = new Schema<IChannelLinkSchema>({
+const ChannelLinkSchema = new Schema<IChannelLink>({
   id: {
     type: String,
     required: true,

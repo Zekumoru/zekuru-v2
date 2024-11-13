@@ -1,14 +1,5 @@
-import { Schema, Types, model } from 'mongoose';
-
-interface IGuildKeySchema {
-  id: string;
-  key: string;
-  createdAt: Date;
-}
-
-export interface IGuildKey extends IGuildKeySchema {
-  _id: Types.ObjectId;
-}
+import { IGuildKey } from '@zekuru-v2/types';
+import { Schema, model } from 'mongoose';
 
 const GuildKeySchema = new Schema<IGuildKey>({
   id: {

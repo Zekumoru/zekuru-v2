@@ -1,19 +1,7 @@
-import * as deepl from 'deepl-node';
-import { Schema, Types, model } from 'mongoose';
+import { ITranslateChannel } from '@zekuru-v2/types';
+import { Schema, model } from 'mongoose';
 
-interface ITranslateChannelSchema {
-  id: string;
-  guildId: string;
-  sourceLang: deepl.SourceLanguageCode;
-  targetLang: deepl.TargetLanguageCode;
-  createdAt: Date;
-}
-
-export interface ITranslateChannel extends ITranslateChannelSchema {
-  _id: Types.ObjectId;
-}
-
-const TranslateChannelSchema = new Schema<ITranslateChannelSchema>({
+const TranslateChannelSchema = new Schema<ITranslateChannel>({
   id: {
     type: String,
     required: true,
