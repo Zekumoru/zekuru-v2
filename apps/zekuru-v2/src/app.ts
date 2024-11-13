@@ -5,8 +5,18 @@ import path from 'path';
 import { DiscordEvent } from '@zekuru-v2/types';
 import { logger } from '@zekuru-v2/utils';
 import { mongodbConnect } from '@zekuru-v2/db';
+import { argv } from 'process';
+import { register as registerCommands } from './register';
 
 mongodbConnect();
+
+// check whether to register commands
+const toRegister = argv.some(
+  (option) => option === '--register' || option === '-r'
+);
+if (toRegister) {
+  registerCommands();
+}
 
 const token = process.env.DISCORD_TOKEN;
 

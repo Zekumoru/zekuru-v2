@@ -33,7 +33,7 @@ const commands: RESTPostAPIChatInputApplicationCommandsJSONBody[] = [];
 const commandsPath = path.join(__dirname, 'commands');
 const commandFiles = fs
   .readdirSync(commandsPath)
-  .filter((file) => file.endsWith('.ts') && !file.endsWith('.test.ts'));
+  .filter((file) => file.endsWith('.js') && !file.endsWith('.test.js'));
 
 // Grab the SlashCommandBuilder#toJSON() output of each command's data for deployment
 for (const file of commandFiles) {
@@ -58,7 +58,7 @@ interface RestResult {
   length: number;
 }
 
-(async () => {
+export const register = async () => {
   logger.info(
     `Started refreshing${isGlobal ? ' globally ' : ' '}${
       commands.length
@@ -84,4 +84,4 @@ interface RestResult {
   }
 
   logger.info(`Successfully reloaded ${data.length} application (/) commands.`);
-})();
+};

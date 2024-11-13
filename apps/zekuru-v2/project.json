@@ -43,7 +43,8 @@
       "dependsOn": ["build"],
       "options": {
         "buildTarget": "zekuru-v2:build",
-        "runBuildTargetDependencies": false
+        "runBuildTargetDependencies": false,
+        "args": ["-r", "-g"]
       },
       "configurations": {
         "development": {
