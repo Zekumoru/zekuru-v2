@@ -3,8 +3,10 @@ import { Client, Collection, GatewayIntentBits, Partials } from 'discord.js';
 import fs from 'fs';
 import path from 'path';
 import { DiscordEvent } from '@zekuru-v2/types';
-import './db/mongoDbConnect';
 import { logger } from '@zekuru-v2/utils';
+import { mongodbConnect } from '@zekuru-v2/db';
+
+mongodbConnect();
 
 const token = process.env.DISCORD_TOKEN;
 
