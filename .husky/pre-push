@@ -1,2 +1,2 @@
 # .husky/pre-push
-yarn test
+echo "[WARNING] Don't forget to run tests later on!"

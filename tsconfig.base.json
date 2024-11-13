@@ -1,0 +1,30 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "esModuleInterop": true,
+
+    // fixes: error TS2688: Cannot find type definition file for '../../packages/types/src/global/env.d.ts'.
+    "typeRoots": ["node_modules/@types", "packages/types/src/global"],
+
+    "paths": {
+      "@zekuru-v2/cache": ["packages/cache/src/index.ts"],
+      "@zekuru-v2/db": ["packages/db/src/index.ts"],
+      "@zekuru-v2/types": ["packages/types/src/index.ts"],
+      "@zekuru-v2/utils": ["packages/utils/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

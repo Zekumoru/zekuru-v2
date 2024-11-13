@@ -1,8 +1,5 @@
-import type { JestConfigWithTsJest } from 'ts-jest';
+import { getJestProjectsAsync } from '@nx/jest';
 
-const jestConfig: JestConfigWithTsJest = {
-  preset: 'ts-jest',
-  testEnvironment: 'node',
-};
-
-export default jestConfig;
+export default async () => ({
+  projects: await getJestProjectsAsync(),
+});

@@ -1,0 +1,58 @@
+{
+  "name": "zekuru-v2",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/zekuru-v2/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "platform": "node",
+        "outputPath": "dist/apps/zekuru-v2",
+        "format": ["cjs"],
+        "bundle": false,
+        "main": "apps/zekuru-v2/src/app.ts",
+        "tsConfig": "apps/zekuru-v2/tsconfig.app.json",
+        "assets": ["apps/zekuru-v2/src/assets"],
+        "generatePackageJson": true,
+        "esbuildOptions": {
+          "sourcemap": true,
+          "outExtension": {
+            ".js": ".js"
+          }
+        }
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "esbuildOptions": {
+            "sourcemap": false,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "dependsOn": ["build"],
+      "options": {
+        "buildTarget": "zekuru-v2:build",
+        "runBuildTargetDependencies": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "zekuru-v2:build:development"
+        },
+        "production": {
+          "buildTarget": "zekuru-v2:build:production"
+        }
+      }
+    }
+  }
+}
