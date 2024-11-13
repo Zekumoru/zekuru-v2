@@ -9,7 +9,7 @@ interface ITagTranscoder {
 const DISCORD_IGNORE_REGEX =
   /(<a?[:@#][\w:]*>)|(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_+.~#?&/=]*))|(```((?!\s)|\r\n|\r|\n|.)*```)/g;
 
-const tagTranscoder: ITagTranscoder = {
+export const tagTranscoder: ITagTranscoder = {
   encode: (message) => {
     const matches = message.matchAll(DISCORD_IGNORE_REGEX);
     const tagTable: TTagTable = new Map();
@@ -53,5 +53,3 @@ const tagTranscoder: ITagTranscoder = {
     return tokens.join('');
   },
 };
-
-export default tagTranscoder;

@@ -9,10 +9,7 @@ import {
   PermissionFlagsBits,
   SlashCommandBuilder,
 } from 'discord.js';
-import {
-  sourceLanguages,
-  targetLanguages,
-} from 'packages/cache/src/discord/utils/languages';
+import { sourceLanguages, targetLanguages } from '@zekuru-v2/utils';
 import updateTranslateMessages from '../events/utilities/updateTranslateMessages';
 
 const data = new SlashCommandBuilder()

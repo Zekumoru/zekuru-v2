@@ -3,11 +3,10 @@ import {
   PermissionFlagsBits,
   SlashCommandBuilder,
 } from 'discord.js';
-import { createCommand } from '@zekuru-v2/utils';
+import { createCommand, sourceLanguages } from '@zekuru-v2/utils';
 import { channelLink as channelLinkCache } from '@zekuru-v2/cache';
 import { TranslateChannel } from '@zekuru-v2/db';
 import buildLongContentEmbeds from './utilities/buildLongContentEmbeds';
-import { sourceLanguages } from 'packages/cache/src/discord/utils/languages';
 import { config as botConfig } from '../config.bot';
 
 const data = new SlashCommandBuilder()

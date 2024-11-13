@@ -2,8 +2,7 @@ import { AuthorizationError, Translator, TranslatorOptions } from 'deepl-node';
 import { Collection } from 'discord.js';
 import { GuildKey } from '@zekuru-v2/db';
 import { IGuildKey } from '@zekuru-v2/types';
-import { encrypt, decrypt, logger } from '@zekuru-v2/utils';
-import { loadLanguages } from './utils/languages';
+import { encrypt, decrypt, logger, loadLanguages } from '@zekuru-v2/utils';
 
 export const translatorOptions: TranslatorOptions = {
   appInfo: {

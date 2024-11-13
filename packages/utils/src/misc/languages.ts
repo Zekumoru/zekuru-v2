@@ -1,5 +1,5 @@
-import { logger } from '@zekuru-v2/utils';
 import * as deepl from 'deepl-node';
+import { logger } from '../logging/logger';
 
 export const targetLanguages: deepl.Language[] = [];
 const loadTargetLanguages = async (translator: deepl.Translator) => {

@@ -1,8 +1,7 @@
 import { GuildKey } from '@zekuru-v2/db';
 import { Client, Events } from 'discord.js';
-import { sourceLanguages } from 'packages/cache/src/discord/utils/languages';
 import { translator as translatorCache } from '@zekuru-v2/cache';
-import { logger } from '@zekuru-v2/utils';
+import { logger, sourceLanguages } from '@zekuru-v2/utils';
 import { DiscordEvent } from '@zekuru-v2/types';
 
 export default {

@@ -4,8 +4,8 @@ import {
   TargetLanguageCode,
 } from 'deepl-node';
 import { DISCORD_MESSAGE_CHARS_LIMIT } from './limits';
-import tagTranscoder from 'packages/utils/src/discord/tagTranscoder';
 import { translator as translatorCache } from '@zekuru-v2/cache';
+import { tagTranscoder } from '@zekuru-v2/utils';
 
 const translateContent = async (
   content: string,
