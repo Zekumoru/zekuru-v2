@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`tagTranscoder 
+Check the code below:
+\`\`\`ts
+// some code...
+\`\`\`
+
+Or you can also try:
+\`\`\`ts
+// some code...
+\`\`\`
+
+Hopefully that answers your question! <a:emoji_anim:333>
+ - that encoding/decoding works 1`] = `
+"
+Check the code below:
+<:0:>
+
+Hopefully that answers your question! <:1:>
+"
+`;
+
+exports[`tagTranscoder <:emoji:111> <:emoji:111> <:emoji:111> - that encoding/decoding works 1`] = `"<:0:> <:1:> <:2:>"`;
+
+exports[`tagTranscoder <@123> did you check the <#456> channel - that encoding/decoding works 1`] = `"<:0:> did you check the <:1:> channel"`;
+
+exports[`tagTranscoder Some <@123> random <#456> text <@789> - that encoding/decoding works 1`] = `"Some <:0:> random <:1:> text <:2:>"`;
+
+exports[`tagTranscoder Why don't you check the official docs here: https://discord.js.org/ ? - that encoding/decoding works 1`] = `"Why don't you check the official docs here: <:0:> ?"`;
+
+exports[`tagTranscoder Yes sure! <:emoji:111> <a:emoji_anim:222> - that encoding/decoding works 1`] = `"Yes sure! <:0:> <:1:>"`;
+
+exports[`tagTranscoder this is an example sentence - that encoding/decoding works 1`] = `"this is an example sentence"`;

@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`/show-channels command should notify user that this command is only on servers 1`] = `
+{
+  "content": "This command is only available on servers.",
+}
+`;
+
+exports[`/show-channels command should notify user when they are no translate channels to show 1`] = `
+{
+  "content": "There are no translate channels yet. You can start setting them by using the \`/set\` command.",
+}
+`;
+
+exports[`/show-channels command should show channels 1`] = `
+{
+  "content": "**Showing all translate channels**
+There are a total of 4 translate channels.
+- <#100> is set to \`en\` and is linked to 2 translate channels.
+- <#200> is set to \`ja\` and is linked to 2 translate channels.
+- <#300> is set to \`zh\` and is linked to 2 translate channels.
+- <#400> is set to \`ko\` and is **not linked** to any translate channels.",
+}
+`;
+
+exports[`/show-channels command should show embeds instead if the message is over Discord's character limit 1`] = `
+{
+  "embeds": [
+    {
+      "color": 39423,
+      "description": "**Showing all translate channels**
+There are a total of 7 translate channels.
+- <#100> is set to \`en\` and is **not linked** to any translate channels.
+- <#200> is set to \`ja\` and is **not linked** to any translate channels.
+- <#300> is set to \`zh\` and is **not linked** to any translate channels.
+- <#400> is set to \`ko\` and is **not linked** to any translate channels.
+- <#000> is set to \`it\` and is **not linked** to any translate channels.
+- <#001> is set to \`fr\` and is **not linked** to any translate channels.
+- <#002> is set to \`es\` and is **not linked** to any translate channels.",
+    },
+  ],
+}
+`;

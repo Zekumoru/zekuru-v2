@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`/usage command should notify user if cannot get usage 1`] = `"An error occurred. Could not get usage."`;
+
+exports[`/usage command should notify user if limit reached 1`] = `"Usage limit has been reached!"`;
+
+exports[`/usage command should notify user if they're not signed in 1`] = `
+{
+  "content": "Cannot get usage, no api key found. Please sign in using the \`sign-in\` command.",
+}
+`;
+
+exports[`/usage command should show usage 1`] = `"Usage count: **56,789 / 500,000 characters**; Remaining: **443,211 characters**."`;

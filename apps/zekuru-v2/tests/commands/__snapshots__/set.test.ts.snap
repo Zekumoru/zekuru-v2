@@ -1,0 +1,133 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`/set command should change language 1`] = `
+{
+  "components": [
+    {
+      "components": [
+        {
+          "custom_id": "cancel",
+          "emoji": undefined,
+          "label": "Cancel",
+          "style": 2,
+          "type": 2,
+        },
+        {
+          "custom_id": "confirm",
+          "emoji": undefined,
+          "label": "Yes, change",
+          "style": 4,
+          "type": 2,
+        },
+      ],
+      "type": 1,
+    },
+  ],
+  "content": "<#100> is already set to \`English\`. Do you want to change it to \`Japanese\`?",
+}
+`;
+
+exports[`/set command should change language 2`] = `
+{
+  "components": [],
+  "content": "<#100> has been changed to \`Japanese\`.",
+}
+`;
+
+exports[`/set command should not change language if timeout reached 1`] = `
+{
+  "components": [
+    {
+      "components": [
+        {
+          "custom_id": "cancel",
+          "emoji": undefined,
+          "label": "Cancel",
+          "style": 2,
+          "type": 2,
+        },
+        {
+          "custom_id": "confirm",
+          "emoji": undefined,
+          "label": "Yes, change",
+          "style": 4,
+          "type": 2,
+        },
+      ],
+      "type": 1,
+    },
+  ],
+  "content": "<#100> is already set to \`English\`. Do you want to change it to \`Japanese\`?",
+}
+`;
+
+exports[`/set command should not change language if timeout reached 2`] = `
+{
+  "components": [],
+  "content": "Confirmation not received within 30 seconds, cancelling.",
+}
+`;
+
+exports[`/set command should not change language if user cancelled 1`] = `
+{
+  "components": [
+    {
+      "components": [
+        {
+          "custom_id": "cancel",
+          "emoji": undefined,
+          "label": "Cancel",
+          "style": 2,
+          "type": 2,
+        },
+        {
+          "custom_id": "confirm",
+          "emoji": undefined,
+          "label": "Yes, change",
+          "style": 4,
+          "type": 2,
+        },
+      ],
+      "type": 1,
+    },
+  ],
+  "content": "<#100> is already set to \`English\`. Do you want to change it to \`Japanese\`?",
+}
+`;
+
+exports[`/set command should not change language if user cancelled 2`] = `
+{
+  "components": [],
+  "content": "<#100>'s language not changed",
+}
+`;
+
+exports[`/set command should notify user if the provided language is missing its target language (DeepL) 1`] = `
+{
+  "content": "Error! Target language for 'English (GB)' is missing. Please contact the developer.",
+}
+`;
+
+exports[`/set command should notify user if they didn't provide correct language name 1`] = `
+{
+  "content": "Invalid language 'gibberish'.",
+}
+`;
+
+exports[`/set command should notify user if they didn't provide the language to set the channel with 1`] = `
+{
+  "content": "Please specify a language.",
+}
+`;
+
+exports[`/set command should notify user that the command has been called outside of a server 1`] = `
+{
+  "content": "This command is only available on servers.",
+}
+`;
+
+exports[`/set command should set language 1`] = `
+{
+  "content": "<#000> has been set to \`English\`.",
+}
+`;

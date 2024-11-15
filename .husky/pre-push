@@ -1,2 +1,2 @@
 # .husky/pre-push
-echo "[WARNING] Don't forget to run tests later on!"
+nx run-many -t test -p zekuru-v2 cache utils

@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`link should link if near the linking limit with recursive linking mode 1`] = `
+{
+  "content": "<#100> **(en)** and <#300> **(zh)** are now linked **recursively**!",
+}
+`;
+
+exports[`link should link the channel where the command is called on and the provided target channel 1`] = `
+{
+  "content": "<#100> **(en)** and <#200> **(ja)** are now linked!",
+}
+`;
+
+exports[`link should link the provided source channel and the provided target channel 1`] = `
+{
+  "content": "<#100> **(en)** and <#200> **(ja)** are now linked!",
+}
+`;
+
+exports[`link should not link if over the linking limit 1`] = `
+{
+  "content": "<#100> **(en)** and <#400> **(ko)** are **not linked** because you already reached the linking limit of 3!",
+}
+`;
+
+exports[`link should notify user if they didn't provide a translate channel 1`] = `
+{
+  "content": "Please specify the target channel.",
+}
+`;
+
+exports[`link should notify user if they provided a source channel that is not a translate channel 1`] = `
+{
+  "content": "<#000> is not associated with any languages yet. Please use the \`/set\` command to set its language.",
+}
+`;
+
+exports[`link should notify user if they provided a target channel that is not a translate channel 1`] = `
+{
+  "content": "<#000> is not associated with any languages yet. Please use the \`/set\` command to set its language.",
+}
+`;
+
+exports[`link should notify user if they provided channels that aren't translate channels 1`] = `
+{
+  "content": "Both <#000> and <#001> are not associated with any languages yet. Please use the \`/set\` command to set their languages.",
+}
+`;
+
+exports[`link should notify user if they tried to link a channel to itself 1`] = `
+{
+  "content": "You cannot link <#100> with itself!",
+}
+`;
+
+exports[`link should notify user that the command has been called outside of a server 1`] = `
+{
+  "content": "This command is only available on servers.",
+}
+`;
+
+exports[`link that unidirectional linking works 1`] = `
+{
+  "content": "<#100> **(en)** is now linked **unidirectionally** to <#200> **(ja)**!",
+}
+`;

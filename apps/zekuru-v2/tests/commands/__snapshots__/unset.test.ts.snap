@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`/unset command should notify user if they try to unset a channel that doesn't have a language yet 1`] = `
+{
+  "content": "<#000> is not set to any language.",
+}
+`;
+
+exports[`/unset command should notify user that the command is for servers only 1`] = `
+{
+  "content": "This command is only available on servers.",
+}
+`;
+
+exports[`/unset command should unset 1`] = `
+{
+  "content": "<#100> has been successfully unset.",
+}
+`;

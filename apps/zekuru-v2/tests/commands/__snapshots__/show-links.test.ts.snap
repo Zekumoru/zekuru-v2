@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`/show-links command should notify user if the translate channel they provided doesn't have any links yet 1`] = `
+{
+  "content": "<#100> **(en)** is linked to 0 channels: ",
+}
+`;
+
+exports[`/show-links command should notify user that this command is only for servers 1`] = `
+{
+  "content": "This command is only available on servers.",
+}
+`;
+
+exports[`/show-links command should show all links and use embeds if above Discord message's characters limit 1`] = `
+{
+  "embeds": [
+    {
+      "color": 39423,
+      "description": "**Showing all translate channels links**
+There are a total of 4 channels that have links.
+
+<#100> **(en)** is linked to 1 channels: 
+- <#200> **(ja)**
+
+<#200> **(ja)** is linked to 1 channels: 
+- <#100> **(en)**
+
+<#300> **(zh)** is linked to 1 channels: 
+- <#400> **(ko)**
+
+<#400> **(ko)** is linked to 1 channels: 
+- <#300> **(zh)**",
+    },
+  ],
+}
+`;
+
+exports[`/show-links command should show links of a translate channel 1`] = `
+{
+  "content": "<#100> **(en)** is linked to 2 channels: 
+- <#200> **(ja)**
+- <#300> **(zh)**",
+}
+`;
