@@ -1,2 +1,2 @@
 # .husky/pre-push
-nx run-many -t test -p zekuru-v2 cache utils
+yarn nx affected -t lint test build
