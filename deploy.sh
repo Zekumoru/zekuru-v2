@@ -50,7 +50,7 @@ yarn nx build zekuru-v2 || error_exit "Build process failed."
 cp .env ./dist/apps/zekuru-v2/ || error_exit "Could not copy .env to build directory."
 
 # Move to build directory
-mv ./dist/apps/zekuru-v2/
+cd ./dist/apps/zekuru-v2/
 
 
 # Function to check if PM2 process exists
