@@ -1,2 +1,2 @@
 # .husky/pre-push
-yarn test
+yarn nx affected -t lint test build

@@ -1,0 +1,43 @@
+name: Automated Tests
+
+on: [pull_request]
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # I've no idea why yarn isn't installed with
+      # actions/setup-node@v4 so install it manually
+      - name: Install Yarn
+        run: npm install -g yarn
+
+      # Cache node_modules
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+      
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      # Ensures that the commit SHAs for affected
+      # files are consistent across tasks.
+      - uses: nrwl/nx-set-shas@v4
+
+      # Nx Affected runs only tasks affected by the changes in
+      # this PR. Learn more: https://nx.dev/ci/features/affected
+      - name: Run tests
+        run: yarn nx affected -t lint test build
