@@ -1,11 +1,12 @@
-import { ChannelLanguage, CommonEntity, Snowflake } from '@zekuru-v2/types';
+import { Snowflake } from '@zekuru-v2/types';
+import { CommonEntity } from '../CommonEntity';
 
-export class Channel implements CommonEntity {
+export class Message implements CommonEntity {
   constructor(
     public _id: Snowflake,
+    public authorId: Snowflake,
+    public channelId: Snowflake,
     public guildId: Snowflake,
-    public links: Snowflake[],
-    public language: ChannelLanguage,
     public createdAt: Date,
     public createdBy: Snowflake,
     public modifiedAt: Date,

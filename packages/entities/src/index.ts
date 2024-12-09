@@ -1,3 +1,3 @@
-export * from './Channel';
-export * from './Guild';
-export * from './Message';
+export * from './channel/Channel';
+export * from './guild/Guild';
+export * from './message/Message';

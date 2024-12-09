@@ -27,7 +27,7 @@
       ],
       "@zekuru-v2/types": ["packages/types/src/index.ts"],
       "@zekuru-v2/utils": ["packages/utils/src/index.ts"],
-      "entities": ["packages/entities/src/index.ts"]
+      "@zekuru-v2/entities": ["packages/entities/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

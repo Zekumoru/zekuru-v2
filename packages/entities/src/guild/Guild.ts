@@ -1,8 +1,6 @@
-import {
-  CommonEntity,
-  GuildTranslationMeta,
-  Snowflake,
-} from '@zekuru-v2/types';
+import { Snowflake } from '@zekuru-v2/types';
+import { CommonEntity } from '../CommonEntity';
+import { GuildTranslationMeta } from './GuildTranslationMeta';
 
 export class Guild implements CommonEntity {
   constructor(
