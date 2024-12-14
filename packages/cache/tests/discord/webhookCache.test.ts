@@ -13,6 +13,7 @@ jest.mock('discord.js', () => {
     Collection: jest.fn().mockImplementation(() => mockCollection),
     Webhook: jest.fn(),
     BaseGuildTextChannel: jest.fn(),
+    SlashCommandBuilder: jest.fn(),
   };
 });
 
