@@ -7,7 +7,11 @@
     // Yes, there is a need to go back to packages/ otherwise
     // intellisense for .env.d.ts won't work
     // probably has something to do with tsconfig.base.json
-    "types": ["node", "../../packages/types/src/global/env.d.ts"]
+    "types": [
+      "node",
+      "../../packages/types/src/global/env.d.ts",
+      "../../packages/types/src/global/discord.d.ts"
+    ]
   },
   "exclude": ["jest.config.ts", "src/**/*.spec.ts", "src/**/*.test.ts"],
   "include": ["src/**/*.ts"]
