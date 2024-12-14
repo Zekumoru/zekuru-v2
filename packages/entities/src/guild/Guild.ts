@@ -1,8 +1,8 @@
 import { Snowflake } from '@zekuru-v2/types';
-import { CommonEntity } from '../CommonEntity';
 import { GuildTranslationMeta } from './GuildTranslationMeta';
+import { Createable, Modifiable } from '../Common';
 
-export class Guild implements CommonEntity {
+export class Guild implements Createable, Modifiable {
   constructor(
     public _id: Snowflake,
     public translation: GuildTranslationMeta,
