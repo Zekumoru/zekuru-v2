@@ -103,4 +103,4 @@ const GuildSchema = new mongoose.Schema<Guild>({
   },
 });
 
-export default mongoose.model<Guild>('Guild', GuildSchema);
+export const GuildModel = mongoose.model<Guild>('Guild', GuildSchema);
