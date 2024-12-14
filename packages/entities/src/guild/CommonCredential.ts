@@ -1,6 +1,4 @@
-import { Snowflake } from '@zekuru-v2/types';
+import { Createable } from '../Common';
 
-export interface CommonCredential {
-  addedAt: Date;
-  addedBy: Snowflake;
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-empty-interface
+export interface CommonCredential extends Createable {}
