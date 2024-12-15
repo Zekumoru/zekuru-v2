@@ -7,8 +7,8 @@ import { SlashCommandBuilder } from 'discord.js';
 export class DiscordCommandBuilder extends SlashCommandBuilder {
   private _cooldown?: number;
   private _devOnly?: boolean;
-  private _executor?: ChatInputCommandExecutor;
-  private _autocompleteExecutor?: AutocompleteExecutor;
+  private _execute?: ChatInputCommandExecutor;
+  private _autocompleteExecute?: AutocompleteExecutor;
 
   get cooldown(): number | undefined {
     return this._cooldown;
@@ -28,21 +28,21 @@ export class DiscordCommandBuilder extends SlashCommandBuilder {
     return this;
   }
 
-  get executor(): ChatInputCommandExecutor | undefined {
-    return this._executor;
+  get execute(): ChatInputCommandExecutor | undefined {
+    return this._execute;
   }
 
-  setExecutor(executor: ChatInputCommandExecutor): this {
-    this._executor = executor;
+  setExecutor(execute: ChatInputCommandExecutor): this {
+    this._execute = execute;
     return this;
   }
 
-  get autocompleteExecutor(): AutocompleteExecutor | undefined {
-    return this._autocompleteExecutor;
+  get autocompleteExecute(): AutocompleteExecutor | undefined {
+    return this._autocompleteExecute;
   }
 
-  setAutocompleteExecutor(executor: AutocompleteExecutor): this {
-    this._autocompleteExecutor = executor;
+  setAutocompleteExecutor(execute: AutocompleteExecutor): this {
+    this._autocompleteExecute = execute;
     return this;
   }
 }

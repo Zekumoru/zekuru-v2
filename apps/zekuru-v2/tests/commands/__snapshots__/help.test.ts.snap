@@ -2,12 +2,14 @@
 
 exports[`/help command should correctly show help content 1`] = `
 {
-  "content": "
-# Help
+  "content": "# Help
+
 Start using the bot by signing in using the \`/sign-in\` command providing your Deepl API key which you can get from [Deepl's website](https://www.deepl.com/pro-api). Then set languages to your channels using the \`/set\` command, link them using the \`/link\` command, and finally start chatting!
 
 For a more elaborate setup instructions, please visit the [Getting Started page on the official Zekuru-v2 documentation](https://zekuru-v2.zekumoru.com/getting-started/adding-to-server/)!
+
 ## Commands
+
 - \`/sign-in\`: Sign in using a Deepl's API key to start using the bot.
 - \`/sign-out\`: Signs out the bot.
 - \`/usage\`: Shows the current usage and remaining characters.

@@ -12,9 +12,9 @@ export type ChatInputCommandExecutor = (
 ) => Promise<void>;
 
 export interface Executors {
-  readonly autocompleteExecutor?: AutocompleteExecutor;
-  setAutocompleteExecutor(executor: AutocompleteExecutor): this;
+  readonly autocompleteExecute?: AutocompleteExecutor;
+  setAutocompleteExecutor(execute: AutocompleteExecutor): this;
 
-  readonly executor?: ChatInputCommandExecutor;
-  setExecutor(executor: ChatInputCommandExecutor): this;
+  readonly execute?: ChatInputCommandExecutor;
+  setExecutor(execute: ChatInputCommandExecutor): this;
 }

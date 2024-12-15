@@ -5,7 +5,7 @@ describe('/help command', () => {
   it('should correctly show help content', async () => {
     const interaction = createMockChatInputCommandInteraction();
 
-    await help.executor(interaction);
+    await help.execute(interaction);
 
     expect(interaction.reply.mock.calls[0][0]).toMatchSnapshot();
   });

@@ -12,7 +12,7 @@ export default {
 
     const autocompleteCommand =
       command instanceof DiscordCommandBuilder
-        ? command.autocompleteExecutor
+        ? command.autocompleteExecute
         : (command as DiscordCommand).autocomplete;
     if (!autocompleteCommand) return;
 
