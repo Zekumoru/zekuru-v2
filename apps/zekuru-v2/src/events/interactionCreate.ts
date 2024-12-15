@@ -1,5 +1,5 @@
-import { DiscordEvent } from '@zekuru-v2/types';
-import { logger } from '@zekuru-v2/utils';
+import { DiscordEvent, DiscordCommand } from '@zekuru-v2/types';
+import { DiscordCommandBuilder, logger } from '@zekuru-v2/utils';
 import { CacheType, Collection, Events, Interaction } from 'discord.js';
 
 export default {
@@ -18,14 +18,23 @@ export default {
       return;
     }
 
+    const commandName =
+      command instanceof DiscordCommandBuilder
+        ? command.name
+        : (command as DiscordCommand).data.name;
+    const executeCommand =
+      command instanceof DiscordCommandBuilder
+        ? command.executor
+        : (command as DiscordCommand).execute;
+
     const { cooldowns } = interaction.client;
 
-    if (!cooldowns.has(command.data.name)) {
-      cooldowns.set(command.data.name, new Collection());
+    if (!cooldowns.has(commandName)) {
+      cooldowns.set(commandName, new Collection());
     }
 
     const now = Date.now();
-    const timestamps = cooldowns.get(command.data.name);
+    const timestamps = cooldowns.get(commandName);
     const defaultCooldownDuration = 1;
     const cooldownAmount =
       (command.cooldown ?? defaultCooldownDuration) * 1_000;
@@ -37,7 +46,7 @@ export default {
       if (now < expirationTime) {
         const expiredTimestamp = Math.round(expirationTime / 1000);
         interaction.reply({
-          content: `Please wait, you are on a cooldown for \`${command.data.name}\`. You can use it again <t:${expiredTimestamp}:R>.`,
+          content: `Please wait, you are on a cooldown for \`${commandName}\`. You can use it again <t:${expiredTimestamp}:R>.`,
           ephemeral: true,
         });
         return;
@@ -48,7 +57,7 @@ export default {
     setTimeout(() => timestamps?.delete(interaction.user.id), cooldownAmount);
 
     try {
-      await command.execute(interaction);
+      await executeCommand(interaction);
     } catch (error) {
       logger.error(error);
 

@@ -1,5 +1,5 @@
-import { DiscordEvent } from '@zekuru-v2/types';
-import { logger } from '@zekuru-v2/utils';
+import { DiscordCommand, DiscordEvent } from '@zekuru-v2/types';
+import { DiscordCommandBuilder, logger } from '@zekuru-v2/utils';
 import { CacheType, Events, Interaction } from 'discord.js';
 
 export default {
@@ -9,10 +9,15 @@ export default {
 
     const command = interaction.client.commands.get(interaction.commandName);
     if (!command) return;
-    if (!command.autocomplete) return;
+
+    const autocompleteCommand =
+      command instanceof DiscordCommandBuilder
+        ? command.autocompleteExecutor
+        : (command as DiscordCommand).autocomplete;
+    if (!autocompleteCommand) return;
 
     try {
-      await command.autocomplete(interaction);
+      await autocompleteCommand(interaction);
     } catch (error) {
       logger.error(error);
     }

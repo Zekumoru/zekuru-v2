@@ -3,7 +3,7 @@ import { Client, Collection, GatewayIntentBits, Partials } from 'discord.js';
 import fs from 'fs';
 import path from 'path';
 import { DiscordEvent } from '@zekuru-v2/types';
-import { logger } from '@zekuru-v2/utils';
+import { DiscordCommandBuilder, logger } from '@zekuru-v2/utils';
 import { mongodbConnect } from '@zekuru-v2/db';
 import { argv } from 'process';
 import { register as registerCommands } from './register';
@@ -58,7 +58,10 @@ for (const file of commandFiles) {
   // Set a new item in the Collection with the key as the command name and the
   // value as the exported module
   if ('data' in command && 'execute' in command) {
+    // OLD STRUCTURING OF COMMANDS, WILL BE DEPRECATED LATER
     client.commands.set(command.data.name, command);
+  } else if (command instanceof DiscordCommandBuilder) {
+    client.commands.set(command.name, command);
   } else {
     logger.warn(
       `[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`

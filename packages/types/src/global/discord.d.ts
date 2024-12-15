@@ -1,11 +1,13 @@
 import { Collection } from 'discord.js';
-import { DiscordCommand } from '../DiscordCommand';
 import { Executors } from '../discord/Executors';
 import { SlashCommandBuilderAddon } from '../discord/SlashCommandBuilderAddon';
+import { DiscordCommand } from '../discord';
+
+type DiscordCommandBuilder = Executors & SlashCommandBuilderAddon;
 
 declare module 'discord.js' {
   interface Client {
-    commands: Collection<string, DiscordCommand>;
+    commands: Collection<string, DiscordCommand | DiscordCommandBuilder>;
     cooldowns: Collection<string, Collection<string, number>>;
   }
 

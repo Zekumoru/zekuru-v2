@@ -7,8 +7,7 @@ import {
 import fs from 'fs';
 import path from 'path';
 import { argv, exit } from 'process';
-import { DiscordCommand } from '@zekuru-v2/types';
-import { asyncExec, logger } from '@zekuru-v2/utils';
+import { asyncExec, DiscordCommandBuilder, logger } from '@zekuru-v2/utils';
 
 // check whether to deploy globally or locally to guild development
 const isGlobal = argv.some(
@@ -38,11 +37,15 @@ const commandFiles = fs
 // Grab the SlashCommandBuilder#toJSON() output of each command's data for deployment
 for (const file of commandFiles) {
   const filePath = path.join(commandsPath, file);
-  const command = require(filePath).default as DiscordCommand;
+  const command = require(filePath).default;
 
   if ('data' in command && 'execute' in command) {
+    // OLD STRUCTURING OF A COMMAND, TO BE DEPRECATED
     // Do not deploy commands that are for development only
     if (!(isGlobal && command.devOnly)) commands.push(command.data.toJSON());
+  } else if (command instanceof DiscordCommandBuilder) {
+    // Do not deploy commands that are for development only
+    if (!(isGlobal && command.devOnly)) commands.push(command.toJSON());
   } else {
     logger.warn(
       `[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`
