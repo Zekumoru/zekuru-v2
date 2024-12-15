@@ -1,36 +1,26 @@
-import { createCommand } from '@zekuru-v2/utils';
-import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
+import { DiscordCommandBuilder } from '@zekuru-v2/utils';
+import fs from 'fs/promises';
+import path from 'path';
 
-const content = `
-# Help
-Start using the bot by signing in using the \`/sign-in\` command providing your Deepl API key which you can get from [Deepl's website](https://www.deepl.com/pro-api). Then set languages to your channels using the \`/set\` command, link them using the \`/link\` command, and finally start chatting!
+const loadHelpContent = (() => {
+  let content: string | undefined;
 
-For a more elaborate setup instructions, please visit the [Getting Started page on the official Zekuru-v2 documentation](https://zekuru-v2.zekumoru.com/getting-started/adding-to-server/)!
-## Commands
-- \`/sign-in\`: Sign in using a Deepl's API key to start using the bot.
-- \`/sign-out\`: Signs out the bot.
-- \`/usage\`: Shows the current usage and remaining characters.
-- \`/set\`: Sets a channel's language.
-- \`/unset\`: Unset a channel's language.
-- \`/link\`: Links two translate channels unidirectionally, bidirectionally, or recursively.
-- \`/link-multiple\`: Links multiple channels at once.
-- \`/unlink\`: Unlinks two translate channels.
-- \`/unlink-channel\`: Unlinks channel from all other translate channels.
-- \`/show-channels\`: Shows a list of all translate channels.
-- \`/show-links\`: Shows the linking of translate channels.
+  return async () => {
+    if (content) return content;
 
-You can learn more about these commands in the [official Zekuru-v2 documentation](https://zekuru-v2.zekumoru.com/)!
-`;
+    content = await fs.readFile(path.join(__dirname, '../assets/help.md'), {
+      encoding: 'utf-8',
+    });
 
-const data = new SlashCommandBuilder()
+    return content;
+  };
+})();
+
+const helpCommand = new DiscordCommandBuilder()
   .setName('help')
-  .setDescription('Shows the available commands of this bot.');
+  .setDescription('Shows the available commands of this bot.')
+  .setExecutor(async (interaction) => {
+    interaction.reply({ content: await loadHelpContent() });
+  });
 
-const execute = async (interaction: ChatInputCommandInteraction) => {
-  interaction.reply({ content });
-};
-
-export default createCommand({
-  data,
-  execute,
-});
+export default helpCommand;

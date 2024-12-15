@@ -16,7 +16,13 @@
         "bundle": false,
         "main": "apps/zekuru-v2/src/app.ts",
         "tsConfig": "apps/zekuru-v2/tsconfig.app.json",
-        "assets": ["apps/zekuru-v2/src/assets"],
+        "assets": [
+          {
+            "input": "apps/zekuru-v2/src/assets",
+            "glob": "*.*",
+            "output": "apps/zekuru-v2/src/assets"
+          }
+        ],
         "generatePackageJson": true,
         "esbuildOptions": {
           "sourcemap": true,
