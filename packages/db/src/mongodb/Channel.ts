@@ -1,5 +1,6 @@
-import mongoose from 'mongoose';
-import { Channel, ChannelLanguage } from '@zekuru-v2/entities';
+/* eslint-disable @typescript-eslint/no-empty-object-type */
+import mongoose, { Model } from 'mongoose';
+import { Channel, ChannelLanguage, ChannelMethods } from '@zekuru-v2/entities';
 
 const ChannelLanguageSchema = new mongoose.Schema<ChannelLanguage>(
   {
@@ -18,7 +19,14 @@ const ChannelLanguageSchema = new mongoose.Schema<ChannelLanguage>(
   { _id: false }
 );
 
-const ChannelSchema = new mongoose.Schema<Channel>({
+type ChannelProperties = Omit<Channel, keyof ChannelMethods>;
+type ChannelModel = Model<ChannelProperties, {}, ChannelMethods>;
+
+const ChannelSchema = new mongoose.Schema<
+  ChannelProperties,
+  ChannelModel,
+  ChannelMethods
+>({
   _id: {
     type: String,
     required: true,
@@ -56,4 +64,7 @@ const ChannelSchema = new mongoose.Schema<Channel>({
   },
 });
 
-export const ChannelModel = mongoose.model<Channel>('Channel', ChannelSchema);
+export const ChannelModel = mongoose.model<ChannelProperties, ChannelModel>(
+  'Channel',
+  ChannelSchema
+);

@@ -1,7 +1,15 @@
-import { Message } from '@zekuru-v2/entities';
-import mongoose from 'mongoose';
+/* eslint-disable @typescript-eslint/no-empty-object-type */
+import { Message, MessageMethods } from '@zekuru-v2/entities';
+import mongoose, { Model } from 'mongoose';
 
-const MessageSchema = new mongoose.Schema<Message>({
+type MessageProperties = Omit<Message, keyof MessageMethods>;
+type MessageModel = Model<MessageProperties, {}, MessageMethods>;
+
+const MessageSchema = new mongoose.Schema<
+  MessageProperties,
+  MessageModel,
+  MessageMethods
+>({
   _id: {
     type: String,
     required: true,
@@ -34,4 +42,7 @@ const MessageSchema = new mongoose.Schema<Message>({
   },
 });
 
-export const MessageModel = mongoose.model<Message>('Message', MessageSchema);
+export const MessageModel = mongoose.model<MessageProperties, MessageModel>(
+  'Message',
+  MessageSchema
+);

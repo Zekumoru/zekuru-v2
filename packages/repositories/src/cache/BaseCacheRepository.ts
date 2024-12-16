@@ -1,10 +1,10 @@
 import { CommonRepository } from '../CommonRepository';
 import { CacheRepository } from './CacheRepository';
 
-export abstract class BaseCacheRepository<T> {
+export abstract class BaseCacheRepository<Entity, CreateDto, UpdateDto> {
   constructor(
-    private cache: CacheRepository<T>,
-    private repository: CommonRepository<T>
+    private cache: CacheRepository<Entity>,
+    private repository: CommonRepository<Entity, CreateDto, UpdateDto>
   ) {}
 
   private async alreadyExists(key: string) {
@@ -14,17 +14,17 @@ export abstract class BaseCacheRepository<T> {
     );
   }
 
-  async set(key: string, data: T): Promise<void> {
-    let instance: T;
+  async set(key: string, data: CreateDto): Promise<void> {
+    let instance: Entity;
 
     if (await this.alreadyExists(key))
-      instance = await this.repository.updateOne(data);
+      instance = await this.repository.updateOne(data as unknown as UpdateDto);
     else instance = await this.repository.insertOne(data);
 
     await this.cache.set(key, instance);
   }
 
-  async get(key: string): Promise<T | null> {
+  async get(key: string): Promise<Entity | null> {
     const cached = await this.cache.get(key);
     if (cached) return cached;
 

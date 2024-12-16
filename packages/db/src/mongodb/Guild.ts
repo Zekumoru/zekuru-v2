@@ -1,11 +1,13 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 import {
   CommonCredential,
   DeepLCredential,
   Guild,
+  GuildMethods,
   GuildTranslationMeta,
   OpenAICredential,
 } from '@zekuru-v2/entities';
-import mongoose from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 
 const CredentialSchema = new mongoose.Schema<CommonCredential>(
   {
@@ -19,7 +21,7 @@ const CredentialSchema = new mongoose.Schema<CommonCredential>(
       default: Date.now,
     },
   },
-  { _id: false }
+  { _id: false, discriminatorKey: 'type' }
 );
 
 const TranslationSchema = new mongoose.Schema<GuildTranslationMeta>(
@@ -28,6 +30,13 @@ const TranslationSchema = new mongoose.Schema<GuildTranslationMeta>(
       type: [CredentialSchema],
       required: true,
       default: [],
+      validate: {
+        validator: (credentials: { type: string }[]) => {
+          const types = credentials.map((credential) => credential.type);
+          return new Set(types).size === credentials.length;
+        },
+        message: 'Duplicate api types are not allowed in credentials.',
+      },
     },
   },
   { _id: false }
@@ -44,11 +53,6 @@ translationDocArray.discriminator(
         type: String,
         required: true,
       },
-      type: {
-        type: String,
-        immutable: true,
-        default: 'deepl',
-      },
     },
     { _id: false }
   )
@@ -60,19 +64,22 @@ translationDocArray.discriminator(
     {
       apiKey: {
         type: String,
-        required: true,
-      },
-      type: {
-        type: String,
         immutable: true,
-        default: 'openai',
+        required: true,
       },
     },
     { _id: false }
   )
 );
 
-const GuildSchema = new mongoose.Schema<Guild>({
+type GuildProperties = Omit<Guild, keyof GuildMethods>;
+type GuildModel = Model<GuildProperties, {}, GuildMethods>;
+
+const GuildSchema = new mongoose.Schema<
+  GuildProperties,
+  GuildModel,
+  GuildMethods
+>({
   _id: {
     type: String,
     required: true,
@@ -103,4 +110,11 @@ const GuildSchema = new mongoose.Schema<Guild>({
   },
 });
 
-export const GuildModel = mongoose.model<Guild>('Guild', GuildSchema);
+GuildSchema.methods.addCredential = Guild.prototype.addCredential;
+GuildSchema.methods.removeCredential = Guild.prototype.removeCredential;
+GuildSchema.methods.findCredential = Guild.prototype.findCredential;
+
+export const GuildModel = mongoose.model<GuildProperties, GuildModel>(
+  'Guild',
+  GuildSchema
+);
