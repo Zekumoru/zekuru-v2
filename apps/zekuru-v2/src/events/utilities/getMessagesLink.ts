@@ -7,7 +7,9 @@ import { IMessageLink } from '@zekuru-v2/types';
 
 const getMessagesLink = async (
   reaction: MessageReaction | PartialMessageReaction
-): Promise<[Message<true>[] | undefined, IMessageLink | undefined]> => {
+): Promise<
+  [(Message<true> | undefined)[] | undefined, IMessageLink | undefined]
+> => {
   // ignore if it is the bot
   if (reaction.me) return [undefined, undefined];
   // ignore channels that aren't set with any language

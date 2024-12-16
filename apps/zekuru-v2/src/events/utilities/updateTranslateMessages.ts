@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
   translateChannel as translateChannelCache,
   webhook as webhookCache,
@@ -13,6 +14,7 @@ const updateTranslateMessages = async (
   newMessage: Message<boolean> | PartialMessage
 ) => {
   if (!newMessage.guild) return;
+  if (!newMessage.content) return;
 
   // get message link
   const link = await MessageLink.findOne({ messageId: newMessage.id });
@@ -44,8 +46,8 @@ const updateTranslateMessages = async (
 
       try {
         const translatedData = await translateContent(
-          newMessage.content,
-          newMessage.guildId,
+          newMessage.content!,
+          newMessage.guildId!,
           sourceTrChannel.sourceLang,
           targetTrChannel.targetLang
         );
@@ -57,7 +59,7 @@ const updateTranslateMessages = async (
         });
 
         // notify user if they edited the message over 2K
-        if (newMessage.content.length > DISCORD_MESSAGE_CHARS_LIMIT) {
+        if (newMessage.content!.length > DISCORD_MESSAGE_CHARS_LIMIT) {
           await newMessage.reply({
             content: `**Warning:** You edited the message over 2000 characters. Due to Discord's characters limit, only the first 2000 characters will be translated.`,
           });

@@ -1,12 +1,13 @@
 import {
   Events,
+  Message,
   MessageReaction,
   PartialMessageReaction,
   PartialUser,
   User,
 } from 'discord.js';
 import getMessagesLink from './utilities/getMessagesLink';
-import { DiscordEvent } from '@zekuru-v2/types';
+import { DiscordEvent, IMessageLink } from '@zekuru-v2/types';
 
 export default {
   name: Events.MessageReactionRemove,
@@ -14,7 +15,10 @@ export default {
     reaction: MessageReaction | PartialMessageReaction,
     user: User | PartialUser
   ) => {
-    const [messages, messageLink] = await getMessagesLink(reaction);
+    const [messages, messageLink] = (await getMessagesLink(reaction)) as [
+      Message<true>[],
+      IMessageLink
+    ];
     if (!messages) return;
     // only original reactor can remove
     if (user.id !== messageLink.authorId) return;

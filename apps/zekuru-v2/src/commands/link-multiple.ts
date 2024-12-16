@@ -11,6 +11,7 @@ import {
   getOrCreateChLink,
   linkChannels,
 } from './utilities/linking';
+import { IChannelLink } from '@zekuru-v2/types';
 import { createCommand } from '@zekuru-v2/utils';
 import { translateChannel } from '@zekuru-v2/cache';
 
@@ -79,7 +80,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
       const chLink = await getOrCreateChLink(channelId, interaction.guildId);
       chProcessMap.set(channelId, {
         trChannel,
-        chLink,
+        chLink: chLink as IChannelLink,
       });
     })
   );

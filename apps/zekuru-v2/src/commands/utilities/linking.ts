@@ -85,15 +85,15 @@ export const buildAllChannelsLinkMap = async (channelLinks: IChannelLink[]) => {
 
   // build map containing all channels
   while (jobQueue.length) {
-    const chLink = jobQueue.shift();
+    const chLink = jobQueue.shift() as IChannelLink;
 
     for (const link of chLink.links) {
       if (allChLinkMap.get(link.id)) continue;
 
-      const [linkTrChannel, linkChLink] = await Promise.all([
+      const [linkTrChannel, linkChLink] = (await Promise.all([
         translateChannelCache.get(link.id),
         getOrCreateChLink(link.id, chLink.guildId),
-      ]);
+      ])) as [ITranslateChannel, IChannelLink];
       jobQueue.push(linkChLink);
 
       if (!linkTrChannel) continue;

@@ -12,6 +12,7 @@ import {
 } from './utilities/linking';
 import { createCommand } from '@zekuru-v2/utils';
 import { translateChannel } from '@zekuru-v2/cache';
+import { IChannelLink } from '@zekuru-v2/types';
 
 export const LinkOptions = {
   SOURCE_CHANNEL: 'source-channel',
@@ -112,10 +113,10 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   }
 
   // add to their respective link documents
-  const [sourceChLink, targetChLink] = await Promise.all([
+  const [sourceChLink, targetChLink] = (await Promise.all([
     getOrCreateChLink(sourceChannelId, interaction.guildId),
     getOrCreateChLink(targetChannelId, interaction.guildId),
-  ]);
+  ])) as [IChannelLink, IChannelLink];
 
   const allChLinkMap = await buildAllChannelsLinkMap([
     sourceChLink,
@@ -160,11 +161,17 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   // already add these to map to save time since they're already done as well
   // refetch channels links due to bidirectional linking
   allChLinkMap.set(sourceChLink.id, {
-    chLink: await getOrCreateChLink(sourceChannelId, interaction.guildId),
+    chLink: (await getOrCreateChLink(
+      sourceChannelId,
+      interaction.guildId
+    )) as IChannelLink,
     trChannel: sourceTrChannel,
   });
   allChLinkMap.set(targetChLink.id, {
-    chLink: await getOrCreateChLink(targetChannelId, interaction.guildId),
+    chLink: (await getOrCreateChLink(
+      targetChannelId,
+      interaction.guildId
+    )) as IChannelLink,
     trChannel: targetTrChannel,
   });
 

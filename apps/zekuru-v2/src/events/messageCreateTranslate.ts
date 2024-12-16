@@ -49,10 +49,12 @@ export default {
       )
     );
 
-    const messagesIds = messages.filter(Boolean).map<IMessageLinkItem>((m) => ({
-      messageId: m.id,
-      channelId: m.channelId,
-    }));
+    const messagesIds = messages
+      .filter(Boolean)
+      .map<IMessageLinkItem>((m: Message) => ({
+        messageId: m.id,
+        channelId: m.channelId,
+      }));
     messagesIds.push({
       messageId: message.id,
       channelId: message.channelId,

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { ChannelType, Message } from 'discord.js';
 import buildReplyEmbed from './buildReplyEmbed';
 import buildCommandReplyEmbed from './buildCommandReplyEmbed';
@@ -81,7 +82,7 @@ const translateChannel = async (
     if (translatedContent === undefined) {
       const translatedData = await translateContent(
         message.content,
-        message.guildId,
+        message.guildId!,
         sourceTrChannel.sourceLang,
         targetTrChannel.targetLang
       );

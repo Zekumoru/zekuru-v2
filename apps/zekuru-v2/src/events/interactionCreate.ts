@@ -23,9 +23,7 @@ export default {
         ? command.name
         : (command as DiscordCommand).data.name;
     const executeCommand =
-      command instanceof DiscordCommandBuilder
-        ? command.execute
-        : (command as DiscordCommand).execute;
+      command.execute ?? (command as DiscordCommand).execute;
 
     const { cooldowns } = interaction.client;
 
