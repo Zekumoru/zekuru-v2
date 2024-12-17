@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { BaseGuildTextChannel, Collection, Webhook } from 'discord.js';
 import { webhook as webhookCache } from '../../src';
@@ -20,7 +21,7 @@ jest.mock('discord.js', () => {
 describe('webhookCache', () => {
   const mockCollection: jest.Mocked<Collection<string, Webhook>> = jest
     .mocked(Collection)
-    .getMockImplementation()() as any;
+    .getMockImplementation()!() as any;
   const mockChannel: jest.Mocked<BaseGuildTextChannel> = {
     id: 'channel-id',
     guildId: 'guild-id',
