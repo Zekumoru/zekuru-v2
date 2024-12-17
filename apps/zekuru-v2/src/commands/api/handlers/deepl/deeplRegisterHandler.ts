@@ -3,6 +3,7 @@ import { WithGuild } from '@zekuru-v2/types';
 import { ChatInputCommandInteraction } from 'discord.js';
 import GuildCache from '../../../../cache/GuildCache';
 import isAlreadyRegistered from '../isAlreadyRegistered';
+import { encrypt } from '@zekuru-v2/utils';
 
 const deeplRegisterHandler = async (
   interaction: WithGuild<ChatInputCommandInteraction>
@@ -22,9 +23,10 @@ const deeplRegisterHandler = async (
   const userId = interaction.user.id;
   const guild = await GuildCache.get(guildId);
 
+  const encryptedKey = encrypt(key);
   const credential: CredentialUtil<DeepLCredential> = {
     type: 'deepl',
-    apiKey: key,
+    apiKey: encryptedKey,
     createdBy: userId,
   };
 

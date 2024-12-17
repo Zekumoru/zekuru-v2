@@ -4,6 +4,7 @@ import GuildCache from './GuildCache';
 import * as deepl from 'deepl-node';
 import TranslatorCache from './TranslatorCache';
 import { Snowflake } from '@zekuru-v2/types';
+import { decrypt } from '@zekuru-v2/utils';
 
 class DeeplTranslatorCache extends TranslatorCache<'deepl', DeeplTranslator> {
   constructor(cache: CacheRepository<DeeplTranslator>) {
@@ -20,10 +21,8 @@ class DeeplTranslatorCache extends TranslatorCache<'deepl', DeeplTranslator> {
     const credential = guild.findCredential('deepl');
     if (!credential) return null;
 
-    this.set(
-      guildId,
-      new DeeplTranslator(new deepl.Translator(credential.apiKey))
-    );
+    const decryptedKey = decrypt(credential.apiKey);
+    this.set(guildId, new DeeplTranslator(new deepl.Translator(decryptedKey)));
     return await this.get(guildId);
   }
 }
