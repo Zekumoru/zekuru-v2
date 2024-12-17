@@ -12,7 +12,7 @@ const deeplRegisterHandler = async (
 
   // check if already exists
   if (await isAlreadyRegistered(guildId, 'deepl')) {
-    interaction.reply(
+    interaction.editReply(
       'Deepl is already registered. Do you wish to change API key? Unregister first.'
     );
     return;
@@ -45,9 +45,8 @@ const deeplRegisterHandler = async (
     await GuildCache.set(guildId, guild);
   }
 
-  interaction.reply({
+  interaction.editReply({
     content: 'Deepl has been registered.',
-    ephemeral: true,
   });
 };
 

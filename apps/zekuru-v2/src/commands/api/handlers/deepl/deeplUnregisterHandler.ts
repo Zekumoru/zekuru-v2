@@ -11,7 +11,7 @@ const deeplUnregisterHandler = async (
 
   const registered = await isAlreadyRegistered(guildId, 'deepl');
   if (!registered) {
-    interaction.reply(
+    interaction.editReply(
       'Deepl is not registered yet. Are you trying to register? Use the `/api register deepl` command.'
     );
     return;
@@ -25,9 +25,8 @@ const deeplUnregisterHandler = async (
 
   await GuildCache.set(guildId, guild);
 
-  interaction.reply({
+  interaction.editReply({
     content: 'Deepl has been unregistered.',
-    ephemeral: true,
   });
 };
 
