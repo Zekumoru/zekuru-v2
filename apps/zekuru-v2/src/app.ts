@@ -7,6 +7,7 @@ import { DiscordCommandBuilder, logger } from '@zekuru-v2/utils';
 import { mongodbConnect } from '@zekuru-v2/db';
 import { argv } from 'process';
 import { register as registerCommands } from './register';
+import loadCommands from './loadCommands';
 
 mongodbConnect();
 
@@ -47,14 +48,8 @@ const client = new Client({
 client.commands = new Collection();
 client.cooldowns = new Collection();
 
-const commandsPath = path.join(__dirname, 'commands');
-const commandFiles = fs
-  .readdirSync(commandsPath)
-  .filter((file) => file.endsWith('.js') && !file.endsWith('.test.js'));
-
-for (const file of commandFiles) {
-  const filePath = path.join(commandsPath, file);
-  const command = require(filePath).default;
+// Push commands to the client.commands collection
+loadCommands().map(([path, command]) => {
   // Set a new item in the Collection with the key as the command name and the
   // value as the exported module
   if ('data' in command && 'execute' in command) {
@@ -64,10 +59,10 @@ for (const file of commandFiles) {
     client.commands.set(command.name, command);
   } else {
     logger.warn(
-      `[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`
+      `[WARNING] The command at ${path} is missing a required "data" or "execute" property.`
     );
   }
-}
+});
 
 const eventsPath = path.join(__dirname, 'events');
 const eventFiles = fs

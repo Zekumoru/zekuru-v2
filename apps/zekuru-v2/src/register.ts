@@ -4,10 +4,9 @@ import {
   RESTPostAPIChatInputApplicationCommandsJSONBody,
   Routes,
 } from 'discord.js';
-import fs from 'fs';
-import path from 'path';
 import { argv, exit } from 'process';
 import { asyncExec, DiscordCommandBuilder, logger } from '@zekuru-v2/utils';
+import loadCommands from './loadCommands';
 
 // check whether to deploy globally or locally to guild development
 const isGlobal = argv.some(
@@ -28,19 +27,10 @@ if (!clientId || !guildId || !token) {
 
 const commands: RESTPostAPIChatInputApplicationCommandsJSONBody[] = [];
 
-// Grab all the commands
-const commandsPath = path.join(__dirname, 'commands');
-const commandFiles = fs
-  .readdirSync(commandsPath)
-  .filter((file) => file.endsWith('.js') && !file.endsWith('.test.js'));
-
-// Grab the SlashCommandBuilder#toJSON() output of each command's data for deployment
-for (const file of commandFiles) {
-  const filePath = path.join(commandsPath, file);
-  const command = require(filePath).default;
-
+loadCommands().map(([path, command]) => {
   if ('data' in command && 'execute' in command) {
     // OLD STRUCTURING OF A COMMAND, TO BE DEPRECATED
+    // DON'T FORGET TO ADJUST THE WARNING BELOW
     // Do not deploy commands that are for development only
     if (!(isGlobal && command.devOnly)) commands.push(command.data.toJSON());
   } else if (command instanceof DiscordCommandBuilder) {
@@ -48,10 +38,10 @@ for (const file of commandFiles) {
     if (!(isGlobal && command.devOnly)) commands.push(command.toJSON());
   } else {
     logger.warn(
-      `[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`
+      `[WARNING] The command at ${path} is missing a required "data" or "execute" property.`
     );
   }
-}
+});
 
 // Construct and prepare an instance of the REST module
 const rest = new REST().setToken(token);
