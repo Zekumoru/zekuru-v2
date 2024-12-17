@@ -1,5 +1,6 @@
 import { CommonRepository } from '../CommonRepository';
 import { CacheRepository } from './CacheRepository';
+import { CacheRepositoryError } from './CacheRepositoryError';
 
 export abstract class BaseCacheRepository<Entity, CreateDto, UpdateDto> {
   constructor(
@@ -24,12 +25,23 @@ export abstract class BaseCacheRepository<Entity, CreateDto, UpdateDto> {
     await this.cache.set(key, instance);
   }
 
-  async get(key: string): Promise<Entity | null> {
+  async get<T extends boolean = false>(
+    key: string,
+    ensured?: T
+  ): Promise<T extends true ? Entity : Entity | null> {
     const cached = await this.cache.get(key);
     if (cached) return cached;
 
     const instance = await this.repository.findById(key);
-    if (!instance) return null;
+    if (!instance) {
+      if (ensured) {
+        throw new CacheRepositoryError(
+          'Was ensured but the actual value does not exist!'
+        );
+      }
+
+      return null as Entity;
+    }
 
     await this.cache.set(key, instance);
     return instance;
