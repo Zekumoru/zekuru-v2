@@ -1,12 +1,12 @@
 import { CredentialUtil, DeepLCredential } from '@zekuru-v2/entities';
-import { WithGuild } from '@zekuru-v2/types';
 import { ChatInputCommandInteraction } from 'discord.js';
 import GuildCache from '../../../../cache/GuildCache';
 import isAlreadyRegistered from '../isAlreadyRegistered';
 import { encrypt } from '@zekuru-v2/utils';
+import { InGuild } from '@zekuru-v2/types';
 
 const deeplRegisterHandler = async (
-  interaction: WithGuild<ChatInputCommandInteraction>
+  interaction: InGuild<ChatInputCommandInteraction>
 ): Promise<void> => {
   const guildId = interaction.guildId;
 

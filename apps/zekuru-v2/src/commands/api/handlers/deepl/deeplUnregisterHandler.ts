@@ -1,11 +1,11 @@
-import { WithGuild } from '@zekuru-v2/types';
+import { InGuild } from '@zekuru-v2/types';
 import isAlreadyRegistered from '../isAlreadyRegistered';
 import { ChatInputCommandInteraction } from 'discord.js';
 import GuildCache from '../../../../cache/GuildCache';
 import TranslatorManagerCache from '../../../../cache/TranslatorManagerCache';
 
 const deeplUnregisterHandler = async (
-  interaction: WithGuild<ChatInputCommandInteraction>
+  interaction: InGuild<ChatInputCommandInteraction>
 ): Promise<void> => {
   const guildId = interaction.guildId;
 
