@@ -32,7 +32,7 @@ const apiCommand = new DiscordCommandBuilder()
     const subcommandGroup = interaction.options.getSubcommandGroup(true);
     const subcommand = interaction.options.getSubcommand(true);
 
-    apiHandler[subcommandGroup][subcommand](interaction);
+    await apiHandler[subcommandGroup][subcommand](interaction);
   });
 
 export default apiCommand;
