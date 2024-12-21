@@ -1,14 +1,13 @@
-import {
-  AutocompleteExecutor,
-  ChatInputCommandExecutor,
-} from '@zekuru-v2/types';
-import { SlashCommandBuilder } from 'discord.js';
+import { AutocompleteExecutor, ComposedCommandExecute } from '@zekuru-v2/types';
+import * as types from '@zekuru-v2/types';
+import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
+import { CommandExecutorBuilder } from './CommandExecutorBuilder';
 
 export class DiscordCommandBuilder extends SlashCommandBuilder {
   private _cooldown?: number;
   private _devOnly?: boolean;
-  private _execute?: ChatInputCommandExecutor;
   private _autocompleteExecute?: AutocompleteExecutor;
+  private _executorBuilder?: types.CommandExecutorBuilder;
 
   get cooldown(): number | undefined {
     return this._cooldown;
@@ -28,12 +27,16 @@ export class DiscordCommandBuilder extends SlashCommandBuilder {
     return this;
   }
 
-  get execute(): ChatInputCommandExecutor | undefined {
-    return this._execute;
+  get execute(): ComposedCommandExecute | undefined {
+    if (!this._executorBuilder) return;
+    return this._executorBuilder.execute;
   }
-
-  setExecutor(execute: ChatInputCommandExecutor): this {
-    this._execute = execute;
+  setExecutors<TInteraction extends ChatInputCommandInteraction>(
+    executors: (
+      builder: types.CommandExecutorBuilder<TInteraction>
+    ) => types.CommandExecutorBuilder<TInteraction>
+  ): this {
+    this._executorBuilder = executors(new CommandExecutorBuilder());
     return this;
   }
 
