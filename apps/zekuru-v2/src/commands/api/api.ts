@@ -1,5 +1,5 @@
 import { DiscordCommandBuilder } from '@zekuru-v2/utils';
-import { InteractionContextType, PermissionFlagsBits } from 'discord.js';
+import { PermissionFlagsBits } from 'discord.js';
 import registerSubcommandGroup from './registerSubcommandGroup';
 import unregisterSubcommandGroup from './unregisterSubcommandGroup';
 import createNoopHandler from './handlers/createNoopHandler';
@@ -27,11 +27,6 @@ const apiCommand = new DiscordCommandBuilder()
   .addSubcommandGroup(unregisterSubcommandGroup)
   // Change permissions later when finished implementing
   .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
-  .setContexts([
-    InteractionContextType.BotDM,
-    InteractionContextType.Guild,
-    InteractionContextType.PrivateChannel,
-  ])
   .setExecutors((executors) =>
     executors.add(inGuildExecutor).add(async (interaction) => {
       await interaction.deferReply({ ephemeral: true });
