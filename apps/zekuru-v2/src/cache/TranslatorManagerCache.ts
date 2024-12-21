@@ -10,12 +10,24 @@ class TranslatorManagerCacheRepository
 {
   constructor(private cache: CacheRepository<TranslatorManager>) {}
 
+  async clear(): Promise<void> {
+    await this.cache.clear();
+  }
+
+  async delete(key: string): Promise<void> {
+    await this.cache.delete(key);
+  }
+
   async get(guildId: Snowflake): Promise<TranslatorManager> {
     const manager = await this.cache.get(guildId);
     if (manager) return manager;
 
     await this.set(guildId, new TranslatorManager());
     return await this.get(guildId);
+  }
+
+  has(key: string): Promise<boolean> {
+    return this.cache.has(key);
   }
 
   async set(guildId: Snowflake, manager: TranslatorManager): Promise<void> {

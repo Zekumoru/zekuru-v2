@@ -10,11 +10,23 @@ export class CacheManagerRepository<T> implements CacheRepository<T> {
     this.cache = createCache({ stores: [keyv], ...options });
   }
 
-  async get(key: string): Promise<T | null> {
+  async clear(): Promise<void> {
+    await this.cache.clear();
+  }
+
+  async delete(key: string): Promise<void> {
+    await this.cache.del(key);
+  }
+
+  get(key: string): Promise<T | null> {
     return this.cache.get<T>(key);
   }
 
+  async has(key: string): Promise<boolean> {
+    return !!(await this.get(key));
+  }
+
   async set(key: string, data: T): Promise<void> {
-    this.cache.set<T>(key, data);
+    await this.cache.set<T>(key, data);
   }
 }

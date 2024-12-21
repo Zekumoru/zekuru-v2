@@ -9,11 +9,23 @@ abstract class TranslatorCache<
 {
   constructor(protected cache: CacheRepository<TClass>) {}
 
+  async clear(): Promise<void> {
+    await this.cache.clear();
+  }
+
+  async delete(key: string): Promise<void> {
+    await this.cache.delete(key);
+  }
+
   async get(guildId: Snowflake): Promise<TClass | null> {
     const translator = await this.cache.get(guildId);
     if (translator) return translator;
 
     return null;
+  }
+
+  has(key: string): Promise<boolean> {
+    return this.cache.has(key);
   }
 
   async set(guildId: Snowflake, translator: TClass): Promise<void> {

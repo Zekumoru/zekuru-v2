@@ -8,21 +8,12 @@ export abstract class BaseCacheRepository<Entity, CreateDto, UpdateDto> {
     private repository: CommonRepository<Entity, CreateDto, UpdateDto>
   ) {}
 
-  private async alreadyExists(key: string) {
-    return (
-      (await this.cache.get(key)) != null ||
-      (await this.repository.findById(key)) != null
-    );
+  async clear(): Promise<void> {
+    await this.cache.clear();
   }
 
-  async set(key: string, data: CreateDto): Promise<void> {
-    let instance: Entity;
-
-    if (await this.alreadyExists(key))
-      instance = await this.repository.updateOne(data as unknown as UpdateDto);
-    else instance = await this.repository.insertOne(data);
-
-    await this.cache.set(key, instance);
+  async delete(key: string): Promise<void> {
+    await this.cache.delete(key);
   }
 
   async get<T extends boolean = false>(
@@ -45,5 +36,22 @@ export abstract class BaseCacheRepository<Entity, CreateDto, UpdateDto> {
 
     await this.cache.set(key, instance);
     return instance;
+  }
+
+  async has(key: string): Promise<boolean> {
+    return (
+      (await this.cache.get(key)) != null ||
+      (await this.repository.findById(key)) != null
+    );
+  }
+
+  async set(key: string, data: CreateDto): Promise<void> {
+    let instance: Entity;
+
+    if (await this.has(key))
+      instance = await this.repository.updateOne(data as unknown as UpdateDto);
+    else instance = await this.repository.insertOne(data);
+
+    await this.cache.set(key, instance);
   }
 }
