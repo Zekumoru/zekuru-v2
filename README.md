@@ -172,8 +172,8 @@ You can also check out the [Zekuru-v2 documentation](https://zekuru-v2.zekumoru.
 
 ## Contributing
 
-Any issues or pull requests are welcome! Do mind that any contributions you make will be under the MIT software license.
+Any issues or pull requests are welcome! Do mind that any contributions you make will be under the GNU AGPLv3 software license.
 
 ## License
 
-This application is licensed under the [MIT license](LICENSE).
+This application is licensed under the [GNU AGPLv3 license](LICENSE).

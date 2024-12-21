@@ -1,7 +1,7 @@
 {
   "name": "zekuru-v2",
   "version": "0.10.0",
-  "license": "MIT",
+  "license": "GNU AGPLv3",
   "scripts": {
     "gen-cipher": "ts-node ./packages/utils/src/security/create-cipher-secret.ts"
   },
