@@ -19,8 +19,10 @@ const loadHelpContent = (() => {
 const helpCommand = new DiscordCommandBuilder()
   .setName('help')
   .setDescription('Shows the available commands of this bot.')
-  .setExecutor(async (interaction) => {
-    interaction.reply({ content: await loadHelpContent() });
-  });
+  .setExecutors((executors) =>
+    executors.add(async (interaction) => {
+      interaction.reply({ content: await loadHelpContent() });
+    })
+  );
 
 export default helpCommand;
