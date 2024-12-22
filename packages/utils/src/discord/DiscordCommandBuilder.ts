@@ -1,6 +1,10 @@
 import { AutocompleteExecutor, ComposedCommandExecute } from '@zekuru-v2/types';
 import * as types from '@zekuru-v2/types';
-import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
+import {
+  CacheType,
+  ChatInputCommandInteraction,
+  SlashCommandBuilder,
+} from 'discord.js';
 import { CommandExecutorBuilder } from './CommandExecutorBuilder';
 
 export class DiscordCommandBuilder extends SlashCommandBuilder {
@@ -31,10 +35,14 @@ export class DiscordCommandBuilder extends SlashCommandBuilder {
     if (!this._executorBuilder) return;
     return this._executorBuilder.execute;
   }
-  setExecutors<TInteraction extends ChatInputCommandInteraction>(
+
+  setExecutors<
+    TContext,
+    TInteraction extends ChatInputCommandInteraction = ChatInputCommandInteraction<CacheType>
+  >(
     executors: (
-      builder: types.CommandExecutorBuilder<TInteraction>
-    ) => types.CommandExecutorBuilder<TInteraction>
+      builder: types.CommandExecutorBuilder<TContext, TInteraction>
+    ) => types.CommandExecutorBuilder<TContext, TInteraction>
   ): this {
     this._executorBuilder = executors(new CommandExecutorBuilder());
     return this;

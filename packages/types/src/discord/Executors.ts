@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   AutocompleteInteraction,
   ChatInputCommandInteraction,
@@ -13,10 +12,13 @@ export type AutocompleteExecutor = (
   interaction: AutocompleteInteraction
 ) => Promise<void>;
 
-export type Executor<TParams extends any[]> = Middleware<TParams>;
+export type Executor<TInteraction, TContext> = Middleware<
+  [interaction: TInteraction, context: TContext]
+>;
 
-export type ComposedExecute<TParams extends any[]> = (
-  ...args: TParams
+export type ComposedExecute<TInteraction, TContext> = (
+  interaction: TInteraction,
+  context: TContext
 ) => Promise<void>;
 
 export interface Executors {
@@ -24,9 +26,12 @@ export interface Executors {
   setAutocompleteExecutor(execute: AutocompleteExecutor): this;
 
   readonly execute?: ComposedCommandExecute;
-  setExecutors<TInteraction extends ChatInputCommandInteraction>(
+  setExecutors<
+    TContext,
+    TInteraction extends ChatInputCommandInteraction = ChatInputCommandInteraction
+  >(
     executors: (
-      builder: CommandExecutorBuilder<TInteraction>
-    ) => CommandExecutorBuilder<TInteraction>
+      builder: CommandExecutorBuilder<TContext, TInteraction>
+    ) => CommandExecutorBuilder<TContext, TInteraction>
   ): this;
 }

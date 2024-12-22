@@ -55,7 +55,7 @@ export default {
     setTimeout(() => timestamps?.delete(interaction.user.id), cooldownAmount);
 
     try {
-      await executeCommand(interaction);
+      await executeCommand(interaction, {});
     } catch (error) {
       logger.error(error);
 

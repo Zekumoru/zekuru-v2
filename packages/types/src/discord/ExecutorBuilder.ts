@@ -1,11 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { ComposedExecute, Executor } from './Executors';
 
-export interface ExecutorBuilder<TParams extends any[]> {
-  get execute(): ComposedExecute<TParams> | undefined;
+export interface ExecutorBuilder<TInteraction, TContext> {
+  get execute(): ComposedExecute<TInteraction, TContext> | undefined;
 
-  add<TArgs extends TParams = TParams>(
-    execute: Executor<TArgs>
-  ): ExecutorBuilder<TArgs>;
+  add<T extends TContext = TContext, U extends TInteraction = TInteraction>(
+    execute: Executor<U, T>
+  ): ExecutorBuilder<U, T>;
 }
