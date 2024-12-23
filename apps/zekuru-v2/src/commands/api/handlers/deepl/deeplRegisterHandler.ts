@@ -4,6 +4,7 @@ import GuildCache from '../../../../cache/GuildCache';
 import isAlreadyRegistered from '../isAlreadyRegistered';
 import { encrypt } from '@zekuru-v2/utils';
 import { InGuild } from '@zekuru-v2/types';
+import * as deepl from 'deepl-node';
 
 const deeplRegisterHandler = async (
   interaction: InGuild<ChatInputCommandInteraction>
@@ -22,6 +23,9 @@ const deeplRegisterHandler = async (
   const key = interaction.options.getString('key', true);
   const userId = interaction.user.id;
   const guild = await GuildCache.get(guildId);
+
+  // check if valid key, throws error if not
+  await new deepl.Translator(key).getUsage();
 
   const encryptedKey = encrypt(key);
   const credential: CredentialUtil<DeepLCredential> = {

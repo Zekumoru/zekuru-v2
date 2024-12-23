@@ -1,4 +1,4 @@
-import { DiscordCommandBuilder } from '@zekuru-v2/utils';
+import { DiscordCommandBuilder, logger } from '@zekuru-v2/utils';
 import { PermissionFlagsBits } from 'discord.js';
 import registerSubcommandGroup from './registerSubcommandGroup';
 import unregisterSubcommandGroup from './unregisterSubcommandGroup';
@@ -6,6 +6,7 @@ import createNoopHandler from './handlers/createNoopHandler';
 import deeplRegisterHandler from './handlers/deepl/deeplRegisterHandler';
 import deeplUnregisterHandler from './handlers/deepl/deeplUnregisterHandler';
 import inGuildExecutor from '../executors/inGuildExecutor';
+import * as deepl from 'deepl-node';
 
 const apiHandler = {
   register: {
@@ -28,14 +29,29 @@ const apiCommand = new DiscordCommandBuilder()
   // Change permissions later when finished implementing
   .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
   .setExecutors((executors) =>
-    executors.add(inGuildExecutor).add(async ({ interaction }) => {
-      await interaction.deferReply({ ephemeral: true });
+    executors
+      .add(inGuildExecutor)
+      .add(async ({ interaction }) => {
+        await interaction.deferReply({ ephemeral: true });
 
-      const subcommandGroup = interaction.options.getSubcommandGroup(true);
-      const subcommand = interaction.options.getSubcommand(true);
+        const subcommandGroup = interaction.options.getSubcommandGroup(true);
+        const subcommand = interaction.options.getSubcommand(true);
 
-      await apiHandler[subcommandGroup][subcommand](interaction);
-    })
+        await apiHandler[subcommandGroup][subcommand](interaction);
+      })
+      .catch(async (error, { interaction }) => {
+        if (error instanceof deepl.AuthorizationError) {
+          await interaction.editReply(
+            `Invalid Deepl API key! Make sure that it's valid and active.`
+          );
+        } else {
+          await interaction.editReply(
+            `Generic error occurred: ${error.message}`
+          );
+        }
+
+        logger.error(error);
+      })
   );
 
 export default apiCommand;
