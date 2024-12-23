@@ -28,7 +28,7 @@ const apiCommand = new DiscordCommandBuilder()
   // Change permissions later when finished implementing
   .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
   .setExecutors((executors) =>
-    executors.add(inGuildExecutor).add(async (interaction) => {
+    executors.add(inGuildExecutor).add(async ({ interaction }) => {
       await interaction.deferReply({ ephemeral: true });
 
       const subcommandGroup = interaction.options.getSubcommandGroup(true);

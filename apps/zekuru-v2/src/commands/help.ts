@@ -20,7 +20,7 @@ const helpCommand = new DiscordCommandBuilder()
   .setName('help')
   .setDescription('Shows the available commands of this bot.')
   .setExecutors((executors) =>
-    executors.add(async (interaction) => {
+    executors.add(async ({ interaction }) => {
       interaction.reply({ content: await loadHelpContent() });
     })
   );

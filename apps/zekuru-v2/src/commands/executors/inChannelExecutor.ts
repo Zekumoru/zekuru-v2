@@ -1,13 +1,16 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { CommandExecutor, InGuild } from '@zekuru-v2/types';
+/* eslint-disable @typescript-eslint/no-empty-object-type */
+import { InGuild, InteractionExecutor } from '@zekuru-v2/types';
 import { ChatInputCommandInteraction } from 'discord.js';
 
-const inChannelExecutor: CommandExecutor<
-  any,
+const inChannelExecutor: InteractionExecutor<
+  {},
   InGuild<ChatInputCommandInteraction> & {
     channel: Exclude<InGuild<ChatInputCommandInteraction>['channel'], null>;
   }
-> = async (interaction: ChatInputCommandInteraction, _context, next) => {
+> = async (
+  { interaction }: { interaction: ChatInputCommandInteraction },
+  next
+) => {
   if (!interaction.channel) {
     await interaction.reply('This command is only available on channels.');
     return;

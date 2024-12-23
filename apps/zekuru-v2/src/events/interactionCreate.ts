@@ -22,8 +22,6 @@ export default {
       command instanceof DiscordCommandBuilder
         ? command.name
         : (command as DiscordCommand).data.name;
-    const executeCommand =
-      command.execute ?? (command as DiscordCommand).execute;
 
     const { cooldowns } = interaction.client;
 
@@ -55,7 +53,11 @@ export default {
     setTimeout(() => timestamps?.delete(interaction.user.id), cooldownAmount);
 
     try {
-      await executeCommand(interaction, {});
+      if (command instanceof DiscordCommandBuilder) {
+        await command.bindExecutors?.({ interaction })();
+      } else {
+        await (command as DiscordCommand).execute(interaction);
+      }
     } catch (error) {
       logger.error(error);
 
