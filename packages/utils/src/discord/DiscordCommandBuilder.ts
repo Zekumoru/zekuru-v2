@@ -1,11 +1,8 @@
-import { AutocompleteExecutor, ComposedCommandExecute } from '@zekuru-v2/types';
+/* eslint-disable @typescript-eslint/no-empty-object-type */
+import { AutocompleteExecutor } from '@zekuru-v2/types';
 import * as types from '@zekuru-v2/types';
-import {
-  CacheType,
-  ChatInputCommandInteraction,
-  SlashCommandBuilder,
-} from 'discord.js';
-import { CommandExecutorBuilder } from './CommandExecutorBuilder';
+import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
+import { CommandExecutorBuilder } from './executors';
 
 export class DiscordCommandBuilder extends SlashCommandBuilder {
   private _cooldown?: number;
@@ -31,18 +28,30 @@ export class DiscordCommandBuilder extends SlashCommandBuilder {
     return this;
   }
 
-  get execute(): ComposedCommandExecute | undefined {
+  get bindExecutors(): types.InteractionExecutorBinder | undefined {
     if (!this._executorBuilder) return;
-    return this._executorBuilder.execute;
+    return this._executorBuilder.bind;
   }
 
   setExecutors<
-    TContext,
-    TInteraction extends ChatInputCommandInteraction = ChatInputCommandInteraction<CacheType>
+    TContext extends object = {},
+    TError extends Error = Error,
+    TInteraction extends ChatInputCommandInteraction = ChatInputCommandInteraction,
+    TBaseContext extends object = TContext
   >(
     executors: (
-      builder: types.CommandExecutorBuilder<TContext, TInteraction>
-    ) => types.CommandExecutorBuilder<TContext, TInteraction>
+      builder: types.CommandExecutorBuilder<
+        TContext,
+        TError,
+        TInteraction,
+        TBaseContext
+      >
+    ) => types.CommandExecutorBuilder<
+      TContext,
+      TError,
+      TInteraction,
+      TBaseContext
+    >
   ): this {
     this._executorBuilder = executors(new CommandExecutorBuilder());
     return this;

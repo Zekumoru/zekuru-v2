@@ -1,1 +1,2 @@
-export * from './middlewareCompose';
+export * from './LastMiddlewareError';
+export * from './MiddlewareError';
