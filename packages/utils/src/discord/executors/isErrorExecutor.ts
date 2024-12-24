@@ -9,7 +9,7 @@ export const isErrorExecutor = <
   TContext extends object = {},
   TInteraction extends BaseInteraction = BaseInteraction
 >(
-  executor: InteractionExecutorType<TContext, TInteraction>
+  executor: InteractionExecutorType<TContext, TInteraction> | undefined
 ): executor is InteractionErrorExecutor<Error, TContext, TInteraction> => {
-  return executor.length >= 3;
+  return !!executor && executor.length >= 3;
 };

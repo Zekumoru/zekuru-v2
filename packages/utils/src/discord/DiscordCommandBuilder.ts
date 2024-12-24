@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 import { AutocompleteExecutor } from '@zekuru-v2/types';
 import * as types from '@zekuru-v2/types';
-import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
+import {
+  CacheType,
+  ChatInputCommandInteraction,
+  SlashCommandBuilder,
+} from 'discord.js';
 import { CommandExecutorBuilder } from './executors';
 
 export class DiscordCommandBuilder extends SlashCommandBuilder {
@@ -36,24 +40,35 @@ export class DiscordCommandBuilder extends SlashCommandBuilder {
   setExecutors<
     TContext extends object = {},
     TError extends Error = Error,
-    TInteraction extends ChatInputCommandInteraction = ChatInputCommandInteraction,
+    TInteraction extends ChatInputCommandInteraction = ChatInputCommandInteraction<CacheType>,
     TBaseContext extends object = TContext
   >(
-    executors: (
-      builder: types.CommandExecutorBuilder<
-        TContext,
-        TError,
-        TInteraction,
-        TBaseContext
-      >
-    ) => types.CommandExecutorBuilder<
-      TContext,
-      TError,
-      TInteraction,
-      TBaseContext
-    >
+    executors:
+      | types.CommandExecutorBuilder<
+          TContext,
+          TError,
+          TInteraction,
+          TBaseContext
+        >
+      | ((
+          builder: types.CommandExecutorBuilder<
+            TContext,
+            TError,
+            TInteraction,
+            TBaseContext
+          >
+        ) => types.CommandExecutorBuilder<
+          TContext,
+          TError,
+          TInteraction,
+          TBaseContext
+        >)
   ): this {
-    this._executorBuilder = executors(new CommandExecutorBuilder());
+    if (typeof executors === 'function') {
+      this._executorBuilder = executors(new CommandExecutorBuilder());
+    } else {
+      this._executorBuilder = executors;
+    }
     return this;
   }
 

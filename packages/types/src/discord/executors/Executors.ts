@@ -21,13 +21,20 @@ export interface Executors {
     TInteraction extends ChatInputCommandInteraction = ChatInputCommandInteraction,
     TBaseContext extends object = TContext
   >(
-    executors: (
-      builder: CommandExecutorBuilder<
-        TContext,
-        TError,
-        TInteraction,
-        TBaseContext
-      >
-    ) => CommandExecutorBuilder<TContext, TError, TInteraction, TBaseContext>
+    executors:
+      | CommandExecutorBuilder<TContext, TError, TInteraction, TBaseContext>
+      | ((
+          builder: CommandExecutorBuilder<
+            TContext,
+            TError,
+            TInteraction,
+            TBaseContext
+          >
+        ) => CommandExecutorBuilder<
+          TContext,
+          TError,
+          TInteraction,
+          TBaseContext
+        >)
   ): this;
 }
