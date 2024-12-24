@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 import {
@@ -11,8 +12,11 @@ import { LastMiddlewareError } from '../../middleware';
 import { BaseInteraction } from 'discord.js';
 import { makeGroups } from './makeGroups';
 
-const lastErrorExecutor: InteractionErrorExecutor<Error> = async (error) => {
-  console.log('[[lastErrorExecutor]]');
+const lastErrorExecutor: InteractionErrorExecutor<Error> = async (
+  error,
+  _context, // important to leave these two so that the composer
+  _next // knows that they are error executors
+) => {
   if (error) {
     throw new LastMiddlewareError(error, error.message);
   }
@@ -65,6 +69,7 @@ export const composeInteractionExecutors = <
           next
         ) => {
           await next().catch(async (error) => {
+            if (error instanceof LastMiddlewareError) throw error; // propagate unhandled error
             const errorsComposed = composeErrorExecutors(
               error,
               errorExecutors,
