@@ -1,4 +1,4 @@
-import { DiscordCommandBuilder, logger } from '@zekuru-v2/utils';
+import { DiscordCommandBuilder } from '@zekuru-v2/utils';
 import { PermissionFlagsBits } from 'discord.js';
 import registerSubcommandGroup from './registerSubcommandGroup';
 import unregisterSubcommandGroup from './unregisterSubcommandGroup';
@@ -6,7 +6,8 @@ import createNoopHandler from './handlers/createNoopHandler';
 import deeplRegisterHandler from './handlers/deepl/deeplRegisterHandler';
 import deeplUnregisterHandler from './handlers/deepl/deeplUnregisterHandler';
 import inGuildExecutor from '../executors/inGuildExecutor';
-import * as deepl from 'deepl-node';
+import invalidDeeplKeyExecutor from './executors/invalidDeeplKeyExecutor';
+import catchAllExecutor from '../executors/catchAllExecutor';
 
 const apiHandler = {
   register: {
@@ -39,19 +40,8 @@ const apiCommand = new DiscordCommandBuilder()
 
         await apiHandler[subcommandGroup][subcommand](interaction);
       })
-      .catch(async (error, { interaction }) => {
-        if (error instanceof deepl.AuthorizationError) {
-          await interaction.editReply(
-            `Invalid Deepl API key! Make sure that it's valid and active.`
-          );
-        } else {
-          await interaction.editReply(
-            `Generic error occurred: ${error.message}`
-          );
-        }
-
-        logger.error(error);
-      })
+      .catch(invalidDeeplKeyExecutor)
+      .catch(catchAllExecutor)
   );
 
 export default apiCommand;
