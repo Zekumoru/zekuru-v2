@@ -48,9 +48,14 @@ export abstract class BaseCacheRepository<Entity, CreateDto, UpdateDto> {
   async set(key: string, data: CreateDto): Promise<void> {
     let instance: Entity;
 
-    if (await this.has(key))
-      instance = await this.repository.updateOne(data as unknown as UpdateDto);
-    else instance = await this.repository.insertOne(data);
+    if (await this.has(key)) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      instance = (await this.repository.updateOne(
+        data as unknown as UpdateDto
+      ))!;
+    } else {
+      instance = await this.repository.insertOne(data);
+    }
 
     await this.cache.set(key, instance);
   }

@@ -34,7 +34,7 @@ export abstract class BaseMongoRepository<Entity, CreateDto, UpdateDto>
     return instances;
   }
 
-  async updateOne(entity: UpdateDto): Promise<Entity> {
+  async updateOne(entity: UpdateDto): Promise<Entity | null> {
     if (entity instanceof this.model) {
       await entity.save();
       return entity;
