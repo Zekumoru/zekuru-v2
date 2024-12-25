@@ -7,6 +7,7 @@ import removeLanguageSubcommand from './subcommands/remove';
 import { LanguagesOptions } from './options';
 import insertLanguageHandler from './handlers/insert';
 import catchAllExecutor from '../executors/catchAllExecutor';
+import queryLanguageHandler from './handlers/query';
 
 const languagesNoopHandler = async (
   interaction: ChatInputCommandInteraction
@@ -22,7 +23,7 @@ const languagesNoopHandler = async (
 };
 
 const languagesHandlers = {
-  query: languagesNoopHandler,
+  query: queryLanguageHandler,
   insert: insertLanguageHandler,
   update: languagesNoopHandler,
   remove: languagesNoopHandler,
@@ -42,6 +43,8 @@ const languagesCommand = new DiscordCommandBuilder()
   .setExecutors((executors) =>
     executors
       .add(async ({ interaction }) => {
+        await interaction.deferReply();
+
         const subcommand = interaction.options.getSubcommand(true);
 
         await languagesHandlers[subcommand](interaction);

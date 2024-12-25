@@ -94,6 +94,8 @@ const LanguageSchema = new mongoose.Schema<
   },
 });
 
+LanguageSchema.methods.toString = Language.prototype.toString;
+
 export const LanguageModel = mongoose.model<LanguageProperties, LanguageModel>(
   'Language',
   LanguageSchema

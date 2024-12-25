@@ -2,7 +2,6 @@ import { ChatInputCommandInteraction } from 'discord.js';
 import { LanguagesOptions } from '../options';
 import { LanguageVariant } from '@zekuru-v2/entities';
 import languagesRepository from '../languagesRepository';
-import { commaSeparate } from '@zekuru-v2/utils';
 
 const VARIANTS_REGEX = /([^,]*):([^,]*),?/gi;
 const parseVariants = (input: string) => {
@@ -48,12 +47,8 @@ const insertLanguageHandler = async (
     supports,
   });
 
-  await interaction.reply(
-    `Successfully added new supported language!\nCode: \`${
-      inserted._id
-    }\`\nLanguage: \`${inserted.name}\`\nVariants: ${commaSeparate(
-      inserted.variants.map((variant) => `\`${variant.code}: ${variant.name}\``)
-    )}\nAPIs: ${commaSeparate(supports.map((support) => `\`${support}\``))}`
+  await interaction.editReply(
+    `Successfully added new supported language!\n${inserted.toString()}`
   );
 };
 
