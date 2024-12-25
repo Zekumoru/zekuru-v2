@@ -75,8 +75,9 @@ export abstract class BaseMongoRepository<Entity, CreateDto, UpdateDto>
     )) as Entity[];
   }
 
-  async deleteById(id: Snowflake): Promise<void> {
-    await this.model.deleteOne().where('_id').equals(id);
+  async deleteById(id: Snowflake): Promise<boolean> {
+    const deleted = await this.model.deleteOne().where('_id').equals(id);
+    return deleted.deletedCount !== 0;
   }
 
   async deleteManyByIds(ids: Snowflake[]): Promise<void> {
