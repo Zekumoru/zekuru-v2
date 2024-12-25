@@ -6,7 +6,7 @@ import { CommonRepository } from './CommonRepository';
 export abstract class BaseMongoRepository<Entity, CreateDto, UpdateDto>
   implements CommonRepository<Entity, CreateDto, UpdateDto>
 {
-  constructor(private model: Model<Entity>) {}
+  constructor(protected model: Model<Entity>) {}
 
   private getId(entity: Entity): string {
     return (entity as unknown as { _id: string })._id;
