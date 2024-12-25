@@ -8,6 +8,7 @@ import { LanguagesOptions } from './options';
 import insertLanguageHandler from './handlers/insert';
 import catchAllExecutor from '../executors/catchAllExecutor';
 import queryLanguageHandler from './handlers/query';
+import updateLanguageHandler from './handlers/update';
 
 const languagesNoopHandler = async (
   interaction: ChatInputCommandInteraction
@@ -17,15 +18,15 @@ const languagesNoopHandler = async (
   const variants = interaction.options.getString(LanguagesOptions.VARIANTS);
   const supports = interaction.options.getString(LanguagesOptions.SUPPORTS);
 
-  await interaction.reply(
-    `Code: \`${code}\`\nLanguage: \`${language}\`\nVariants: \`${variants}\`\nAPIs: \`${supports}\``
+  await interaction.editReply(
+    `Not implemented yet!\nCode: \`${code}\`\nLanguage: \`${language}\`\nVariants: \`${variants}\`\nAPIs: \`${supports}\``
   );
 };
 
 const languagesHandlers = {
   query: queryLanguageHandler,
   insert: insertLanguageHandler,
-  update: languagesNoopHandler,
+  update: updateLanguageHandler,
   remove: languagesNoopHandler,
 };
 

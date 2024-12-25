@@ -1,25 +1,8 @@
 import { ChatInputCommandInteraction } from 'discord.js';
 import { LanguagesOptions } from '../options';
-import { LanguageVariant } from '@zekuru-v2/entities';
 import languagesRepository from '../languagesRepository';
-
-const VARIANTS_REGEX = /([^,]*):([^,]*),?/gi;
-const parseVariants = (input: string) => {
-  const matches = input.matchAll(VARIANTS_REGEX);
-  const variants: LanguageVariant[] = [];
-
-  for (const match of matches) {
-    const code = match[1].trim();
-    const name = match[2].trim();
-    variants.push({ code, name });
-  }
-
-  return variants;
-};
-
-const parseSupports = (input: string) => {
-  return input.split(',').map((token) => token.trim());
-};
+import parseVariants from '../parseVariants';
+import parseSupports from '../parseSupports';
 
 const insertLanguageHandler = async (
   interaction: ChatInputCommandInteraction
