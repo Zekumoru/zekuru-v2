@@ -8,6 +8,7 @@ declare global {
         CLIENT_ID: string;
         GUILD_ID: string;
         MONGODB_CONNECTION_STRING: string;
+        DEEPL_API_KEY: string;
         CIPHER_SECRET_KEY: string;
         CHANNEL_LINK_LIMIT: string;
       }> {}

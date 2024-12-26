@@ -9,12 +9,17 @@ import queryLanguageHandler from './handlers/query';
 import updateLanguageHandler from './handlers/update';
 import removeLanguageHandler from './handlers/remove';
 import { PermissionFlagsBits } from 'discord.js';
+import refreshSubcommandGroup from './refreshSubcommandGroup';
+import refreshDeeplHandler from './handlers/refresh/deepl';
 
 const languagesHandlers = {
   query: queryLanguageHandler,
   insert: insertLanguageHandler,
   update: updateLanguageHandler,
   remove: removeLanguageHandler,
+  refresh: {
+    deepl: refreshDeeplHandler,
+  },
 };
 
 const languagesCommand = new DiscordCommandBuilder()
@@ -27,6 +32,7 @@ const languagesCommand = new DiscordCommandBuilder()
   .addSubcommand(insertLanguageSubcommand)
   .addSubcommand(updateLanguageSubcommand)
   .addSubcommand(removeLanguageSubcommand)
+  .addSubcommandGroup(refreshSubcommandGroup)
   .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
   .setExecutors((executors) =>
     executors
@@ -34,8 +40,13 @@ const languagesCommand = new DiscordCommandBuilder()
         await interaction.deferReply();
 
         const subcommand = interaction.options.getSubcommand(true);
+        const subcommandGroup = interaction.options.getSubcommandGroup();
 
-        await languagesHandlers[subcommand](interaction);
+        if (subcommandGroup) {
+          await languagesHandlers[subcommandGroup][subcommand](interaction);
+        } else {
+          await languagesHandlers[subcommand](interaction);
+        }
       })
       .catch(catchAllExecutor)
   );
