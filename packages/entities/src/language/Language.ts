@@ -24,15 +24,18 @@ export class Language implements Createable, Modifiable, LanguageMethods {
   ) {}
 
   toString(): string {
-    const variants = delimiterSeparate(
-      this.variants.map(
-        (variant) => `- \`${variant.code}\`: \`${variant.name}\``
-      ),
-      '\n'
-    );
-    const supports = delimiterSeparate(
-      this.supports.map((support) => `\`${support}\``)
-    );
+    const variants = this.variants.length
+      ? delimiterSeparate(
+          this.variants.map(
+            (variant) => `- \`${variant.code}\`: \`${variant.name}\``
+          ),
+          '\n'
+        )
+      : 'None.';
+
+    const supports = this.supports.length
+      ? delimiterSeparate(this.supports.map((support) => `\`${support}\``))
+      : 'None.';
 
     return `**Code:** \`${this._id}\`\n**Language:** \`${this.name}\`\n**Supported by APIs:** ${supports}\n**Variants**\n${variants}`;
   }
