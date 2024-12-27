@@ -11,6 +11,8 @@ import removeLanguageHandler from './handlers/remove';
 import { PermissionFlagsBits } from 'discord.js';
 import refreshSubcommandGroup from './refreshSubcommandGroup';
 import refreshDeeplHandler from './handlers/refresh/deepl';
+import refreshOpenAIHandler from './handlers/refresh/openai';
+import refreshGeminiHandler from './handlers/refresh/gemini';
 
 const languagesHandlers = {
   query: queryLanguageHandler,
@@ -19,6 +21,8 @@ const languagesHandlers = {
   remove: removeLanguageHandler,
   refresh: {
     deepl: refreshDeeplHandler,
+    openai: refreshOpenAIHandler,
+    gemini: refreshGeminiHandler,
   },
 };
 

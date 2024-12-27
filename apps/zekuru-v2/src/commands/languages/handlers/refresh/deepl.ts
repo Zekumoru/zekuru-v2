@@ -1,7 +1,7 @@
 import { ChatInputCommandInteraction } from 'discord.js';
 import normalizeDeeplLanguagesToMap from './deepl/normalizeDeeplLanguagesToMap';
-import createGroupMap from './deepl/createGroupMap';
-import refreshDeeplLanguages from './deepl/refreshDeeplLanguages';
+import createGroupMap from './shared/createGroupMap';
+import refreshCommon from './shared/refreshCommon';
 import * as deepl from 'deepl-node';
 
 const deeplApiKey = process.env.DEEPL_API_KEY;
@@ -27,7 +27,7 @@ const refreshDeeplHandler = async (
   const groupMap = createGroupMap(normalizedMap);
   const userId = interaction.user.id;
 
-  await refreshDeeplLanguages(groupMap, userId);
+  await refreshCommon(userId, 'deepl', groupMap);
 
   await interaction.editReply(
     `DeepL's supported languages has been successfully refreshed!`
