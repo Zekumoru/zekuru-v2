@@ -1,6 +1,7 @@
 import { Language, LanguageVariant } from '@zekuru-v2/entities';
 import LanguageGroup from './LanguageGroup';
 import languagesRepository from '../../../languagesRepository';
+import { ApiType } from '@zekuru-v2/types';
 
 const alreadyHasVariant = (
   variants: LanguageVariant[],
@@ -11,7 +12,7 @@ const alreadyHasVariant = (
 
 const refreshCommon = async (
   userId: string,
-  apiType: 'deepl' | 'openai' | 'gemini',
+  apiType: ApiType,
   groupMap: Map<string, LanguageGroup>
 ) => {
   // get all languages from db to make only one call
