@@ -26,18 +26,19 @@ const createLanguagesEmbedComponent = async ({
   range: customRange,
 }: CreateLanguagesEmbedComponentOptions) => {
   const range = customRange ?? 24;
-  const index = indexType === 'end' ? tempIndex - range : tempIndex;
+  const normalizedIndex = (Math.floor((tempIndex - 1) / range) + 1) * range;
+  const index = indexType === 'end' ? normalizedIndex - range : normalizedIndex;
+  const endIndex = index + range;
 
   const languages = await ApiLanguagesCache.get(api as ApiType);
 
   const showStart = index + 1;
-  const showEnd =
-    index + range > languages.length ? languages.length : index + range;
+  const showEnd = endIndex > languages.length ? languages.length : endIndex;
   const embed = new EmbedBuilder()
     .setTitle(`Supported languages of \`${api}\``)
     .addFields(
       languages
-        .slice(index, index + range)
+        .slice(index, endIndex)
         .map(({ code, name }) => ({ name: code, value: name, inline: true }))
     )
     .setFooter({

@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { ApiType, DiscordEvent } from '@zekuru-v2/types';
 import { ButtonInteraction, CacheType, Events, Interaction } from 'discord.js';
-import ApiLanguagesCache from '../cache/ApiLanguagesCache';
 import createLanguagesEmbedComponent, {
   LanguagesEmbedComponentIds,
 } from '../components/createLanguagesEmbedComponent';
@@ -12,13 +11,12 @@ const handlers = {
 
     const api = oldEmbed.title!.match(/`.*`/i)![0].match(/[^`]+/i)![0];
 
-    const languages = await ApiLanguagesCache.get(api as ApiType);
-    const firstField = oldEmbed.fields[0];
-    const index = languages.findIndex(({ code }) => firstField.name === code);
+    const footer = oldEmbed.footer!.text;
+    const index = +footer.slice('Showing '.length, footer.indexOf('-'));
 
     const [embed, row] = await createLanguagesEmbedComponent({
       api: api as ApiType,
-      index,
+      index: index - 1,
       indexType: 'end',
     });
 
@@ -29,13 +27,12 @@ const handlers = {
 
     const api = oldEmbed.title!.match(/`.*`/i)![0].match(/[^`]+/i)![0];
 
-    const languages = await ApiLanguagesCache.get(api as ApiType);
-    const lastField = oldEmbed.fields[oldEmbed.fields.length - 1];
-    const index = languages.findIndex(({ code }) => lastField.name === code);
+    const footer = oldEmbed.footer!.text;
+    const index = +footer.slice('Showing '.length, footer.indexOf('-'));
 
     const [embed, row] = await createLanguagesEmbedComponent({
       api: api as ApiType,
-      index: index + 1,
+      index,
       indexType: 'start',
     });
 
