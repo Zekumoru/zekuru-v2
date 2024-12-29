@@ -1,17 +1,10 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
-
-import { InGuild, InteractionExecutor } from '@zekuru-v2/types';
-import {
-  ChannelType,
-  ChatInputCommandInteraction,
-  TextChannel,
-} from 'discord.js';
+import { InGuild, InteractionExecutor, InTextChannel } from '@zekuru-v2/types';
+import { ChannelType, ChatInputCommandInteraction } from 'discord.js';
 
 const inTextChannelExecutor: InteractionExecutor<
   {},
-  InGuild<ChatInputCommandInteraction> & {
-    channel: TextChannel;
-  }
+  InTextChannel<InGuild<ChatInputCommandInteraction>>
 > = async (
   { interaction }: { interaction: ChatInputCommandInteraction },
   next
