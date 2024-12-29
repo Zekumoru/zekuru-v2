@@ -48,7 +48,10 @@ export default {
     await interaction.deferUpdate();
 
     const id = interaction.customId;
+    const handler = handlers[id];
 
-    await handlers[id](interaction);
+    if (!handler) return;
+
+    await handler(interaction);
   },
 } as DiscordEvent;
