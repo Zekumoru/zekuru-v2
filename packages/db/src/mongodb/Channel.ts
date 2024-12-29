@@ -4,16 +4,13 @@ import { Channel, ChannelLanguage, ChannelMethods } from '@zekuru-v2/entities';
 
 const ChannelLanguageSchema = new mongoose.Schema<ChannelLanguage>(
   {
-    name: {
+    code: {
       type: String,
       required: true,
       lowercase: true,
     },
-    codes: {
-      type: [String],
-      required: true,
-      lowercase: true,
-      default: [],
+    variantCode: {
+      type: String,
     },
   },
   { _id: false }
