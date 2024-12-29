@@ -1,3 +1,4 @@
+export * from './apiTypes';
 export * from './discord';
 export * from './entities';
 export * from './middleware';

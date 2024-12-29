@@ -4,9 +4,19 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug Nx App",
+      "name": "Debug Zekuru-v2",
       "runtimeExecutable": "nx",
       "args": ["serve", "zekuru-v2"],
+      "cwd": "${workspaceFolder}",
+      "outputCapture": "std",
+      "console": "integratedTerminal"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Zekuru-v2 Docs",
+      "runtimeExecutable": "nx",
+      "args": ["serve", "zekuru-v2-docs"],
       "cwd": "${workspaceFolder}",
       "outputCapture": "std",
       "console": "integratedTerminal"

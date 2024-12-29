@@ -6,7 +6,7 @@ import { CommonRepository } from './CommonRepository';
 export abstract class BaseMongoRepository<Entity, CreateDto, UpdateDto>
   implements CommonRepository<Entity, CreateDto, UpdateDto>
 {
-  constructor(private model: Model<Entity>) {}
+  constructor(protected model: Model<Entity>) {}
 
   private getId(entity: Entity): string {
     return (entity as unknown as { _id: string })._id;
@@ -34,7 +34,7 @@ export abstract class BaseMongoRepository<Entity, CreateDto, UpdateDto>
     return instances;
   }
 
-  async updateOne(entity: UpdateDto): Promise<Entity> {
+  async updateOne(entity: UpdateDto): Promise<Entity | null> {
     if (entity instanceof this.model) {
       await entity.save();
       return entity;
@@ -75,8 +75,9 @@ export abstract class BaseMongoRepository<Entity, CreateDto, UpdateDto>
     )) as Entity[];
   }
 
-  async deleteById(id: Snowflake): Promise<void> {
-    await this.model.deleteOne().where('_id').equals(id);
+  async deleteById(id: Snowflake): Promise<boolean> {
+    const deleted = await this.model.deleteOne().where('_id').equals(id);
+    return deleted.deletedCount !== 0;
   }
 
   async deleteManyByIds(ids: Snowflake[]): Promise<void> {

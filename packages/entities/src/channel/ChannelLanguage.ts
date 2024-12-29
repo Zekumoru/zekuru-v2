@@ -1,4 +1,4 @@
 export interface ChannelLanguage {
-  name: string;
-  codes: string[];
+  code: string;
+  variantCode?: string;
 }

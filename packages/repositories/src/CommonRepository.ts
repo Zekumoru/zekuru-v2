@@ -5,8 +5,8 @@ export interface CommonRepository<Entity, CreateDto, UpdateDto> {
   insertMany(entities: CreateDto[]): Promise<Entity[]>;
   findById(id: Snowflake): Promise<Entity | null>;
   findByIds(ids: Snowflake[]): Promise<Entity[]>;
-  updateOne(entity: UpdateDto): Promise<Entity>;
+  updateOne(entity: UpdateDto): Promise<Entity | null>;
   updateMany(entities: UpdateDto[]): Promise<Entity[]>;
-  deleteById(id: Snowflake): Promise<void>;
+  deleteById(id: Snowflake): Promise<boolean>;
   deleteManyByIds(ids: Snowflake[]): Promise<void>;
 }
