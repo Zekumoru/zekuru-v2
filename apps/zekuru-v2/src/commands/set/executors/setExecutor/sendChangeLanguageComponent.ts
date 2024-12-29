@@ -1,7 +1,7 @@
 import { Channel } from '@zekuru-v2/entities';
 import LanguageCache from '../../../../cache/LanguageCache';
 import { ChatInputCommandInteraction } from 'discord.js';
-import getLanguageName from './getLanguageName';
+import getLanguageName from '../../../utilities/getLanguageName';
 import setResponses from './setResponses';
 import createConfirmationComponent from './createConfirmationComponent';
 import { asyncExec } from '@zekuru-v2/utils';

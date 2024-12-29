@@ -21,7 +21,9 @@ const setCommand = new DiscordCommandBuilder()
   .addChannelOption((option) =>
     option
       .setName('channel')
-      .setDescription('The channel to set the language of.')
+      .setDescription(
+        'The channel to set the language of. If not specified, defaults to current channel.'
+      )
   )
   .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
   .setAutocompleteExecutor(setAutocompleteExecutor)

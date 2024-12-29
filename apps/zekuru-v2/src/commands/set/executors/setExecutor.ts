@@ -6,7 +6,7 @@ import GuildCache from '../../../cache/GuildCache';
 import { ChatInputCommandInteraction } from 'discord.js';
 import parseLanguageInput from './setExecutor/parseLanguageInput';
 import setResponses from './setExecutor/setResponses';
-import getLanguageName from './setExecutor/getLanguageName';
+import getLanguageName from '../../utilities/getLanguageName';
 import setNewChannel from './setExecutor/setNewChannel';
 import alreadySetToSameLanguage from './setExecutor/alreadySetToSameLanguage';
 import sendContinueSettingComponent from './setExecutor/sendContinueSettingComponent';
@@ -48,14 +48,18 @@ const setExecutor: InteractionExecutor<
   const channel = await ChannelCache.get(channelId);
   if (!channel) {
     await setNewChannel(userId, guildId, channelId, channelLanguage);
-    await interaction.editReply(setResponses.newSet(channelId, languageName));
+    await interaction.editReply({
+      content: setResponses.newSet(channelId, languageName),
+      components: [],
+    });
     return;
   }
 
   if (alreadySetToSameLanguage(channel, channelLanguage)) {
-    await interaction.editReply(
-      setResponses.alreadySet(channelId, languageName)
-    );
+    await interaction.editReply({
+      content: setResponses.alreadySet(channelId, languageName),
+      components: [],
+    });
     return;
   }
 

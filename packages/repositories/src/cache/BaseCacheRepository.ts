@@ -12,8 +12,16 @@ export abstract class BaseCacheRepository<Entity, CreateDto, UpdateDto> {
     await this.cache.clear();
   }
 
-  async delete(key: string): Promise<void> {
+  async delete(key: string, dbAsWell = false): Promise<boolean> {
+    let deleted = true;
+
+    if (dbAsWell) {
+      deleted = await this.repository.deleteById(key);
+    }
+
     await this.cache.delete(key);
+
+    return deleted;
   }
 
   async get<T extends boolean = false>(
