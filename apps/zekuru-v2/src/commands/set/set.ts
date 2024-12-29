@@ -5,7 +5,7 @@ import catchAllExecutor from '../executors/catchAllExecutor';
 import inTextChannelExecutor from '../executors/inTextChannelExecutor';
 import setAutocompleteExecutor from './executors/autocompleteExecutor';
 import setExecutor from './executors/setExecutor';
-import deferExecutor from '../executors/deferEphemeralExecutor';
+import deferEphemeralExecutor from '../executors/deferEphemeralExecutor';
 import isRegisteredExecutor from '../executors/isRegisteredExecutor';
 
 const setCommand = new DiscordCommandBuilder()
@@ -29,7 +29,7 @@ const setCommand = new DiscordCommandBuilder()
     executors
       .add(inGuildExecutor)
       .add(inTextChannelExecutor)
-      .add(deferExecutor)
+      .add(deferEphemeralExecutor)
       .add(isRegisteredExecutor)
       .add(setExecutor)
       .catch(catchAllExecutor)

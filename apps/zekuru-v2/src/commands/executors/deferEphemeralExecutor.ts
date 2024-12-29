@@ -2,7 +2,7 @@
 import { InteractionExecutor } from '@zekuru-v2/types';
 import { ChatInputCommandInteraction } from 'discord.js';
 
-const deferExecutor: InteractionExecutor<
+const deferEphemeralExecutor: InteractionExecutor<
   {},
   ChatInputCommandInteraction
 > = async ({ interaction }, next) => {
@@ -11,4 +11,4 @@ const deferExecutor: InteractionExecutor<
   await next();
 };
 
-export default deferExecutor;
+export default deferEphemeralExecutor;
