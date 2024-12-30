@@ -1,4 +1,4 @@
-const LinkOptions = {
+const SingleOptions = {
   SOURCE_CHANNEL: 'source-channel',
   TARGET_CHANNEL: 'target-channel',
   MODE: 'mode',
@@ -10,6 +10,21 @@ const LinkOptions = {
     MONO_RECURSIVE: 'mono-recursive',
     BI_RECURSIVE: 'bi-recursive',
   },
+};
+
+const MultipleOptions = {
+  CHANNELS: 'channels',
+  RECURSIVE: 'recursive',
+};
+
+const GroupOptions = {
+  CATEGORY_CHANNEL: 'category-channel',
+};
+
+const LinkOptions = {
+  Single: SingleOptions,
+  Multiple: MultipleOptions,
+  Group: GroupOptions,
 };
 
 export default LinkOptions;
