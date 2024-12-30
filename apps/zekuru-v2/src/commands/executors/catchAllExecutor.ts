@@ -9,9 +9,9 @@ const catchAllExecutor: InteractionErrorExecutor<
   ChatInputCommandInteraction
 > = async (error, { interaction }) => {
   if (interaction.deferred) {
-    await interaction.editReply(`Generic error occurred: ${error.message}`);
+    await interaction.editReply(`${error.name}: ${error.message}`);
   } else {
-    await interaction.reply(`Generic error occurred: ${error.message}`);
+    await interaction.reply(`${error.name}: ${error.message}`);
   }
 
   logger.error(error);
