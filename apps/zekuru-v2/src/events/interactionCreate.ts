@@ -1,6 +1,13 @@
 import { DiscordEvent, DiscordCommand } from '@zekuru-v2/types';
 import { DiscordCommandBuilder, logger } from '@zekuru-v2/utils';
-import { CacheType, Collection, Events, Interaction } from 'discord.js';
+import {
+  CacheType,
+  Collection,
+  Events,
+  Interaction,
+  InteractionReplyOptions,
+  MessageFlags,
+} from 'discord.js';
 
 export default {
   name: Events.InteractionCreate,
@@ -13,7 +20,7 @@ export default {
       logger.error(`No command matching ${interaction.commandName} was found.`);
       interaction.reply({
         content: `Error: No command \`/${interaction.commandName}\` found.`,
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
       return;
     }
@@ -43,7 +50,7 @@ export default {
         const expiredTimestamp = Math.round(expirationTime / 1000);
         interaction.reply({
           content: `Please wait, you are on a cooldown for \`${commandName}\`. You can use it again <t:${expiredTimestamp}:R>.`,
-          ephemeral: true,
+          flags: MessageFlags.Ephemeral,
         });
         return;
       }
@@ -61,9 +68,9 @@ export default {
     } catch (error) {
       logger.error(error);
 
-      const errorMessageContent = {
+      const errorMessageContent: InteractionReplyOptions = {
         content: 'There was an error while executing this command!',
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       };
 
       if (interaction.replied || interaction.deferred) {

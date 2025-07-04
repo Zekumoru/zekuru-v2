@@ -1,5 +1,5 @@
 import { DiscordCommandBuilder } from '@zekuru-v2/utils';
-import { PermissionFlagsBits } from 'discord.js';
+import { MessageFlags, PermissionFlagsBits } from 'discord.js';
 import registerSubcommandGroup from './registerSubcommandGroup';
 import unregisterSubcommandGroup from './unregisterSubcommandGroup';
 import createNoopHandler from './handlers/createNoopHandler';
@@ -33,7 +33,7 @@ const apiCommand = new DiscordCommandBuilder()
     executors
       .add(inGuildExecutor)
       .add(async ({ interaction }) => {
-        await interaction.deferReply({ ephemeral: true });
+        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
         const subcommandGroup = interaction.options.getSubcommandGroup(true);
         const subcommand = interaction.options.getSubcommand(true);
@@ -41,7 +41,7 @@ const apiCommand = new DiscordCommandBuilder()
         await apiHandler[subcommandGroup][subcommand](interaction);
       })
       .catch(invalidDeeplKeyExecutor)
-      .catch(catchAllExecutor)
+      .catch(catchAllExecutor),
   );
 
 export default apiCommand;
