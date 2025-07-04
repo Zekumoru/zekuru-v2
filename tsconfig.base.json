@@ -19,17 +19,18 @@
     "typeRoots": ["node_modules/@types", "packages/types/src/global"],
     "paths": {
       "@zekuru-v2/cache": ["packages/cache/src/index.ts"],
+      "@zekuru-v2/core": ["packages/core/src/index.ts"],
       "@zekuru-v2/db": ["packages/db/src/index.ts"],
+      "@zekuru-v2/entities": ["packages/entities/src/index.ts"],
       "@zekuru-v2/mocks/cache": ["packages/test/src/mocks/cache"],
       "@zekuru-v2/mocks/utils": ["packages/test/src/mocks/utils"],
+      "@zekuru-v2/repositories": ["packages/repositories/src/index.ts"],
       "@zekuru-v2/test": ["packages/test/src/index.ts"],
       "@zekuru-v2/test/pino-disable": [
         "packages/test/src/pino-disable/index.ts"
       ],
       "@zekuru-v2/types": ["packages/types/src/index.ts"],
-      "@zekuru-v2/utils": ["packages/utils/src/index.ts"],
-      "@zekuru-v2/entities": ["packages/entities/src/index.ts"],
-      "@zekuru-v2/repositories": ["packages/repositories/src/index.ts"]
+      "@zekuru-v2/utils": ["packages/utils/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
