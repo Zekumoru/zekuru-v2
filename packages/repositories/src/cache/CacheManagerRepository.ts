@@ -18,7 +18,7 @@ export class CacheManagerRepository<T> implements CacheRepository<T> {
     await this.cache.del(key);
   }
 
-  get(key: string): Promise<T | null> {
+  async get(key: string): Promise<T | null> {
     // As of cache-manager v7.0, they return `undefined` than `null`
     return this.cache.get<T>(key).then((value) => value ?? null);
   }
