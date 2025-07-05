@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import * as Types from '@zekuru-v2/types';
 import { CommonRepository } from '../CommonRepository';
 import { CacheRepository } from './CacheRepository';
@@ -62,7 +63,6 @@ export abstract class BaseCacheRepository<
     let instance: Entity;
 
     if (await this.has(key)) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       instance = (await this.repository.updateOne(
         data as unknown as UpdateDto,
       ))!;
@@ -75,7 +75,8 @@ export abstract class BaseCacheRepository<
 
   async setMany(data: (CreateDto | UpdateDto)[]): Promise<void> {
     const dataMap = new Map(data.map((d) => [d._id, d]));
-    const keys = Object.keys(dataMap);
+    const keys = Array.from(dataMap.keys());
+    // test if already existing
     const existing = await this.repository.findByIds(keys);
     const existingSet = new Set(existing.map((e) => e._id));
 
@@ -83,11 +84,11 @@ export abstract class BaseCacheRepository<
     const updates: UpdateDto[] = [];
 
     for (const key of keys) {
-      const dto = dataMap[key];
+      const dto = dataMap.get(key)!;
       if (existingSet.has(key)) {
-        updates.push(dto as unknown as UpdateDto);
+        updates.push(dto as UpdateDto);
       } else {
-        inserts.push(dto);
+        inserts.push(dto as CreateDto);
       }
     }
 
