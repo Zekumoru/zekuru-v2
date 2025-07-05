@@ -1,16 +1,15 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Snowflake } from 'discord.js';
-import { HydratedDocument, Model, UpdateQuery } from 'mongoose';
+import { Model, UpdateQuery } from 'mongoose';
 import { CommonRepository } from './CommonRepository';
+import * as Types from '@zekuru-v2/types';
 
-export abstract class BaseMongoRepository<Entity, CreateDto, UpdateDto>
-  implements CommonRepository<Entity, CreateDto, UpdateDto>
+export abstract class BaseMongoRepository<
+  Entity extends Types.Entity,
+  CreateDto extends Types.Entity,
+  UpdateDto extends Types.Entity,
+> implements CommonRepository<Entity, CreateDto, UpdateDto>
 {
   constructor(protected model: Model<Entity>) {}
-
-  private getId(entity: Entity): string {
-    return (entity as unknown as { _id: string })._id;
-  }
 
   async insertOne(entity: CreateDto): Promise<Entity> {
     const instance = new this.model(entity);
@@ -19,7 +18,9 @@ export abstract class BaseMongoRepository<Entity, CreateDto, UpdateDto>
   }
 
   async insertMany(entities: CreateDto[]): Promise<Entity[]> {
-    const instances = (await this.model.insertMany(entities)) as Entity[];
+    const instances = (await this.model.insertMany(
+      entities,
+    )) as unknown as Entity[];
     return instances;
   }
 
@@ -41,38 +42,25 @@ export abstract class BaseMongoRepository<Entity, CreateDto, UpdateDto>
     }
 
     const instance = await this.model.findByIdAndUpdate(
-      this.getId(entity as unknown as Entity),
+      entity._id,
       entity as UpdateQuery<Entity> | undefined,
       {
         returnOriginal: false,
-      }
+      },
     );
     return instance as Entity;
   }
 
   async updateMany(entities: UpdateDto[]): Promise<Entity[]> {
-    const map = new Map(
-      entities.map((entity) => [
-        this.getId(entity as unknown as Entity),
-        entity,
-      ])
-    );
-    const oldInstances = (await this.findByIds([
-      ...map.keys(),
-    ])) as HydratedDocument<Entity>[];
+    const operations = entities.map((entity) => ({
+      updateOne: {
+        filter: { _id: entity._id },
+        update: { $set: entity as UpdateQuery<Entity> },
+      },
+    }));
 
-    // validate first before updating
-    const instances = await Promise.all(
-      oldInstances.map(async (instance) => {
-        instance.set(map.get(this.getId(instance))!);
-        await instance.validate();
-        return instance;
-      })
-    );
-
-    return (await Promise.all(
-      instances.map(async (instance) => await instance.save())
-    )) as Entity[];
+    await this.model.bulkWrite(operations);
+    return this.findByIds(entities.map((e) => e._id));
   }
 
   async deleteById(id: Snowflake): Promise<boolean> {
