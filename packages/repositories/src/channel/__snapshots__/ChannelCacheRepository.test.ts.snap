@@ -1,0 +1,85 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ChannelCacheRepository should set many channels persisting changes if already present in the database 1`] = `
+[
+  Channel {
+    "_id": "A",
+    "createdAt": 2025-01-01T00:00:00.000Z,
+    "createdBy": "user",
+    "guildId": "guild",
+    "language": {
+      "code": "en",
+    },
+    "links": [
+      "B",
+    ],
+    "modifiedAt": 2025-01-01T00:00:00.000Z,
+    "modifiedBy": "user",
+  },
+  Channel {
+    "_id": "B",
+    "createdAt": 2025-01-01T00:00:00.000Z,
+    "createdBy": "user",
+    "guildId": "guild",
+    "language": {
+      "code": "en",
+    },
+    "links": [],
+    "modifiedAt": 2025-01-01T00:00:00.000Z,
+    "modifiedBy": "user",
+  },
+  Channel {
+    "_id": "C",
+    "createdAt": 2025-01-01T00:00:00.000Z,
+    "createdBy": "user",
+    "guildId": "guild",
+    "language": {
+      "code": "en",
+    },
+    "links": [],
+    "modifiedAt": 2025-01-01T00:00:00.000Z,
+    "modifiedBy": "user",
+  },
+]
+`;
+
+exports[`ChannelCacheRepository should set many channels persisting them in the database 1`] = `
+[
+  Channel {
+    "_id": "A",
+    "createdAt": 2025-01-01T00:00:00.000Z,
+    "createdBy": "user",
+    "guildId": "guild",
+    "language": {
+      "code": "en",
+    },
+    "links": [],
+    "modifiedAt": 2025-01-01T00:00:00.000Z,
+    "modifiedBy": "user",
+  },
+  Channel {
+    "_id": "B",
+    "createdAt": 2025-01-01T00:00:00.000Z,
+    "createdBy": "user",
+    "guildId": "guild",
+    "language": {
+      "code": "en",
+    },
+    "links": [],
+    "modifiedAt": 2025-01-01T00:00:00.000Z,
+    "modifiedBy": "user",
+  },
+  Channel {
+    "_id": "C",
+    "createdAt": 2025-01-01T00:00:00.000Z,
+    "createdBy": "user",
+    "guildId": "guild",
+    "language": {
+      "code": "en",
+    },
+    "links": [],
+    "modifiedAt": 2025-01-01T00:00:00.000Z,
+    "modifiedBy": "user",
+  },
+]
+`;
