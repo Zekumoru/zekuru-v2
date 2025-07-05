@@ -84,11 +84,16 @@ export class LinkManager {
     if (source._id === target._id) return; // Ignore same channel link
 
     if (!this.map.has(source)) this.map.set(source, new Set());
-    this.map.get(source)!.add(target);
+
+    const linked = this.map.get(source)!;
+    linked.add(target);
+    source.links = Array.from(linked).map((c) => c._id);
 
     if (!mono) {
       if (!this.map.has(target)) this.map.set(target, new Set());
-      this.map.get(target)!.add(source);
+      const linked = this.map.get(target)!;
+      linked.add(source);
+      target.links = Array.from(linked).map((c) => c._id);
     }
   }
 }
