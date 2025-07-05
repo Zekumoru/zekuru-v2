@@ -1,11 +1,16 @@
+import * as Types from '@zekuru-v2/types';
 import { CommonRepository } from '../CommonRepository';
 import { CacheRepository } from './CacheRepository';
 import { CacheRepositoryError } from './CacheRepositoryError';
 
-export abstract class BaseCacheRepository<Entity, CreateDto, UpdateDto> {
+export abstract class BaseCacheRepository<
+  Entity extends Types.Entity,
+  CreateDto extends Types.Entity,
+  UpdateDto extends Types.Entity,
+> {
   constructor(
     private cache: CacheRepository<Entity>,
-    private repository: CommonRepository<Entity, CreateDto, UpdateDto>
+    private repository: CommonRepository<Entity, CreateDto, UpdateDto>,
   ) {}
 
   async clear(): Promise<void> {
@@ -26,7 +31,7 @@ export abstract class BaseCacheRepository<Entity, CreateDto, UpdateDto> {
 
   async get<T extends boolean = false>(
     key: string,
-    ensured?: T
+    ensured?: T,
   ): Promise<T extends true ? Entity : Entity | null> {
     const cached = await this.cache.get(key);
     if (cached) return cached;
@@ -35,11 +40,11 @@ export abstract class BaseCacheRepository<Entity, CreateDto, UpdateDto> {
     if (!instance) {
       if (ensured) {
         throw new CacheRepositoryError(
-          'Was ensured but the actual value does not exist!'
+          'Was ensured but the actual value does not exist!',
         );
       }
 
-      return null as Entity;
+      return null as unknown as Entity;
     }
 
     await this.cache.set(key, instance);
@@ -59,7 +64,7 @@ export abstract class BaseCacheRepository<Entity, CreateDto, UpdateDto> {
     if (await this.has(key)) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       instance = (await this.repository.updateOne(
-        data as unknown as UpdateDto
+        data as unknown as UpdateDto,
       ))!;
     } else {
       instance = await this.repository.insertOne(data);

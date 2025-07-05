@@ -1,4 +1,4 @@
-import { CreateDtoUtil, UpdateDtoUtil } from '@zekuru-v2/types';
+import { CreateDtoUtil, Entity, UpdateDtoUtil } from '@zekuru-v2/types';
 import { delimiterSeparate } from '@zekuru-v2/utils';
 import { Createable, Modifiable } from '../Common';
 import { LanguageVariant } from './LanguageVariant';
@@ -11,7 +11,9 @@ export type LanguageCreateDto = CreateDtoUtil<Language, LanguageMethods>;
 
 export type LanguageUpdateDto = UpdateDtoUtil<LanguageCreateDto>;
 
-export class Language implements Createable, Modifiable, LanguageMethods {
+export class Language
+  implements Entity, Createable, Modifiable, LanguageMethods
+{
   constructor(
     public _id: string,
     public name: string,
@@ -20,16 +22,16 @@ export class Language implements Createable, Modifiable, LanguageMethods {
     public createdBy: string,
     public createdAt: Date,
     public modifiedBy: string,
-    public modifiedAt: Date
+    public modifiedAt: Date,
   ) {}
 
   toString(): string {
     const variants = this.variants.length
       ? delimiterSeparate(
           this.variants.map(
-            (variant) => `- \`${variant.code}\`: \`${variant.name}\``
+            (variant) => `- \`${variant.code}\`: \`${variant.name}\``,
           ),
-          '\n'
+          '\n',
         )
       : 'None.';
 

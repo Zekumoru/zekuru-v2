@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 /* eslint-disable @typescript-eslint/no-empty-object-type */
-import { CreateDtoUtil, Snowflake, UpdateDtoUtil } from '@zekuru-v2/types';
+import {
+  CreateDtoUtil,
+  Entity,
+  Snowflake,
+  UpdateDtoUtil,
+} from '@zekuru-v2/types';
 import { Createable, Modifiable } from '../Common';
 import { ChannelLanguage } from './ChannelLanguage';
 
@@ -10,7 +15,7 @@ export type ChannelCreateDto = CreateDtoUtil<Channel, ChannelMethods>;
 
 export type ChannelUpdateDto = UpdateDtoUtil<ChannelCreateDto>;
 
-export class Channel implements Createable, Modifiable {
+export class Channel implements Entity, Createable, Modifiable {
   constructor(
     public _id: Snowflake,
     public guildId: Snowflake,
@@ -19,6 +24,6 @@ export class Channel implements Createable, Modifiable {
     public createdAt: Date,
     public createdBy: Snowflake,
     public modifiedAt: Date,
-    public modifiedBy: Snowflake
+    public modifiedBy: Snowflake,
   ) {}
 }
