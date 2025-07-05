@@ -72,4 +72,35 @@ export abstract class BaseCacheRepository<
 
     await this.cache.set(key, instance);
   }
+
+  async setMany(data: (CreateDto | UpdateDto)[]): Promise<void> {
+    const dataMap = new Map(data.map((d) => [d._id, d]));
+    const keys = Object.keys(dataMap);
+    const existing = await this.repository.findByIds(keys);
+    const existingSet = new Set(existing.map((e) => e._id));
+
+    const inserts: CreateDto[] = [];
+    const updates: UpdateDto[] = [];
+
+    for (const key of keys) {
+      const dto = dataMap[key];
+      if (existingSet.has(key)) {
+        updates.push(dto as unknown as UpdateDto);
+      } else {
+        inserts.push(dto);
+      }
+    }
+
+    const [inserted, updated] = await Promise.all([
+      this.repository.insertMany(inserts),
+      this.repository.updateMany(updates),
+    ]);
+
+    // Update cache
+    await Promise.all(
+      [...inserted, ...updated].map((instance) =>
+        this.cache.set(instance._id, instance),
+      ),
+    );
+  }
 }
