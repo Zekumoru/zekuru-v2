@@ -10,16 +10,19 @@ const SingleOptions = {
     MONO_RECURSIVE: 'mono-recursive',
     BI_RECURSIVE: 'bi-recursive',
   },
-};
+} as const;
+
+export type SingleModeOption =
+  (typeof SingleOptions.mode)[keyof typeof SingleOptions.mode];
 
 const MultipleOptions = {
   CHANNELS: 'channels',
   RECURSIVE: 'recursive',
-};
+} as const;
 
 const GroupOptions = {
   CATEGORY_CHANNEL: 'category-channel',
-};
+} as const;
 
 const LinkOptions = {
   Single: SingleOptions,
