@@ -1,24 +1,26 @@
-import { Channel, ChannelType } from 'discord.js';
+import { Channel, channelMention } from 'discord.js';
+import {
+  ChannelValidator,
+  ChannelValidatorContext,
+  formatValidationResults,
+  isLinkLimitReachedValidator,
+  isTextChannelValidator,
+  isTranslateChannelValidator,
+  runValidators,
+} from '@zekuru-v2/core';
 import ChannelCache from '../../cache/ChannelCache';
 
-const validateChannel = async (
-  channel: Channel
-): Promise<string | undefined> => {
-  let warning: string | undefined;
+const validations: ChannelValidator[] = [
+  isTextChannelValidator,
+  isTranslateChannelValidator,
+  isLinkLimitReachedValidator,
+];
 
-  if (channel.type !== ChannelType.GuildText) {
-    warning = `<#${channel.id}> must be a text channel.`;
-  }
-
-  if (!(await ChannelCache.has(channel.id))) {
-    if (warning) {
-      warning = `<#${channel.id}> must be a text channel and a translate channel.`;
-    } else {
-      warning = `<#${channel.id}> must be a translate channel.`;
-    }
-  }
-
-  return warning;
+export const validateChannel = async (channel: Channel): Promise<string> => {
+  const ctx: ChannelValidatorContext = { cacheRepo: ChannelCache };
+  const results = await runValidators(channel, ctx, validations);
+  if (!results.length) return '';
+  return `${channelMention(channel.id)} ${formatValidationResults(results)}`;
 };
 
 export default validateChannel;

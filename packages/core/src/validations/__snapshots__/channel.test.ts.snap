@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ChannelValidator should fail validation if not a text channel 1`] = `
+[
+  "must be a Discord text channel",
+  "must be a translate channel",
+]
+`;
+
+exports[`ChannelValidator should fail validation if not a translate channel 1`] = `
+[
+  "must be a translate channel",
+]
+`;
+
+exports[`ChannelValidator should fail validation if reached linking limit 1`] = `
+[
+  "is already linked to 5 channels",
+]
+`;
