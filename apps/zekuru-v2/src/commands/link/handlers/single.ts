@@ -53,10 +53,10 @@ const linkSingleHandler = async (
     'bi-recursive') as SingleModeOption;
 
   const linkManager = new LinkManager(ChannelCache);
-  const channels = [sourceTrChannel, targetTrChannel];
-  await linkManager.link(channels, buildLinkOptions(modeOption));
+  const trChannels = [sourceTrChannel, targetTrChannel];
+  await linkManager.link(trChannels, buildLinkOptions(modeOption));
 
-  await ChannelCache.setMany(channels);
+  await ChannelCache.setMany(trChannels);
 
   // Output
   await interaction.editReply(

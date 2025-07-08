@@ -22,8 +22,8 @@ export async function runValidators<T, C>(
 export function formatValidationResults(results: string[]): string {
   if (results.length === 0) return '';
   if (results.length === 1) return `${results[0]}.`;
-  if (results.length === 2) return `${results[0]} and ${results[1]}.`;
+  if (results.length === 2) return `${results[0]} and ${results[1]}`;
 
   const last = results.pop();
-  return `${results.join(', ')}, and ${last}.`;
+  return `${results.join(', ')}, and ${last}`;
 }

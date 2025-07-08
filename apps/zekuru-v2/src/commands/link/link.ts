@@ -8,9 +8,11 @@ import linkSingleSubcommand from './subcommands/single';
 import linkSingleHandler from './handlers/single';
 import linkMultipleSubcommand from './subcommands/multiple';
 import linkGroupSubcommand from './subcommands/group';
+import linkMultipleHandler from './handlers/multiple';
 
 const handlers = {
   single: linkSingleHandler,
+  multiple: linkMultipleHandler,
 };
 
 const linkCommand = new DiscordCommandBuilder()
@@ -31,14 +33,14 @@ const linkCommand = new DiscordCommandBuilder()
 
         if (!handler) {
           await interaction.editReply(
-            `Unsupported subcommand \`${subcommand}\`.`
+            `Unsupported subcommand \`${subcommand}\`.`,
           );
           return;
         }
 
         handler(interaction);
       })
-      .catch(catchAllExecutor)
+      .catch(catchAllExecutor),
   );
 
 export default linkCommand;
