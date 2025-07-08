@@ -7,12 +7,14 @@ import deferExecutor from '../executors/deferExecutor';
 import linkSingleSubcommand from './subcommands/single';
 import linkSingleHandler from './handlers/single';
 import linkMultipleSubcommand from './subcommands/multiple';
-import linkGroupSubcommand from './subcommands/group';
+import linkCategorySubcommand from './subcommands/category';
 import linkMultipleHandler from './handlers/multiple';
+import linkCategoryHandler from './handlers/category';
 
 const handlers = {
   single: linkSingleHandler,
   multiple: linkMultipleHandler,
+  category: linkCategoryHandler,
 };
 
 const linkCommand = new DiscordCommandBuilder()
@@ -20,7 +22,7 @@ const linkCommand = new DiscordCommandBuilder()
   .setDescription('Links translation channels.')
   .addSubcommand(linkSingleSubcommand)
   .addSubcommand(linkMultipleSubcommand)
-  .addSubcommand(linkGroupSubcommand)
+  .addSubcommand(linkCategorySubcommand)
   .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
   .setExecutors((executors) =>
     executors

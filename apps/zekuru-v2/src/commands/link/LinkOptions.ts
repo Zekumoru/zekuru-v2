@@ -20,14 +20,14 @@ const MultipleOptions = {
   RECURSIVE: 'recursive',
 } as const;
 
-const GroupOptions = {
+const CategoryOptions = {
   CATEGORY_CHANNEL: 'category-channel',
 } as const;
 
 const LinkOptions = {
   Single: SingleOptions,
   Multiple: MultipleOptions,
-  Group: GroupOptions,
+  Group: CategoryOptions,
 };
 
 export default LinkOptions;
