@@ -4,9 +4,13 @@ import { LinkMode, LinkOptions } from './LinkOptions';
 import { ChannelCacheRepository } from '@zekuru-v2/repositories';
 
 export class LinkManager {
+  private linkedSet = new Set<Channel>();
+
   constructor(private channelRepo: ChannelCacheRepository) {}
 
   async link(channels: Channel[], options: LinkOptions): Promise<void> {
+    this.linkedSet = new Set<Channel>();
+
     const sourceSet = options.single ? [channels[0]] : channels;
     const targetSet = await this._buildTargets(channels, options);
 
@@ -17,6 +21,10 @@ export class LinkManager {
       }
     }
     await Promise.all(promises);
+  }
+
+  getLinkedChannels(): Channel[] {
+    return Array.from(this.linkedSet);
   }
 
   private async _buildTargets(
@@ -79,11 +87,14 @@ export class LinkManager {
 
     const sourceSet = new Set(source.links);
     sourceSet.add(target._id);
+    this.linkedSet.add(target);
     source.links = Array.from(sourceSet);
 
     if (!mono) {
+      // Link bidirectionally
       const targetSet = new Set(target.links);
       targetSet.add(source._id);
+      this.linkedSet.add(source);
       target.links = Array.from(targetSet);
     }
   }

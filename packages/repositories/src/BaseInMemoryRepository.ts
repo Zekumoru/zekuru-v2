@@ -12,13 +12,13 @@ export abstract class BaseInMemoryRepository<
   private store = new Map<Snowflake, Entity>();
 
   async insertOne(entity: CreateDto): Promise<Entity> {
-    this.store.set(entity._id, entity as any);
+    this.store.set(entity._id, structuredClone(entity as any));
     return entity as any;
   }
 
   async insertMany(entities: CreateDto[]): Promise<Entity[]> {
     for (const entity of entities) {
-      this.store.set(entity._id, entity as any);
+      this.store.set(entity._id, structuredClone(entity as any));
     }
     return entities as any[];
   }
@@ -33,7 +33,7 @@ export abstract class BaseInMemoryRepository<
 
   async updateOne(entity: UpdateDto): Promise<Entity | null> {
     if (!this.store.has(entity._id)) return null;
-    this.store.set(entity._id, entity as any);
+    this.store.set(entity._id, structuredClone(entity as any));
     return entity as any;
   }
 
@@ -41,7 +41,7 @@ export abstract class BaseInMemoryRepository<
     const updated: Entity[] = [];
     for (const entity of entities) {
       if (this.store.has(entity._id)) {
-        this.store.set(entity._id, entity as any);
+        this.store.set(entity._id, structuredClone(entity as any));
         updated.push(entity as any);
       }
     }

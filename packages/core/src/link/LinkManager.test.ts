@@ -254,9 +254,36 @@ describe('LinkManager', () => {
     expect(d.links).toContain(c._id);
   });
 
+  test('that linking two different channels recursively also saves the channels not specified in the link command', async () => {
+    // Initial setup: A <-> B, C
+    const db = new ChannelInMemoryRepository();
+    const cache = new CacheManagerRepository<Channel>({});
+    const repo = new ChannelCacheRepository(cache, db);
+    const a = createChannel('A');
+    const b = createChannel('B');
+    a.links.push(b._id);
+    b.links.push(a._id);
+    await repo.set(a._id, a);
+    await repo.set(b._id, b);
+    const c = createChannel('C');
+    await repo.set(c._id, c);
+    const manager = new LinkManager(repo);
+
+    await manager.link([a, c], { mode: 'recursive' });
+    await cache.clear();
+    await repo.setMany(manager.getLinkedChannels());
+
+    // Expect that B from the database is connected to A and C
+    const dbB = (await db.findById(b._id)) as Channel;
+    expect(dbB.links).toContain(a._id);
+    expect(dbB.links).toContain(c._id);
+  });
+
   test('that it links but DO NOT save to db', async () => {
     // Since saving is something that should be done in bulk.
-    const repo = createChannelCacheRepo();
+    const db = new ChannelInMemoryRepository();
+    const cache = new CacheManagerRepository<Channel>({});
+    const repo = new ChannelCacheRepository(cache, db);
     const a = createChannel('A');
     await repo.set(a._id, a);
     const b = createChannel('B');
@@ -267,16 +294,13 @@ describe('LinkManager', () => {
       mode: 'non-recursive',
     };
 
-    const localA = createChannel('A');
-    const localB = createChannel('B');
-    await manager.link([localA, localB], options);
+    await manager.link([a, b], options);
+    await cache.clear();
 
-    // Expect A <-> B but NOT in db
-    expect(localA.links).toContain(b._id);
-    expect(localB.links).toContain(a._id);
-    const dbA = await repo.get(a._id, true);
+    // Expect A <-> B NOT in db
+    const dbA = (await db.findById(a._id)) as Channel;
     expect(dbA.links).toHaveLength(0);
-    const dbB = await repo.get(b._id, true);
+    const dbB = (await db.findById(b._id)) as Channel;
     expect(dbB.links).toHaveLength(0);
   });
 });
