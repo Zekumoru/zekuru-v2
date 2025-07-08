@@ -57,7 +57,6 @@ const linkMultipleHandler = async (
   const mode = recursive ? 'recursive' : 'non-recursive';
   await linkManager.link(trChannels, { mode });
 
-  console.log(JSON.stringify(linkManager.getLinkedChannels()));
   await ChannelCache.setMany(linkManager.getLinkedChannels());
 
   // Output
