@@ -11,7 +11,7 @@ const fetchOrCreateLink = async (channelId: string, guildId: string) => {
   if (link) return link;
 
   const newLink = new ChannelLink({
-    // guildId,
+    guildId,
     id: channelId,
     links: [],
   });
